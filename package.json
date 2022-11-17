@@ -1,0 +1,18 @@
+{
+	"name": "astro-i18n",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Alexandre-Fernandez/astro-i18n.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Alexandre-Fernandez/astro-i18n/issues"
+	},
+	"homepage": "https://github.com/Alexandre-Fernandez/astro-i18n#readme"
+}
