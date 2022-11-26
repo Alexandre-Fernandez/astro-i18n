@@ -1,18 +1,77 @@
 {
 	"name": "astro-i18n",
-	"version": "0.0.1",
-	"description": "",
-	"main": "index.js",
-	"scripts": {},
+	"version": "1.0.0",
+	"author": "alexandre-fernandez",
+	"description": "A TypeScript-first internationalization library for Astro.",
+	"keywords": [
+		"astro",
+		"i18n",
+		"l10n",
+		"internationalization",
+		"localization",
+		"typescript"
+	],
+	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Alexandre-Fernandez/astro-i18n.git"
+		"url": "https://github.com/alexandre-fernandez/astro-i18n"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/Alexandre-Fernandez/astro-i18n/issues"
+	"main": "dist/src/index.mjs",
+	"bin": "dist/src/cli/index.cjs",
+	"types": "./dist/src/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": "./dist/src/index.mjs",
+		"./components": "./dist/src/astro/index.mjs"
 	},
-	"homepage": "https://github.com/Alexandre-Fernandez/astro-i18n#readme"
+	"typesVersions": {
+		"*": {
+			"": [
+				"./dist/src/index.d.ts"
+			],
+			"components": [
+				"./dist/src/astro/index.d.ts"
+			]
+		}
+	},
+	"scripts": {
+		"prepare": "ts-patch install -s",
+		"lint": "eslint --ignore-path .eslintignore .",
+		"build": "npm run build:types && npm run build:core && npm run build:cli && npm run build:astro",
+		"build:types": "tsc --project tsconfig.json",
+		"build:core": "node esbuild/core.cjs",
+		"build:cli": "node esbuild/cli.cjs",
+		"build:astro": "node esbuild/astro.cjs && cpy 'src/astro/*.astro' dist/src/astro"
+	},
+	"devDependencies": {
+		"@types/node": "^18.8.5",
+		"@typescript-eslint/eslint-plugin": "^5.43.0",
+		"@typescript-eslint/parser": "^5.43.0",
+		"astro": "^1.5.0",
+		"cpy-cli": "^4.2.0",
+		"esbuild": "^0.15.11",
+		"eslint": "^8.27.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-import-resolver-typescript": "^3.5.2",
+		"eslint-plugin-github": "^4.4.1",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-sonarjs": "^0.16.0",
+		"eslint-plugin-unicorn": "^44.0.2",
+		"prettier": "^2.7.1",
+		"ts-patch": "^2.0.2",
+		"typescript": "4.8.4",
+		"typescript-transform-paths": "^3.4.4"
+	},
+	"dependencies": {
+		"get-file-exports": "^1.2.1"
+	},
+	"contributors": [
+		{
+			"name": "Alexandre Fernandez",
+			"url": "https://github.com/alexandre-fernandez"
+		}
+	]
 }

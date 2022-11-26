@@ -1,0 +1,19 @@
+---
+import { astroI18n, extractRouteLangCode } from "..";
+import type { InterpolationFormatter } from "../types/app";
+
+interface Props {
+	formatters?: Record<string, InterpolationFormatter>;
+}
+const { formatters } = Astro.props
+
+if(formatters) {
+	for(const [name, formatter] of Object.entries(formatters)) {
+		astroI18n.setFormatter(name, formatter)
+	}
+}
+
+astroI18n.langCode = extractRouteLangCode(Astro.url.pathname)
+---
+
+<slot/>

@@ -1,0 +1,6 @@
+esbuild
+dist
+*.js
+*.cjs
+*.mjs
+*.astro

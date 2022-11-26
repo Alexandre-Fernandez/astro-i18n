@@ -1,0 +1,21 @@
+---
+import { astroI18n, l } from "..";
+
+const params: Record<string, string> = {}
+for(const [key, value] of Object.entries(Astro.params)) {
+	if(value === undefined) continue
+	params[key] = String(value)
+}
+
+const hrefLangs = astroI18n.langCodes
+	.map(
+		(langCode) => ({
+			href: Astro.url.origin + l(Astro.url.pathname, params, langCode),
+			hreflang: langCode
+		})
+	)
+---
+
+{hrefLangs.map(
+	({href, hreflang}) => <link rel="alternate" href={href} hreflang={hreflang} />
+)}
