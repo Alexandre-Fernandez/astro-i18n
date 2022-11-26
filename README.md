@@ -423,7 +423,7 @@ An astro component that will automatically generate hreflang tags for the curren
 						<img src="https://avatars.githubusercontent.com/u/79476242?v=4?s=100" width="100px;"
 							alt="Alexandre Fernandez">
 						<br />
-						<figcaption>Alexandre Fernandez</figcaption>
+						<figcaption><sub>Alexandre Fernandez</sub></figcaption>
 					</figure>
 				</a>
 			</td>
