@@ -52,6 +52,7 @@ module.exports = {
 		"unicorn/prefer-top-level-await": "off",
 		"unicorn/no-array-reduce": "off",
 		"unicorn/no-await-expression-member": "off",
+		"sonarjs/cognitive-complexity": ["error", 16],
 		"@typescript-eslint/no-unused-vars": "error",
 		"@typescript-eslint/interface-name-prefix": "off",
 		"@typescript-eslint/explicit-function-return-type": "off",
