@@ -422,10 +422,11 @@ The `t` function is the main function to translate, it can take up to three argu
 
 #### `l`
 
-The `l` function is a function used to get translated routes, it can take up to three arguments.
+The `l` function is a function used to get translated routes, it can take up to four arguments.
 
 -   `route`: The target route, e.g. `"/about"`.
 -   `params`: (optional) An object containing all the `route`'s params.
+-   `query`: (optional) An object containing the query string properties to append.
 -   `langCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
 
 #### `I18nProvider`
