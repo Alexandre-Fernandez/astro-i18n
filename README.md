@@ -13,7 +13,12 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 
 ## Preview
 
+### Translation function
+
 ![Translation function preview.](/img/t.png "Translation function preview.")
+
+### Translated routing function
+
 ![Translated routing function preview.](/img/l.png "Translated routing function preview.")
 
 ## Content page
