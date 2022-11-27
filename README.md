@@ -11,6 +11,21 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 -   🔧 Support for plurals, context, interpolations and formatters.
 -   🚀 Built for [Astro](https://github.com/withastro/astro) and nothing else.
 
+## Content page
+
+-   [Get started](#get-started)
+    -   [Installation](#installation)
+    -   [Setup](#setup)
+    -   [Configuration](#configuration)
+    -   [That's it](#thats-it)
+-   [Reference](#reference)
+    -   [Declare your translations directly in `pages`](#declare-your-translations-directly-in-pages)
+    -   [Variants](#variants)
+    -   [Interpolation](#interpolation)
+    -   [API](#api)
+    -   [CLI](#cli)
+-   [Contributors](#contributors)
+
 ## Get started
 
 -   Star the [github repo](https://github.com/alexandre-fernandez/astro-i18n) 😎
@@ -26,7 +41,9 @@ yarn add astro-i18n
 pnpm add astro-i18n
 ```
 
-### Automatic setup
+### Setup
+
+#### Automatic
 
 Run the following command.
 
@@ -49,7 +66,9 @@ import { I18nProvider } from "astro-i18n/components"
 </I18nProvider>
 ```
 
-### Manual setup
+[Go to next step.](#configuration)
+
+#### Manual
 
 Add [astro-i18n](https://github.com/alexandre-fernandez/astro-i18n) to your `astro.config` integrations.
 
