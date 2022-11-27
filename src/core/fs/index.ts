@@ -159,7 +159,7 @@ function getI18nPageTranslations(
 			delete translation[ROUTE_TRANSLATION_KEY]
 		}
 
-		// nesting the translations inside it's page route
+		// nesting the translations inside its page route
 		let nestedTranslation = translation
 		const segments = ["index", ...pageRoute.split("/").filter((s) => !!s)]
 		for (let i = segments.length - 1; i > -1; i -= 1) {
