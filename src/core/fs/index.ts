@@ -96,9 +96,21 @@ export function getPagesMetadata(
 				} else {
 					// translation directory
 					const { pageTranslations, pageRouteTranslations } =
-						getI18nPageTranslations(fullPath, name, astroI18nConfig)
+						getI18nPageTranslations(
+							fullPath,
+							route,
+							name,
+							astroI18nConfig,
+						)
 					merge(translations, pageTranslations)
 					merge(routeTranslations, pageRouteTranslations)
+					/*
+						[post]
+						blog
+						integrations
+						showcase
+						index
+					*/
 				}
 			}
 		},
@@ -119,6 +131,7 @@ export function getPagesMetadata(
  */
 function getI18nPageTranslations(
 	directoryPath: string,
+	pageRoute: string,
 	pageName: string,
 	{ defaultLangCode, supportedLangCodes }: AstroI18nConfig,
 ) {
@@ -146,8 +159,17 @@ function getI18nPageTranslations(
 			delete translation[ROUTE_TRANSLATION_KEY]
 		}
 
+		// nesting the translations inside it's page route
+		let nestedTranslation = translation
+		const segments = ["index", ...pageRoute.split("/").filter((s) => !!s)]
+		for (let i = segments.length - 1; i > -1; i -= 1) {
+			nestedTranslation = {
+				[segments[i]]: nestedTranslation,
+			}
+		}
+
 		// adding translation
-		pageTranslations[langCode] = translation
+		pageTranslations[langCode] = nestedTranslation
 	}
 
 	return { pageTranslations, pageRouteTranslations }
