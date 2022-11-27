@@ -18,11 +18,11 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 
 ```js
 // npm
-npm install tzlocator
+npm install astro-i18n
 // yarn
-yarn add tzlocator
+yarn add astro-i18n
 // pnpm
-pnpm add tzlocator
+pnpm add astro-i18n
 ```
 
 ### Automatic setup
