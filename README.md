@@ -11,6 +11,11 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 -   🔧 Support for plurals, context, interpolations and formatters.
 -   🚀 Built for [Astro](https://github.com/withastro/astro) and nothing else.
 
+## Preview
+
+![Translation function preview.](/img/t.png "Translation function preview.")
+![Translated routing function preview.](/img/l.png "Translated routing function preview.")
+
 ## Content page
 
 -   [Get started](#get-started)
