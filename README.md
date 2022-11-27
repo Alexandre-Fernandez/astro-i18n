@@ -29,10 +29,10 @@ pnpm add astro-i18n
 
 Run the following command.
 
-```ts
-// node
+```yml
+# node
 node_modules/.bin/astro-i18n install
-// deno
+# deno
 deno run npm:astro-i18n install
 ```
 
@@ -168,10 +168,10 @@ export default defineAstroI18nConfig({
 
 Run the following command to generate the types corresponding to your configuration and translations.
 
-```ts
-// node
+```yml
+# node
 npm run i18n:sync
-// deno
+# deno
 deno run npm:astro-i18n install
 ```
 
@@ -192,6 +192,38 @@ import { I18nProvider } from "astro-i18n/components"
 ```
 
 ## Reference
+
+### Declare your translations directly in `pages`
+
+You can have your translation and your route translations sitting directly with your pages by having an `i18n` folder next to them. The `.json` translations files will be named after the language they cover.
+You can use the special translation key `"{route}"` to translate the route.
+
+#### Example
+
+```yml
+src/
+├── pages/
+│   ├── index.astro
+│   ├── i18n/
+│   │   ├── en.json
+│   │   └── fr.json
+│   └── about/
+│       ├── index.astro
+│       └── i18n/
+│           ├── en.json
+│           └── fr.json
+```
+
+_src/pages/about/i18n/fr.json_
+
+```json
+{
+	"{route}": "a-propos",
+	"my": {
+		"translation:": "Une traduction."
+	}
+}
+```
 
 ### Variants
 
