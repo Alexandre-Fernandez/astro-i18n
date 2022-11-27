@@ -4,9 +4,10 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 
 ## Key features
 
+-   🪶 Lightweight.
 -   🏗️ Build-time loading.
 -   🌏 Internationalized routing.
--   🎓 Type-safety and autocompletion.
+-   🔒 Type-safety and autocompletion.
 -   🔧 Support for plurals, context, interpolations and formatters.
 -   🚀 Built for [Astro](https://github.com/withastro/astro) and nothing else.
 
@@ -16,12 +17,12 @@ A TypeScript-first internationalization library for [Astro](https://github.com/w
 
 ### Installation
 
-```js
-// npm
+```yml
+# npm
 npm install astro-i18n
-// yarn
+# yarn
 yarn add astro-i18n
-// pnpm
+# pnpm
 pnpm add astro-i18n
 ```
 
