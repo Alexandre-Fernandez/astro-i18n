@@ -7,14 +7,20 @@ import type { AstroI18nConfig } from "$src/types/config"
 export function l<Uri extends RouteUri>(
 	route: Uri,
 	params?: RouteParams[Uri],
+	query: Record<string, string> = {},
 	langCode = astroI18n.langCode,
 ) {
 	let translatedRoute = translatePath(route, langCode, astroI18n)
-	if (!params) return translatedRoute
+	if (!params) return getQueriedRoute(translatedRoute, query)
 	for (const [param, value] of Object.entries(params)) {
 		translatedRoute = translatedRoute.replace(`[${param}]`, value)
 	}
-	return translatedRoute
+	return getQueriedRoute(translatedRoute, query)
+}
+
+function getQueriedRoute(route: string, query: Record<string, string>) {
+	const queryString = new URLSearchParams(query).toString()
+	return queryString ? `${route}?${queryString}` : route
 }
 
 /**

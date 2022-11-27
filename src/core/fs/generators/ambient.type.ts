@@ -18,7 +18,7 @@ const TRANSLATION_PATH = "TranslationPath"
 const TRANSLATION_OPTIONS = "TranslationOptions"
 
 const DEFAULT_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n}`
-const OVERRIDE_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n\t\n\texport function l<Uri extends ${ROUTE_URI}>(\n\t\troute: Uri,\n\t\t...args: undefined extends ${ROUTE_PARAMS}[Uri]\n\t\t\t? [params?: ${ROUTE_PARAMS}[Uri], langCode?: ${LANG_CODE}]\n\t\t\t: [params: ${ROUTE_PARAMS}[Uri], langCode?: ${LANG_CODE}]\n\t): string\n\t\n\texport function t<Path extends ${TRANSLATION_PATH}>(\n\t\tpath: Path,\n\t\t...args: undefined extends ${TRANSLATION_OPTIONS}[Path]\n\t\t\t? [options?: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t\t\t: [options: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t): string\n}`
+const OVERRIDE_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n\t\n\texport function l<Uri extends ${ROUTE_URI}>(\n\t\troute: Uri,\n\t\t...args: undefined extends ${ROUTE_PARAMS}[Uri]\n\t\t\t? [params?: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t\t\t: [params: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t): string\n\t\n\texport function t<Path extends ${TRANSLATION_PATH}>(\n\t\tpath: Path,\n\t\t...args: undefined extends ${TRANSLATION_OPTIONS}[Path]\n\t\t\t? [options?: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t\t\t: [options: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t): string\n}`
 
 export async function generateAmbientType(
 	root: string,
