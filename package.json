@@ -10,7 +10,8 @@
 		"internationalization",
 		"localization",
 		"typescript",
-		"astro-component"
+		"astro-component",
+		"seo"
 	],
 	"license": "MIT",
 	"homepage": "https://github.com/alexandre-fernandez/astro-i18n",
