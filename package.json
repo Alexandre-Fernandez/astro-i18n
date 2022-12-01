@@ -9,9 +9,11 @@
 		"l10n",
 		"internationalization",
 		"localization",
-		"typescript"
+		"typescript",
+		"astro-component"
 	],
 	"license": "MIT",
+	"homepage": "https://github.com/alexandre-fernandez/astro-i18n",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/alexandre-fernandez/astro-i18n"
