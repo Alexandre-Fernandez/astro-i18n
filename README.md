@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" width="33%">
 	<img src="https://raw.githubusercontent.com/Alexandre-Fernandez/astro-i18n/0fb145cf64ef94968ca70c36b52a922fa897d11a/img/logo.svg" alt="astro-i18n logo">
 </div>
 
