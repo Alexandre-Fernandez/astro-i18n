@@ -1,3 +1,7 @@
+<div align="center">
+	![astro-i18n logo](https://raw.githubusercontent.com/Alexandre-Fernandez/astro-i18n/0fb145cf64ef94968ca70c36b52a922fa897d11a/img/logo.svg "astro-i18n logo")
+</div>
+
 # astro-i18n
 
 A TypeScript-first internationalization library for [Astro](https://github.com/withastro/astro).
