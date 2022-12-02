@@ -49,7 +49,7 @@ export function translatePath(
 		segments.shift()
 	}
 
-	const lastSegment = segments.at(-1)! // never undefined since `suffix` is truthy
+	const lastSegment = segments.at(-1) || ""
 
 	let addExtensionBack = false
 	if (
