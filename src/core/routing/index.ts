@@ -39,7 +39,7 @@ export function translatePath(
 	base = "",
 ) {
 	const [prefix, suffix] = splitAfter(route.toLowerCase(), base.toLowerCase())
-	if (!suffix) return route
+	if (!suffix) return route || separator
 
 	// removing leading slash and splitting suffix
 	const segments = removeFromStart(suffix, separator).split(separator)
@@ -82,12 +82,14 @@ export function translatePath(
 	)
 
 	if (addExtensionBack) {
-		return removeFromEnd(
-			`${translatedPath}${COMPONENT_EXTENSION}`,
-			separator,
+		return (
+			removeFromEnd(
+				`${translatedPath}${COMPONENT_EXTENSION}`,
+				separator,
+			) || separator
 		)
 	}
-	return removeFromEnd(translatedPath, separator)
+	return removeFromEnd(translatedPath, separator) || separator
 }
 
 /**
