@@ -15,6 +15,9 @@ class AstroI18n implements AstroI18nConfig {
 
 	routeTranslations: AstroI18nConfig["routeTranslations"]
 
+	/**
+	 * Used internally by astro-i18n.
+	 */
 	translationVariants: Record<string, TranslationVariant[]> = {}
 
 	#langCode: string

@@ -11,14 +11,27 @@ import { PACKAGE_NAME } from "$src/constants"
 import type { AstroI18nConfig, TranslationMap } from "$src/types/config"
 import type { PagesMetadata } from "$src/types/app"
 
+// LANG CODE
+const DEFAULT_LANG_CODE = "DefaultLangCode"
+const SUPPORTED_LANG_CODE = "SupportedLangCode"
 const LANG_CODE = "LangCode"
+// ROUTE
+const L_FUNCTION = "l"
 const ROUTE_URI = "RouteUri"
 const ROUTE_PARAMS = "RouteParams"
+// TRANSLATION
+const T_FUNCTION = "t"
 const TRANSLATION_PATH = "TranslationPath"
 const TRANSLATION_OPTIONS = "TranslationOptions"
+// ASTRO I18N CLASS
+const ASTRO_I18N = "AstroI18n"
+const TRANSLATION = "Translation"
+const TRANSLATIONS = "Translations"
+const ROUTE_TRANSLATIONS = "RouteTranslations"
+const INTERPOLATION_FORMATTER = "InterpolationFormatter"
 
 const DEFAULT_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n}`
-const OVERRIDE_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n\t\n\texport function l<Uri extends ${ROUTE_URI}>(\n\t\troute: Uri,\n\t\t...args: undefined extends ${ROUTE_PARAMS}[Uri]\n\t\t\t? [params?: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t\t\t: [params: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t): string\n\t\n\texport function t<Path extends ${TRANSLATION_PATH}>(\n\t\tpath: Path,\n\t\t...args: undefined extends ${TRANSLATION_OPTIONS}[Path]\n\t\t\t? [options?: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t\t\t: [options: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t): string\n}`
+const OVERRIDE_MODULE_DECLARATION = `declare module "${PACKAGE_NAME}" {\n\texport * from "${PACKAGE_NAME}/"\n\t\n\texport function ${L_FUNCTION}<Uri extends ${ROUTE_URI}>(\n\t\troute: Uri | string & {},\n\t\t...args: undefined extends ${ROUTE_PARAMS}[Uri]\n\t\t\t? [params?: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t\t\t: [params: ${ROUTE_PARAMS}[Uri], query?: Record<string, string>, langCode?: ${LANG_CODE}]\n\t): string\n\t\n\texport function ${T_FUNCTION}<Path extends ${TRANSLATION_PATH}>(\n\t\tpath: Path | string & {},\n\t\t...args: undefined extends ${TRANSLATION_OPTIONS}[Path]\n\t\t\t? [options?: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t\t\t: [options: ${TRANSLATION_OPTIONS}[Path], langCode?: ${LANG_CODE}]\n\t): string\n\t\n\ttype ${TRANSLATION} = string | { [translationKey: string]: string | ${TRANSLATION} }\n\ttype ${TRANSLATIONS} = { [langCode: string]: Record<string, ${TRANSLATION}> }\n\ttype ${ROUTE_TRANSLATIONS} = { [langCode: string]: Record<string, string> }\n\ttype ${INTERPOLATION_FORMATTER} = (value: unknown, ...args: unknown[]) => string\n\tclass ${ASTRO_I18N} {\n\t\tdefaultLangCode: ${DEFAULT_LANG_CODE}\n\t\tsupportedLangCodes: ${SUPPORTED_LANG_CODE}[]\n\t\tshowDefaultLangCode: boolean\n\t\ttranslations: ${TRANSLATIONS}\n\t\trouteTranslations: ${ROUTE_TRANSLATIONS}\n\t\tget langCodes(): ${LANG_CODE}[]\n\t\tget langCode(): ${LANG_CODE}\n\t\tset langCode(langCode: ${LANG_CODE})\n\t\tget formatters(): Record<string, ${INTERPOLATION_FORMATTER}>\n\t\tgetFormatter(name: string): ${INTERPOLATION_FORMATTER} | undefined\n\t\tsetFormatter(name: string, formatter: ${INTERPOLATION_FORMATTER}): void\n\t\tdeleteFormatter(name: string): void\n\t}\n\texport const astroI18n: AstroI18n\n}`
 
 export async function generateAmbientType(
 	root: string,
@@ -62,7 +75,7 @@ export function getAmbientType(
 	astroI18nConfig: AstroI18nConfig,
 	uniqueRoutes: string[],
 ) {
-	return `${getLangCodeType(astroI18nConfig)}\n${getRouteTypes(
+	return `${getLangCodeTypes(astroI18nConfig)}\n${getRouteTypes(
 		uniqueRoutes,
 	)}\n${getTranslationTypes(
 		astroI18nConfig.translations,
@@ -71,15 +84,27 @@ export function getAmbientType(
 
 // LANG CODE
 
-function getLangCodeType(astroI18nConfig: AstroI18nConfig) {
-	const langCodes = [
-		astroI18nConfig.defaultLangCode,
-		...astroI18nConfig.supportedLangCodes,
-	].filter((langCode) => !!langCode)
+function getLangCodeTypes({
+	defaultLangCode,
+	supportedLangCodes,
+}: AstroI18nConfig) {
+	let langCodeTypes = defaultLangCode
+		? `type ${DEFAULT_LANG_CODE} = "${defaultLangCode}"\n`
+		: `type ${DEFAULT_LANG_CODE} = string\n`
 
-	return langCodes.length === 0
-		? `type ${LANG_CODE} = string`
-		: `type ${LANG_CODE} = "${langCodes.join('" | "')}"`
+	langCodeTypes +=
+		supportedLangCodes.length > 0
+			? `type ${SUPPORTED_LANG_CODE} = "${supportedLangCodes.join(
+					'" | "',
+			  )}"\n`
+			: `type ${SUPPORTED_LANG_CODE} = string\n`
+
+	const langCodes = [defaultLangCode, ...supportedLangCodes].filter(
+		(langCode) => !!langCode,
+	)
+	return langCodes.length > 0
+		? `${langCodeTypes}type ${LANG_CODE} = "${langCodes.join('" | "')}"`
+		: `${langCodeTypes}type ${LANG_CODE} = string`
 }
 
 // ROUTES
