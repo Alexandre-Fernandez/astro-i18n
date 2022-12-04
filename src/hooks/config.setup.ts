@@ -31,7 +31,7 @@ export default async function configSetup(
 		"page-ssr",
 		[
 			'import { astroI18n } from "astro-i18n"',
-			`astroI18n.init(${stringifiedConfig}, ${stringifiedVariants})`,
+			`astroI18n.internals().init(${stringifiedConfig}, ${stringifiedVariants})`,
 		].join(";"),
 	)
 }

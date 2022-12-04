@@ -26,7 +26,11 @@ export function t<Key extends TranslationPath>(
 		return getTranslationValue(path, langCode)
 	}
 	const translationValue = getTranslationValue(
-		getBestVariantPath(path, astroI18n.translationVariants, options),
+		getBestVariantPath(
+			path,
+			astroI18n.internals().translationVariants,
+			options,
+		),
 		langCode,
 	)
 	return replaceInterpolations(translationValue, options)

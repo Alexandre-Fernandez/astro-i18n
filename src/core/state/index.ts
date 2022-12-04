@@ -15,10 +15,7 @@ class AstroI18n implements AstroI18nConfig {
 
 	routeTranslations: AstroI18nConfig["routeTranslations"]
 
-	/**
-	 * Used internally by astro-i18n.
-	 */
-	translationVariants: Record<string, TranslationVariant[]> = {}
+	#translationVariants: Record<string, TranslationVariant[]> = {}
 
 	#langCode: string
 
@@ -70,17 +67,21 @@ class AstroI18n implements AstroI18nConfig {
 		return this.#formatters
 	}
 
-	/**
-	 * Used internally by astro-i18n.
-	 */
-	init(
+	internals() {
+		return {
+			init: this.#init,
+			translationVariants: this.#translationVariants,
+		}
+	}
+
+	#init(
 		astroI18nConfig: AstroI18nConfig,
 		variants: Record<string, TranslationVariant[]> = {},
 	) {
 		for (const [key, value] of objectEntries(astroI18nConfig)) {
 			if (this[key] !== undefined) (this as any)[key] = value
 		}
-		this.translationVariants = variants
+		this.#translationVariants = variants
 	}
 
 	getFormatter(name: string): InterpolationFormatter | undefined {
