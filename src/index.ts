@@ -21,6 +21,6 @@ export { extractRouteLangCode } from "$src/core/routing"
 
 export { default as astroI18n } from "$src/core/state"
 
-export { l } from "$src/core/routing"
+export { l, appendQueryString } from "$src/core/routing"
 
 export { t } from "$src/core/translation"
