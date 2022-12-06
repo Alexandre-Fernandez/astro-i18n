@@ -1,26 +1,62 @@
-import { glue, removeFromEnd, removeFromStart, splitAfter } from "$lib/string"
+import {
+	glue,
+	removeFromEnd,
+	removeFromStart,
+	splitAfter,
+	trimString,
+} from "$lib/string"
 import { COMPONENT_EXTENSION } from "$src/constants"
 import astroI18n from "$src/core/state"
-import type { RouteParams, RouteUri } from "$src/types/app"
+import type { FullRouteTranslationMap } from "$src/types/app"
 import type { AstroI18nConfig } from "$src/types/config"
 
-export function l<Uri extends RouteUri>(
-	route: Uri,
-	params?: RouteParams[Uri],
-	query: Record<string, string> = {},
-	langCode = astroI18n.langCode,
+export function l(
+	route: string,
+	params?: Record<string, string>,
+	targetLangCode = astroI18n.langCode,
+	routeLangCode = "",
 ) {
-	let translatedRoute = translatePath(route, langCode, astroI18n)
-	if (!params) return getQueriedRoute(translatedRoute, query)
-	for (const [param, value] of Object.entries(params)) {
-		translatedRoute = translatedRoute.replace(`[${param}]`, value)
+	const { langCodes, defaultLangCode, showDefaultLangCode } = astroI18n
+	const { fullRouteTranslations } = astroI18n.internals()
+
+	const segments = trimString(route, "/").split("/")
+
+	// removing langCode
+	if (langCodes.includes(segments[0])) {
+		segments.shift()
 	}
-	return getQueriedRoute(translatedRoute, query)
+
+	// translating route
+	const inputLangCode =
+		routeLangCode ||
+		detectRouteLangCode(segments, fullRouteTranslations) ||
+		defaultLangCode
+
+	let translatedRoute = segments
+		.map((segment) =>
+			fullRouteTranslations[inputLangCode]?.[segment]?.[targetLangCode]
+				? fullRouteTranslations[inputLangCode][segment][targetLangCode]
+				: segment,
+		)
+		.join("/")
+
+	// replacing params
+	if (params) {
+		for (const [param, value] of Object.entries(params)) {
+			translatedRoute = translatedRoute.replace(`[${param}]`, value)
+		}
+	}
+
+	// adding langCode back if needed
+	if (showDefaultLangCode || targetLangCode !== defaultLangCode) {
+		return `/${targetLangCode}/${translatedRoute}`
+	}
+	return `/${translatedRoute}`
 }
 
-function getQueriedRoute(route: string, query: Record<string, string>) {
-	const queryString = new URLSearchParams(query).toString()
-	return queryString ? `${route}?${queryString}` : route
+export function appendQueryString(url: string, query: Record<string, string>) {
+	const searchParams = new URLSearchParams(query).toString()
+	return searchParams ? `${url}?${searchParams}` : url
 }
 
 /**
@@ -90,6 +126,38 @@ export function translatePath(
 		)
 	}
 	return removeFromEnd(translatedPath, separator) || separator
+}
+
+function detectRouteLangCode(
+	routeSegments: string[],
+	fullRouteTranslations: FullRouteTranslationMap,
+) {
+	const langCodeScores: Record<string, number> = {}
+
+	for (const segment of routeSegments) {
+		// adding 1 point if a segment is in translations
+		for (const [langCode, translations] of Object.entries(
+			fullRouteTranslations,
+		)) {
+			if (!langCodeScores[langCode]) langCodeScores[langCode] = 0
+
+			if (translations[segment]) {
+				langCodeScores[langCode] += 1
+			}
+		}
+	}
+
+	// removing duplicate scores
+	const uniqueLangCodeScores = Object.entries(langCodeScores)
+		.filter(
+			([langCode, score], _, entries) =>
+				entries.findIndex(
+					([lng, scr]) => lng !== langCode && scr === score,
+				) === -1,
+		)
+		.sort((a, b) => b[1] - a[1])
+
+	return uniqueLangCodeScores.at(0)?.[0]
 }
 
 /**

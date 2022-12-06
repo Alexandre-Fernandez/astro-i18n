@@ -54,6 +54,14 @@ export type Imports = {
 	}
 }
 
+export type FullRouteTranslationMap = {
+	[langCode: string]: {
+		[untranslated: string]: {
+			[otherLangCode: string]: string
+		}
+	}
+}
+
 export type CodeFormat = "ESM" | "CJS"
 
 // overridden by generators (for `l` and `t` functions)

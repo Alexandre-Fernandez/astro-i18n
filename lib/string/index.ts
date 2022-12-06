@@ -67,6 +67,13 @@ export function removeFromEnd(string: string, searchString: string) {
 }
 
 /**
+ * Removes `searchString` from `string` from the beginning and end.
+ */
+export function trimString(string: string, searchString: string) {
+	return removeFromEnd(removeFromStart(string, searchString), searchString)
+}
+
+/**
  * Adds `start` at the start of the `string` if it doesn't already start with
  * `start`.
  */
