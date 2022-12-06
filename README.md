@@ -413,6 +413,10 @@ The `defineAstroI18nConfig` is an helper to give you autocompletion and type-saf
 
 This function will extract a supported lang code (either the default one or one inside `supportedLangCodes`) from the given route.
 
+#### `appendQueryString`
+
+A helper function to append a query string to a url/route.
+
 #### `astroI18n`
 
 This is where the [astro-i18n](https://github.com/alexandre-fernandez/astro-i18n) run-time state resides.
@@ -440,8 +444,8 @@ The `l` function is a function used to get translated routes, it can take up to 
 
 -   `route`: The target route, e.g. `"/about"`.
 -   `params`: (optional) An object containing all the `route`'s params.
--   `query`: (optional) An object containing the query string properties to append.
--   `langCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
+-   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
+-   `routeLangCode`: (optional) The `route` langCode used to map translations, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
 
 #### `I18nProvider`
 
