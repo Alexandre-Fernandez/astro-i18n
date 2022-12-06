@@ -28,7 +28,7 @@ export type InterpolationFormatter = (
 ) => string
 
 export type InterpolationArgument = {
-	getter: (options: TranslationOptions[string]) => unknown
+	getter: (options: Record<string, unknown>) => unknown
 	name?: string
 }
 
@@ -63,17 +63,3 @@ export type FullRouteTranslationMap = {
 }
 
 export type CodeFormat = "ESM" | "CJS"
-
-// overridden by generators (for `l` and `t` functions)
-
-export type RouteUri = string
-
-export type RouteParams = {
-	[key: string]: undefined | Record<string, string>
-}
-
-export type TranslationPath = string
-
-export type TranslationOptions = {
-	[key: string]: undefined | Record<string, string | number | unknown>
-}

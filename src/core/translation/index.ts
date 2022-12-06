@@ -11,15 +11,13 @@ import type {
 	ParsedFormatter,
 	ParsedInterpolation,
 	TranslationKey,
-	TranslationOptions,
-	TranslationPath,
 	TranslationVariant,
 } from "$src/types/app"
 import type { Translation, TranslationMap } from "$src/types/config"
 
-export function t<Key extends TranslationPath>(
-	path: Key,
-	options?: TranslationOptions[Key],
+export function t(
+	path: string,
+	options?: Record<string, unknown>,
 	langCode = astroI18n.langCode,
 ) {
 	if (!options) {
@@ -172,7 +170,7 @@ function calculateVariantScore(
  */
 function replaceInterpolations(
 	translationValue: string,
-	options: TranslationOptions[string],
+	options: Record<string, unknown>,
 ) {
 	const interpolations = parseInterpolations(translationValue)
 	if (interpolations.length === 0) return translationValue
@@ -216,7 +214,7 @@ function replaceInterpolations(
 function getFormattedValue(
 	value: unknown,
 	parsedFormatters: ParsedFormatter[],
-	options: TranslationOptions[string],
+	options: Record<string, unknown>,
 	availableFormatters = astroI18n.formatters,
 ) {
 	return String(
