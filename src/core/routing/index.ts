@@ -60,7 +60,8 @@ export function appendQueryString(url: string, query: Record<string, string>) {
 }
 
 /**
- * Internal function for `l`, can be used with routes or paths.
+ * Old translation function, refactor this to specialize in file path
+ * translations.
  */
 export function translatePath(
 	route: string,
@@ -189,11 +190,11 @@ export function removeRouteLangCode(
 
 export function extractRouteLangCode(
 	route: string,
-	langCodes = astroI18n.langCodes,
 	fallbackLangCode = astroI18n.defaultLangCode,
+	langCodes = astroI18n.langCodes,
 ) {
 	return (
-		route.match(new RegExp(`^/?(${langCodes.join("|")})(?:/.+)?$`))?.[1] ||
+		route.match(new RegExp(`^/?(${langCodes.join("|")})(?:/.*)?$`))?.[1] ||
 		fallbackLangCode
 	)
 }

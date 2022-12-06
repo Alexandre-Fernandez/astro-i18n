@@ -75,7 +75,7 @@ class AstroI18n implements AstroI18nConfig {
 
 	internals() {
 		return {
-			init: this.#init,
+			init: this.#init.bind(this),
 			translationVariants: this.#translationVariants,
 			fullRouteTranslations: this.#fullRouteTranslations,
 		}
