@@ -420,6 +420,7 @@ A helper function to append a query string to a url/route.
 #### `astroI18n`
 
 This is where the [astro-i18n](https://github.com/alexandre-fernandez/astro-i18n) run-time state resides.
+The `langCode` gets updated thanks to `I18nProvider`, because of this it is only usable inside it (either in the template directly or in child components).
 
 -   `defaultLangCode`: see [configuration](#configuration).
 -   `supportedLangCodes`: see [configuration](#configuration).
@@ -442,10 +443,10 @@ The `t` function is the main function to translate, it can take up to three argu
 
 The `l` function is a function used to get translated routes, it can take up to four arguments.
 
--   `route`: The target route, e.g. `"/about"`.
+-   `route`: The route to translate, it can take parameters, e.g. `"/posts/[id]"`.
 -   `params`: (optional) An object containing all the `route`'s params.
 -   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
--   `routeLangCode`: (optional) The `route` langCode used to map translations, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
+-   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
 
 #### `I18nProvider`
 
