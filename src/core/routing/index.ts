@@ -129,6 +129,47 @@ export function translatePath(
 	return removeFromEnd(translatedPath, separator) || separator
 }
 
+export function createFullRouteTranslations({
+	defaultLangCode,
+	routeTranslations,
+}: AstroI18nConfig) {
+	const fullRouteTranslations: FullRouteTranslationMap = {
+		[defaultLangCode]: {},
+	}
+	const entries = Object.entries(routeTranslations).filter(
+		([langCode]) => langCode !== defaultLangCode,
+	)
+	for (const [langCode, translations] of entries) {
+		fullRouteTranslations[langCode] = {}
+
+		const langLessEntries = entries.filter(([lng]) => lng !== langCode)
+
+		for (const [defaultLangValue, langValue] of Object.entries(
+			translations,
+		)) {
+			// filling default lang translations
+			if (!fullRouteTranslations[defaultLangCode][defaultLangValue]) {
+				fullRouteTranslations[defaultLangCode][defaultLangValue] = {}
+			}
+			fullRouteTranslations[defaultLangCode][defaultLangValue][langCode] =
+				langValue
+
+			// adding current lang to default translation
+			fullRouteTranslations[langCode][langValue] = {
+				[defaultLangCode]: defaultLangValue,
+			}
+
+			// adding current lang to other translation
+			for (const [otherLangCode, otherTranslations] of langLessEntries) {
+				if (otherTranslations[defaultLangValue]) {
+					fullRouteTranslations[langCode][langValue][otherLangCode] =
+						otherTranslations[defaultLangValue]
+				}
+			}
+		}
+	}
+}
+
 function detectRouteLangCode(
 	routeSegments: string[],
 	fullRouteTranslations: FullRouteTranslationMap,
