@@ -1,16 +1,17 @@
 import { resolve, sep } from "node:path"
 import { isDirectory } from "$lib/filesystem"
 import { merge } from "$lib/object-literal"
+import type { Command } from "$lib/argv"
 import { astroRootNotFound, noAstroRoot } from "$src/cli/errors"
 import { loadAstroI18nConfig } from "$src/core/fs/config"
-import { removeRouteLangCode, translatePath } from "$src/core/routing"
+import { translatePath } from "$src/core/routing"
+import { removeRouteLangCode } from "$src/core/routing/lang.code"
 import { generatePageProxy } from "$src/core/fs/generators/page.proxy"
 import { generateAmbientType } from "$src/core/fs/generators/ambient.type"
 import {
 	getPagesDirectoryRootRelativePath,
 	getPagesMetadata,
 } from "$src/core/fs"
-import type { Command } from "$lib/argv"
 
 export const sync: Command = {
 	name: "sync",

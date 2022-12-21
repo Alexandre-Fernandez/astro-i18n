@@ -7,6 +7,7 @@ import type {
 	InterpolationFormatter,
 	TranslationVariant,
 } from "$src/types/app"
+import { extractRouteLangCode } from "$src/core/routing/lang.code"
 
 class AstroI18n implements AstroI18nConfig {
 	defaultLangCode: AstroI18nConfig["defaultLangCode"]
@@ -91,6 +92,23 @@ class AstroI18n implements AstroI18nConfig {
 
 	deleteFormatter(name: string) {
 		delete this.#formatters[name]
+	}
+
+	init(
+		Astro: { url: URL },
+		formatters?: Record<string, InterpolationFormatter>,
+	) {
+		let langCode = extractRouteLangCode(Astro.url.pathname, this.langCodes)
+		if (langCode && !this.langCodes.includes(langCode)) {
+			langCode = this.defaultLangCode
+		}
+		this.langCode = langCode || this.defaultLangCode
+
+		if (formatters) {
+			for (const [name, formatter] of Object.entries(formatters)) {
+				this.setFormatter(name, formatter)
+			}
+		}
 	}
 
 	#init(

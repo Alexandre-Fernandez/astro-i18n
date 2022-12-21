@@ -1,4 +1,6 @@
 import configSetup from "$src/hooks/config.setup"
+import astroI18n from "$src/core/state"
+import { extractRouteLangCode as internalExtractRouteLangCode } from "$src/core/routing/lang.code"
 import type { AstroIntegration } from "astro"
 
 /**
@@ -15,9 +17,11 @@ export default function i18n(astroI18nConfigFile = ""): AstroIntegration {
 	}
 }
 
-export { defineAstroI18nConfig } from "$src/core/fs/config"
+export function extractRouteLangCode(route: string) {
+	internalExtractRouteLangCode(route, astroI18n.langCodes)
+}
 
-export { extractRouteLangCode } from "$src/core/routing"
+export { defineAstroI18nConfig } from "$src/core/fs/config"
 
 export { default as astroI18n } from "$src/core/state"
 
