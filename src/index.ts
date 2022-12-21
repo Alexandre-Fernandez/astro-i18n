@@ -18,7 +18,11 @@ export default function i18n(astroI18nConfigFile = ""): AstroIntegration {
 }
 
 export function extractRouteLangCode(route: string) {
-	internalExtractRouteLangCode(route, astroI18n.langCodes)
+	const langCode = internalExtractRouteLangCode(route, astroI18n.langCodes)
+	if (!langCode && !astroI18n.showDefaultLangCode) {
+		return astroI18n.defaultLangCode
+	}
+	return langCode
 }
 
 export { defineAstroI18nConfig } from "$src/core/fs/config"
