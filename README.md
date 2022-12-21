@@ -214,15 +214,14 @@ Start translating.
 ```astro
 ---
 import { t, l } from "astro-i18n"
-import { I18nProvider } from "astro-i18n/components"
+import { astroI18n } from "astro-i18n/components"
 
+astroI18n.init(Astro)
 ---
 
-<I18nProvider>
-	<a href={ l("/about") }>
-		{ t("page.about") }
-	</a>
-</I18nProvider>
+<a href={ l("/about") }>
+	{ t("page.about") }
+</a>
 ```
 
 ## Reference
@@ -348,7 +347,7 @@ t("my.translation3", { name: "JoHn" }) // "My name is john."
 
 #### Formatters
 
-Formatters are functions that take the inserted value (or default value if none) and return a string. If there's more than one formatter for the same interpolation they will be chained. You can add custom formatters using [`astroI18n.init`](#init) or [astroI18n.addFormatter](#astroi18n).
+Formatters are functions that take the inserted value (or default value if none) and return a string. If there's more than one formatter for the same interpolation they will be chained. You can add custom formatters using [`astroI18n.init`](#astroi18n) or [astroI18n.addFormatter](#astroi18n).
 Just like the main interpolation value, formatters can also take variables that will be given at run-time through the `t` function options.
 
 ##### Example
@@ -420,13 +419,14 @@ A helper function to append a query string to a url/route.
 #### `astroI18n`
 
 This is where the [astro-i18n](https://github.com/alexandre-fernandez/astro-i18n) run-time state resides.
-The `langCode` gets updated thanks to `I18nProvider`, because of this it is only usable inside it (either in the template directly or in child components).
+The `langCode` gets updated thanks to `astroI18n.init`, because of this it is only usable after the function runs.
 
 -   `defaultLangCode`: see [configuration](#configuration).
 -   `supportedLangCodes`: see [configuration](#configuration).
 -   `showDefaultLangCode`: see [configuration](#configuration).
 -   `translations`: see [configuration](#configuration).
 -   `routeTranslations`: see [configuration](#configuration).
+-   `init`: A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one. You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
 -   `langCode`: The langCode for the current page.
 -   `langCodes`: A concatenation of `defaultLangCode` and `supportedLangCodes`.
 -   `getFormatter` / `setFormatter` / `deleteFormatter`: Functions to manage formatters.
@@ -447,11 +447,6 @@ The `l` function is a function used to get translated routes, it can take up to 
 -   `params`: (optional) An object containing all the `route`'s params.
 -   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
 -   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
-
-#### `init`
-
-A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one.
-You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
 
 #### `HrefLangs`
 
