@@ -68,16 +68,16 @@ node_modules/.bin/astro-i18n install
 deno run npm:astro-i18n install
 ```
 
-Wrap your application with [I18nProvider](#i18nprovider).
+Add `astroI18n.init(Astro)` at the start of your page's frontmatter.
 
 ```astro
 ---
-import { I18nProvider } from "astro-i18n/components"
+import { astroI18n } from "astro-i18n/components"
+
+astroI18n.init(Astro)
 ---
 
-<I18nProvider>
-	<MyApp />
-</I18nProvider>
+<MyApp />
 ```
 
 [Go to next step.](#configuration)
@@ -128,16 +128,16 @@ Add the following command to your scripts.
 }
 ```
 
-Wrap your application with [I18nProvider](#i18nprovider).
+Add `astroI18n.init(Astro)` at the start of your page's frontmatter.
 
 ```astro
 ---
-import { I18nProvider } from "astro-i18n/components"
+import { astroI18n } from "astro-i18n/components"
+
+astroI18n.init(Astro)
 ---
 
-<I18nProvider>
-	<MyApp />
-</I18nProvider>
+<MyApp />
 ```
 
 ### Configuration
@@ -348,7 +348,7 @@ t("my.translation3", { name: "JoHn" }) // "My name is john."
 
 #### Formatters
 
-Formatters are functions that take the inserted value (or default value if none) and return a string. If there's more than one formatter for the same interpolation they will be chained. You can add custom formatters using [I18nProvider](#i18nprovider) or [astroI18n.addFormatter](#astroi18n).
+Formatters are functions that take the inserted value (or default value if none) and return a string. If there's more than one formatter for the same interpolation they will be chained. You can add custom formatters using [`astroI18n.init`](#init) or [astroI18n.addFormatter](#astroi18n).
 Just like the main interpolation value, formatters can also take variables that will be given at run-time through the `t` function options.
 
 ##### Example
@@ -448,10 +448,10 @@ The `l` function is a function used to get translated routes, it can take up to 
 -   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
 -   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
 
-#### `I18nProvider`
+#### `init`
 
-An astro component meant to wrap your application, it will set [`astroI18n.langCode`](#astroi18n) to the current page one.
-You can pass an object containing your custom formatters for them to be available, e.g. `<I18nProvider formatters={{ myFormatter: (value) => String(value)}} />`.
+A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one.
+You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
 
 #### `HrefLangs`
 

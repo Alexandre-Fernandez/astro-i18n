@@ -129,6 +129,47 @@ export function translatePath(
 	return removeFromEnd(translatedPath, separator) || separator
 }
 
+export function createFullRouteTranslations({
+	defaultLangCode,
+	routeTranslations,
+}: AstroI18nConfig) {
+	const fullRouteTranslations: FullRouteTranslationMap = {
+		[defaultLangCode]: {},
+	}
+	const entries = Object.entries(routeTranslations).filter(
+		([langCode]) => langCode !== defaultLangCode,
+	)
+	for (const [langCode, translations] of entries) {
+		fullRouteTranslations[langCode] = {}
+
+		const langLessEntries = entries.filter(([lng]) => lng !== langCode)
+
+		for (const [defaultLangValue, langValue] of Object.entries(
+			translations,
+		)) {
+			// filling default lang translations
+			if (!fullRouteTranslations[defaultLangCode][defaultLangValue]) {
+				fullRouteTranslations[defaultLangCode][defaultLangValue] = {}
+			}
+			fullRouteTranslations[defaultLangCode][defaultLangValue][langCode] =
+				langValue
+
+			// adding current lang to default translation
+			fullRouteTranslations[langCode][langValue] = {
+				[defaultLangCode]: defaultLangValue,
+			}
+
+			// adding current lang to other translation
+			for (const [otherLangCode, otherTranslations] of langLessEntries) {
+				if (otherTranslations[defaultLangValue]) {
+					fullRouteTranslations[langCode][langValue][otherLangCode] =
+						otherTranslations[defaultLangValue]
+				}
+			}
+		}
+	}
+}
+
 function detectRouteLangCode(
 	routeSegments: string[],
 	fullRouteTranslations: FullRouteTranslationMap,
@@ -159,42 +200,4 @@ function detectRouteLangCode(
 		.sort((a, b) => b[1] - a[1])
 
 	return uniqueLangCodeScores.at(0)?.[0]
-}
-
-/**
- * Removes the lang code from a route.
- * **WARNING** the route needs to start with the lang code: `"en"` or
- * `"/en"`.
- */
-export function removeRouteLangCode(
-	route: string,
-	{ defaultLangCode, supportedLangCodes }: AstroI18nConfig,
-) {
-	if (route.startsWith("/")) {
-		for (const langCode of [defaultLangCode, ...supportedLangCodes]) {
-			const regex = new RegExp(`^/${langCode}(/)?`)
-			if (regex.test(route)) {
-				return route.replace(regex, "/")
-			}
-		}
-	} else {
-		for (const langCode of [defaultLangCode, ...supportedLangCodes]) {
-			const regex = new RegExp(`^${langCode}(/)?`)
-			if (regex.test(route)) {
-				return route.replace(regex, "")
-			}
-		}
-	}
-	return route
-}
-
-export function extractRouteLangCode(
-	route: string,
-	fallbackLangCode = astroI18n.defaultLangCode,
-	langCodes = astroI18n.langCodes,
-) {
-	return (
-		route.match(new RegExp(`^/?(${langCodes.join("|")})(?:/.*)?$`))?.[1] ||
-		fallbackLangCode
-	)
 }

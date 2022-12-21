@@ -4,6 +4,7 @@ import { loadAstroI18nConfig } from "$src/core/fs/config"
 import { getPagesMetadata } from "$src/core/fs"
 import { getTranslationVariants } from "$src/core/translation"
 import type { AstroHooks } from "$src/types/astro"
+import { createFullRouteTranslations } from "$src/core/routing"
 
 export default async function configSetup(
 	{
@@ -26,12 +27,15 @@ export default async function configSetup(
 	const stringifiedVariants = JSON.stringify(
 		getTranslationVariants(astroI18nConfig.translations),
 	)
+	const stringifiedFullRouteTranslations = JSON.stringify(
+		createFullRouteTranslations(astroI18nConfig),
+	)
 
 	injectScript(
 		"page-ssr",
 		[
 			'import { astroI18n } from "astro-i18n"',
-			`astroI18n.internals().init(${stringifiedConfig}, ${stringifiedVariants})`,
+			`astroI18n.internals().init(${stringifiedConfig}, ${stringifiedVariants}, ${stringifiedFullRouteTranslations})`,
 		].join(";"),
 	)
 }
