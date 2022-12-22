@@ -168,6 +168,7 @@ export function createFullRouteTranslations({
 			}
 		}
 	}
+	return fullRouteTranslations
 }
 
 function detectRouteLangCode(
