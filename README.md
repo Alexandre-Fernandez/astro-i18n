@@ -72,7 +72,7 @@ Add `astroI18n.init(Astro)` at the start of your page's frontmatter.
 
 ```astro
 ---
-import { astroI18n } from "astro-i18n/components"
+import { astroI18n } from "astro-i18n"
 
 astroI18n.init(Astro)
 ---
@@ -132,7 +132,7 @@ Add `astroI18n.init(Astro)` at the start of your page's frontmatter.
 
 ```astro
 ---
-import { astroI18n } from "astro-i18n/components"
+import { astroI18n } from "astro-i18n"
 
 astroI18n.init(Astro)
 ---
@@ -213,8 +213,7 @@ Start translating.
 
 ```astro
 ---
-import { t, l } from "astro-i18n"
-import { astroI18n } from "astro-i18n/components"
+import { astroI18n, t, l } from "astro-i18n"
 
 astroI18n.init(Astro)
 ---
