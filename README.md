@@ -478,6 +478,10 @@ An astro component that will automatically generate hreflang tags for the curren
 | -------- | -------- | -------------- | --------------------------------------------------------------------------------------------- |
 | --config | -c       | Project's root | A custom path relative from the project's root where you want your astro-i18n config created. |
 
+#### `astro-i18n extract:keys`
+
+-   Generates a json file containing all the pure `string` translation keys you used with the [`t`](#t) function in the `src` directory.
+
 ## Contributors
 
 <table>
