@@ -19,6 +19,7 @@ const commands = {
 	scripts: {
 		"i18n:install": "astro-i18n install",
 		"i18n:sync": "astro-i18n sync",
+		"i18n:extract:keys": "astro-i18n extract:keys",
 	},
 }
 

@@ -7,6 +7,7 @@ export const TSCONFIG_JSON = "tsconfig.json"
 export const PATH_SEPARATOR = "."
 export const ASTRO_I18N_DIRECTORY = `.${PACKAGE_NAME}`
 export const GENERATED_DTS = `generated.d.ts`
+export const GENERATED_EXTRACTED_KEYS = `generated.keys.json`
 export const ASTRO_ENV_DTS = "env.d.ts"
 export const ASTRO_CONFIG = "astro.config"
 export const ASTRO_I18N_DEFAULT_IMPORT = "i18n"

@@ -237,6 +237,9 @@ function getTranslationValue(
 	langCode = astroI18n.langCode,
 	translations = astroI18n.translations,
 ) {
+	if (typeof translations[langCode][path] === "string") {
+		return translations[langCode][path] as string
+	}
 	const translation = splitTranslationPath(path).reduce((prev, prop) => {
 		if (prev === undefined) return undefined
 		if (typeof prev === "string") return prev

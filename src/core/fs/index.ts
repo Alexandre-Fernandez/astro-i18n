@@ -104,13 +104,6 @@ export function getPagesMetadata(
 						)
 					merge(translations, pageTranslations)
 					merge(routeTranslations, pageRouteTranslations)
-					/*
-						[post]
-						blog
-						integrations
-						showcase
-						index
-					*/
 				}
 			}
 		},
