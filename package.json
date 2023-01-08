@@ -46,8 +46,7 @@
 		"build:types": "tsc --project tsconfig.json",
 		"build:core": "node esbuild/core.cjs",
 		"build:cli": "node esbuild/cli.cjs",
-		"build:astro": "node esbuild/astro.cjs && cpy 'src/astro/*.astro' dist/src/astro",
-		"move": "npm run build:core && npm run build:cli && npm pack && mv ./astro-i18n-1.5.0.tgz /media/data/dev/web/repos/astro-test"
+		"build:astro": "node esbuild/astro.cjs && cpy 'src/astro/*.astro' dist/src/astro"
 	},
 	"devDependencies": {
 		"@types/node": "^18.8.5",
