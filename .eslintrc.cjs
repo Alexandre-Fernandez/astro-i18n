@@ -39,6 +39,7 @@ module.exports = {
 		"eslint-comments/no-use": "warn",
 		"filenames/match-regex": "off",
 		"i18n-text/no-en": "off",
+		"import/no-cycle": "off",
 		"import/no-unresolved": "error",
 		"import/no-namespace": "off",
 		"import/extensions": "off",
