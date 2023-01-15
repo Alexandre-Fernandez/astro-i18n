@@ -428,6 +428,8 @@ The `langCode` gets updated thanks to `astroI18n.init`, because of this it is on
 -   `init`: A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one. You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
 -   `langCode`: The langCode for the current page.
 -   `langCodes`: A concatenation of `defaultLangCode` and `supportedLangCodes`.
+-   `addTranslations`: Adds translations at runtime, see [configuration](#configuration).
+-   `addRouteTranslations`: Adds route translations at runtime, see [configuration](#configuration).
 -   `getFormatter` / `setFormatter` / `deleteFormatter`: Functions to manage formatters.
 
 #### `t`
