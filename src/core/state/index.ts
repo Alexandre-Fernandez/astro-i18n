@@ -8,6 +8,9 @@ import type {
 	TranslationVariant,
 } from "$src/types/app"
 import { extractRouteLangCode } from "$src/core/routing/lang.code"
+import { getTranslationVariants } from "$src/core/translation"
+import { merge } from "$lib/object-literal"
+import { createFullRouteTranslations } from "$src/core/routing"
 
 class AstroI18n implements AstroI18nConfig {
 	defaultLangCode: AstroI18nConfig["defaultLangCode"]
@@ -80,6 +83,23 @@ class AstroI18n implements AstroI18nConfig {
 			translationVariants: this.#translationVariants,
 			fullRouteTranslations: this.#fullRouteTranslations,
 		}
+	}
+
+	addTranslations(translations: AstroI18nConfig["translations"]) {
+		const translationsVariants = getTranslationVariants(translations)
+		merge(this.translations, translations)
+		merge(this.#translationVariants, translationsVariants)
+	}
+
+	addRouteTranslations(
+		routeTranslations: AstroI18nConfig["routeTranslations"],
+	) {
+		const fullRouteTranslations = createFullRouteTranslations({
+			...this,
+			routeTranslations,
+		})
+		merge(this.routeTranslations, routeTranslations)
+		merge(this.#fullRouteTranslations, fullRouteTranslations)
 	}
 
 	getFormatter(name: string): InterpolationFormatter | undefined {
