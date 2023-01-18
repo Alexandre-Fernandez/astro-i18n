@@ -49,5 +49,8 @@ function getTAlias(code: string) {
 }
 
 function getFunctionPattern(fnName: string) {
-	return new RegExp(`${fnName}\\(["']([\\s\\S]+?)["']\\)`, "g")
+	return new RegExp(
+		`${fnName}\\((?:\\s+)?["']([\\s\\S]+?)["'](?:\\s+)?\\)`,
+		"g",
+	)
 }
