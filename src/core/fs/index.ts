@@ -282,9 +282,10 @@ function getIgnoredLangDirectoryPatterns(
  * See implementation for more details.
  */
 function regexPathNotStartsWith(string: string, base = "") {
+	const regexSep = sep === "/" ? sep : `\\\\`
 	let prefix = base
-	if (prefix.at(-1) !== sep) prefix = `${prefix}${sep}`
-	return new RegExp(`${prefix}(?!(${string}$)|(${string}${sep}(.+)?))`)
+	if (prefix.at(-1) !== sep) prefix = `${prefix}${regexSep}`
+	return new RegExp(`${prefix}(?!(${string}$)|(${string}${regexSep}(.+)?))`)
 }
 
 /**
@@ -293,9 +294,10 @@ function regexPathNotStartsWith(string: string, base = "") {
  * See implementation for more details.
  */
 function regexPathStartsWith(string: string, base = "") {
+	const regexSep = sep === "/" ? sep : `\\\\`
 	let prefix = base
-	if (prefix.at(-1) !== sep) prefix = `${prefix}${sep}`
-	return new RegExp(`${prefix}(?=(${string}$)|(${string}${sep}(.+)?))`)
+	if (prefix.at(-1) !== sep) prefix = `${prefix}${regexSep}`
+	return new RegExp(`${prefix}(?=(${string}$)|(${string}${regexSep}(.+)?))`)
 }
 
 /**
