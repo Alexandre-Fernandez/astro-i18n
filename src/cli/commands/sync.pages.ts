@@ -27,7 +27,7 @@ export async function executeSyncPages(
 		config?: string[]
 	},
 ) {
-	const root = args.at(0) ?? process.env.PWD
+	const root = args.at(0) ?? process.cwd()
 	if (!root) throw noAstroRoot()
 	const pages = resolve(root, getPagesDirectoryRootRelativePath())
 	const config = options.config?.at(0) && resolve(root, options.config[0])

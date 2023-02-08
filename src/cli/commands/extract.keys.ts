@@ -12,7 +12,7 @@ export const extractKeys: Command = {
 }
 
 export async function executeExtractKeys(args: string[]) {
-	const root = args.at(0) ?? process.env.PWD
+	const root = args.at(0) ?? process.cwd()
 	if (!root) throw noAstroRoot()
 	const pages = resolve(root, getPagesDirectoryRootRelativePath())
 	if (!isDirectory(pages)) throw astroRootNotFound(pages)
