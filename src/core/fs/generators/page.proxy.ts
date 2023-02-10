@@ -1,4 +1,4 @@
-import { join, sep } from "node:path"
+import { join, posix, sep } from "node:path"
 import {
 	removeLeadingSep,
 	removeTrailingSep,
@@ -15,7 +15,10 @@ export function generatePageProxy(
 		0,
 		removeLeadingSep(removeTrailingSep(proxyPath)).split(sep).length - 1,
 	)
-	const importPath = `"${join("../".repeat(depth), pagePath)}"\n\n`
+	const importPath = `"${posix.join(
+		"../".repeat(depth),
+		pagePath.replaceAll("\\", "/"),
+	)}"\n\n`
 
 	let pageProxy = `---\nimport Page from ${importPath}`
 	if (importGetStaticPaths) {

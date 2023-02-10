@@ -1,4 +1,4 @@
-import { resolve, sep } from "node:path"
+import { resolve, posix } from "node:path"
 import { isDirectory } from "$lib/filesystem"
 import { merge } from "$lib/object-literal"
 import type { Command } from "$lib/argv"
@@ -51,7 +51,7 @@ export async function executeSync(
 			generatePageProxy(
 				pagesMetadata.directory,
 				page.path,
-				translatePath(page.path, langCode, astroI18nConfig, sep),
+				translatePath(page.path, langCode, astroI18nConfig, posix.sep),
 				page.hasGetStaticPaths,
 			)
 		}
