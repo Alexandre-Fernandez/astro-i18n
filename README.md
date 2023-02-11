@@ -499,6 +499,16 @@ An astro component that will automatically generate hreflang tags for the curren
 					</figure>
 				</a>
 			</td>
+			<td align="center">
+				<a href="https://github.com/FabianLars">
+					<figure>
+						<img src="https://avatars.githubusercontent.com/u/30730186?v=4?s=100" width="100px;"
+							alt="Fabian Lars">
+						<br />
+						<figcaption><sub>Fabian Lars</sub></figcaption>
+					</figure>
+				</a>
+			</td>
 		</tr>
 	</tbody>
 </table>
