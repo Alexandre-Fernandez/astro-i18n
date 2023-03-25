@@ -147,8 +147,6 @@ function routeParamsRecord(params: string[] = []) {
 
 // TRANSLATIONS
 
-// FIX LINT
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function getTranslationTypes(translations: TranslationMap) {
 	const paths = new Set<string>()
 	const options: {

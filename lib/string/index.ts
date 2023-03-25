@@ -35,7 +35,6 @@ export function splitAfter(
  * Concatenates `string1` and `string2` with `glue` in the middle, if `string1`
  * ends with `glue` it gets removed, the same goes for the beginning of `string2`.
  */
-// eslint-disable-next-line no-shadow
 export function glue(string1: string, glue: string, string2: string) {
 	const start = string1.endsWith(glue)
 		? string1.slice(0, -glue.length)

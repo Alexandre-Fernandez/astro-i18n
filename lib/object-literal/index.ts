@@ -84,7 +84,8 @@ export function clone<T>(object: T): T {
 		}) as T
 	}
 	return objectEntries(object as any).reduce((cloned, [key, value]) => {
-		;(cloned as any)[key] = clone(value)
+		const obj = cloned as any
+		obj[key] = clone(value)
 		return cloned
 	}, {} as T)
 }
