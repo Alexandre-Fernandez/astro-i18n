@@ -42,7 +42,7 @@ const defaultConfig: AstroI18nConfig = {
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
-	trailingSlash: undefined,
+	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
 }
