@@ -16,7 +16,8 @@ export function l(
 	targetLangCode = astroI18n.langCode,
 	routeLangCode = "",
 ) {
-	const { langCodes, defaultLangCode, showDefaultLangCode } = astroI18n
+	const { langCodes, defaultLangCode, showDefaultLangCode, trailingSlash } =
+		astroI18n
 	const { fullRouteTranslations } = astroI18n.internals()
 
 	const segments = trimString(route, "/").split("/")
@@ -51,7 +52,7 @@ export function l(
 	if (showDefaultLangCode || targetLangCode !== defaultLangCode) {
 		return `/${targetLangCode}/${translatedRoute}`
 	}
-	return `/${translatedRoute}`
+	return `/${translatedRoute}${trailingSlash === "always" ?? "/"}`
 }
 
 export function appendQueryString(url: string, query: Record<string, string>) {
