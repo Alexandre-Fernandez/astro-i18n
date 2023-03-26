@@ -23,7 +23,20 @@ export default async function configSetup(
 	merge(astroI18nConfig.routeTranslations, pagesMetadata.routeTranslations)
 	merge(astroI18nConfig.translations, pagesMetadata.translations)
 
-	if (astroConfig.trailingSlash !== "ignore") {
+	if (
+		astroI18nConfig.trailingSlash !== undefined &&
+		astroConfig.trailingSlash !== "ignore" &&
+		astroI18nConfig.trailingSlash !== astroConfig.trailingSlash
+	) {
+		console.warn(
+			`'trailingSlash' in Astro config and astro-i18n config do not match. Using '${astroI18nConfig.trailingSlash}' from astro-i18n config.`,
+		)
+	}
+
+	if (
+		astroI18nConfig.trailingSlash === undefined &&
+		astroConfig.trailingSlash !== "ignore"
+	) {
 		astroI18nConfig.trailingSlash = astroConfig.trailingSlash
 	}
 
