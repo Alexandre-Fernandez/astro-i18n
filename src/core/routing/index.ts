@@ -53,8 +53,6 @@ export function l(
 		return `/${targetLangCode}/${translatedRoute}`
 	}
 
-	// FIXME: `trailingSlash` from state isn't matching the config
-	console.log(trailingSlash)
 	return `/${translatedRoute}${trailingSlash === "always" ? "/" : ""}`
 }
 
