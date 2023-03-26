@@ -103,6 +103,7 @@ export default defineAstroI18nConfig({
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
+	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
 })
@@ -157,6 +158,13 @@ This is an empty array by default.
 This will control the visibility of the `defaultLangCode` in the URL.
 If `defaultLangCode` is `en` and if `showDefaultLangCode` is true your index page will be `/en` instead of `/`.
 It's false by default.
+
+#### `trailingSlash`
+
+Determines if trailing slashes should be included in URLs or not.
+Possible values are `always` and `never`.
+Values of `always` or `never` in the [Astro config `trailingSlash` property](https://docs.astro.build/en/reference/configuration-reference/#trailingslash) will be automatically used (and will take priority over the astro-i18n config).
+It defaults to `never`.
 
 #### `translations`
 
@@ -423,6 +431,7 @@ The `langCode` gets updated thanks to `astroI18n.init`, because of this it is on
 -   `defaultLangCode`: see [configuration](#configuration).
 -   `supportedLangCodes`: see [configuration](#configuration).
 -   `showDefaultLangCode`: see [configuration](#configuration).
+-   `trailingSlash`: see [configuration](#configuration).
 -   `translations`: see [configuration](#configuration).
 -   `routeTranslations`: see [configuration](#configuration).
 -   `init`: A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one. You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
@@ -506,6 +515,16 @@ An astro component that will automatically generate hreflang tags for the curren
 							alt="Fabian Lars">
 						<br />
 						<figcaption><sub>Fabian Lars</sub></figcaption>
+					</figure>
+				</a>
+			</td>
+			<td align="center">
+				<a href="https://github.com/lorenzolewis">
+					<figure>
+						<img src="https://avatars.githubusercontent.com/u/15347255?v=4?s=100" width="100px;"
+							alt="Lorenzo Lewis">
+						<br />
+						<figcaption><sub>Lorenzo Lewis</sub></figcaption>
 					</figure>
 				</a>
 			</td>
