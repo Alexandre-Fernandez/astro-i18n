@@ -52,7 +52,7 @@ export function l(
 	if (showDefaultLangCode || targetLangCode !== defaultLangCode) {
 		return `/${targetLangCode}/${translatedRoute}`
 	}
-	return `/${translatedRoute}${trailingSlash === "always" ?? "/"}`
+	return `/${translatedRoute}${trailingSlash === "always" ? "/" : ""}`
 }
 
 export function appendQueryString(url: string, query: Record<string, string>) {
