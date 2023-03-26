@@ -5,7 +5,7 @@ export type UninitializedAstroI18nConfig = {
 	defaultLangCode: string
 	supportedLangCodes: string[]
 	showDefaultLangCode: boolean
-	trailingSlash: "always" | "never" | undefined
+	trailingSlash: "always" | "never"
 	translations: UninitializedTranslationMap
 	routeTranslations: UninitializedRouteTranslationMap
 }
