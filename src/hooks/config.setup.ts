@@ -24,7 +24,7 @@ export default async function configSetup(
 	merge(astroI18nConfig.translations, pagesMetadata.translations)
 
 	if (
-		!astroI18nConfig.trailingSlash &&
+		// astroI18nConfig.trailingSlash === undefined &&
 		astroConfig.trailingSlash !== "ignore"
 	) {
 		astroI18nConfig.trailingSlash = astroConfig.trailingSlash
