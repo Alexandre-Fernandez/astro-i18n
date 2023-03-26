@@ -35,7 +35,8 @@ export default async function configSetup(
 
 	if (
 		astroI18nConfig.trailingSlash === undefined &&
-		astroConfig.trailingSlash !== "ignore"
+		(astroConfig.trailingSlash == "always" ||
+			astroConfig.trailingSlash == "never")
 	) {
 		astroI18nConfig.trailingSlash = astroConfig.trailingSlash
 	}
