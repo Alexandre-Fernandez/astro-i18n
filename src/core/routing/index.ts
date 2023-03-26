@@ -52,6 +52,7 @@ export function l(
 	if (showDefaultLangCode || targetLangCode !== defaultLangCode) {
 		return `/${targetLangCode}/${translatedRoute}`
 	}
+
 	return `/${translatedRoute}${trailingSlash === "always" ? "/" : ""}`
 }
 
