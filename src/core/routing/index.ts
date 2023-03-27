@@ -50,10 +50,14 @@ export function l(
 
 	// adding langCode back if needed
 	if (showDefaultLangCode || targetLangCode !== defaultLangCode) {
-		return `/${targetLangCode}/${translatedRoute}`
+		translatedRoute = `${targetLangCode}/${translatedRoute}`
+	}
+	// add trailing slash if enabled
+	if (trailingSlash === "always") {
+		translatedRoute = `${translatedRoute}/`
 	}
 
-	return `/${translatedRoute}${trailingSlash === "always" ? "/" : ""}`
+	return `/${translatedRoute}`
 }
 
 export function appendQueryString(url: string, query: Record<string, string>) {
