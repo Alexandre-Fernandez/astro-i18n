@@ -53,6 +53,7 @@ export async function executeSync(
 				page.path,
 				translatePath(page.path, langCode, astroI18nConfig, posix.sep),
 				page.hasGetStaticPaths,
+				page.hasPrerender,
 			)
 		}
 	}

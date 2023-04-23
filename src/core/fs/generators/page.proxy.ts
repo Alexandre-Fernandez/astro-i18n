@@ -10,6 +10,7 @@ export function generatePageProxy(
 	pagePath: string,
 	proxyPath: string,
 	importGetStaticPaths: boolean,
+	exportPrerender: boolean,
 ) {
 	const depth = Math.max(
 		0,
@@ -24,6 +25,10 @@ export function generatePageProxy(
 	if (importGetStaticPaths) {
 		pageProxy += `export { getStaticPaths } from ${importPath}`
 	}
+	if (exportPrerender) {
+		pageProxy += "export const prerender = true\n\n"
+	}
+
 	pageProxy += "const { props } = Astro\n---\n\n<Page {...props} />"
 
 	writeNestedFile(join(pagesDirectory, proxyPath), pageProxy)

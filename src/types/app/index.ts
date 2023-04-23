@@ -6,6 +6,7 @@ export type PageInfo = {
 	route: string
 	path: string
 	hasGetStaticPaths: boolean
+	hasPrerender: boolean
 }
 
 export type PagesMetadata = ReturnType<typeof getPagesMetadata>
