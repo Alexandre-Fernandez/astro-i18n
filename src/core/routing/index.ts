@@ -53,7 +53,7 @@ export function l(
 		translatedRoute = `${targetLangCode}/${translatedRoute}`
 	}
 	// add trailing slash if enabled
-	if (trailingSlash === "always") {
+	if (trailingSlash === "always" && !translatedRoute.endsWith("/")) {
 		translatedRoute = `${translatedRoute}/`
 	}
 
