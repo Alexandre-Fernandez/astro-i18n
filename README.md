@@ -103,7 +103,7 @@ export default defineAstroI18nConfig({
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
-	trailingSlash: "never",
+	trailingSlash: "ignore",
 	translations: {},
 	routeTranslations: {},
 })
@@ -163,8 +163,7 @@ It's false by default.
 
 Determines if trailing slashes should be included in URLs or not.
 Possible values are `always` and `never`.
-Values of `always` or `never` in the [Astro config `trailingSlash` property](https://docs.astro.build/en/reference/configuration-reference/#trailingslash) will be automatically used (and will take priority over the astro-i18n config).
-It defaults to `never`.
+It's `never` by default.
 
 #### `translations`
 

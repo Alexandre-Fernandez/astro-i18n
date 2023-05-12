@@ -54,7 +54,7 @@ export function assertIsPartialUninitializedAstroI18nConfig(
 		!(subject.trailingSlash == "always" || subject.trailingSlash == "never")
 	) {
 		throw new TypeError(
-			`${DEFAULT_CONFIG_NAME}.trailingSlash must be "always" or "never"`,
+			`${DEFAULT_CONFIG_NAME}.trailingSlash must be "always" or "never".`,
 		)
 	}
 

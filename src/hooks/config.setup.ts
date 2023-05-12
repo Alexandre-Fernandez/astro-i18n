@@ -23,13 +23,6 @@ export default async function configSetup(
 	merge(astroI18nConfig.routeTranslations, pagesMetadata.routeTranslations)
 	merge(astroI18nConfig.translations, pagesMetadata.translations)
 
-	if (
-		astroConfig.trailingSlash == "always" ||
-		astroConfig.trailingSlash == "never"
-	) {
-		astroI18nConfig.trailingSlash = astroConfig.trailingSlash
-	}
-
 	const stringifiedConfig = JSON.stringify(astroI18nConfig)
 	const stringifiedVariants = JSON.stringify(
 		getTranslationVariants(astroI18nConfig.translations),
