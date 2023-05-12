@@ -84,6 +84,7 @@ export function getPagesMetadata(
 						route,
 						path: "",
 						hasGetStaticPaths: false,
+						hasPrerender: false,
 					}
 				}
 
@@ -92,6 +93,7 @@ export function getPagesMetadata(
 					routePageInfo[route].path = relativePath
 					routePageInfo[route].hasGetStaticPaths =
 						hasGetStaticPaths(fullPath)
+					routePageInfo[route].hasPrerender = hasPrerender(fullPath)
 					routePageInfo[route].name = name
 				} else {
 					// translation directory
@@ -242,6 +244,21 @@ function hasGetStaticPaths(path: string) {
 			"export const getStaticPaths",
 			"export { getStaticPaths }",
 			"export {getStaticPaths}",
+		].some((searchString) => file.includes(searchString))
+	} catch (error) {
+		return false
+	}
+}
+
+function hasPrerender(path: string) {
+	try {
+		const file = readFileSync(path, "utf8")
+		return [
+			"export const prerender",
+			"export let prerender",
+			"export var prerender",
+			"export { prerender }",
+			"export {prerender}",
 		].some((searchString) => file.includes(searchString))
 	} catch (error) {
 		return false
