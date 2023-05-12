@@ -57,7 +57,11 @@ export function l(
 		translatedRoute = `${translatedRoute}/`
 	}
 
-	return `/${translatedRoute}`
+	if (!translatedRoute.startsWith("/")) {
+		translatedRoute = `/${translatedRoute}`
+	}
+
+	return translatedRoute
 }
 
 export function appendQueryString(url: string, query: Record<string, string>) {
