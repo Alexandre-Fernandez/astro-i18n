@@ -103,7 +103,7 @@ export default defineAstroI18nConfig({
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
-	trailingSlash: "ignore",
+	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
 })
