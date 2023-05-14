@@ -455,7 +455,7 @@ The `l` function is a function used to get translated routes, it can take up to 
 -   `route`: The route to translate, it can take parameters, e.g. `"/posts/[id]"`.
 -   `params`: (optional) An object containing all the `route`'s params.
 -   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
--   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
+-   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overridden and the auto-detection fails it will default to the `defaultLangCode`.
 
 #### `HrefLangs`
 
@@ -482,7 +482,7 @@ An astro component that will automatically generate hreflang tags for the curren
 #### `astro-i18n sync`
 
 -   Generates translated routes (`astro-i18n sync:pages`).
--   Generates types for your current translations & routet translations (`astro-i18n sync:types`).
+-   Generates types for your current translations & route translations (`astro-i18n sync:types`).
 
 | Option   | Shortcut | Default        | Description                                                                                   |
 | -------- | -------- | -------------- | --------------------------------------------------------------------------------------------- |
