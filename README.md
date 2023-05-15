@@ -103,6 +103,7 @@ export default defineAstroI18nConfig({
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
+	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
 })
@@ -157,6 +158,12 @@ This is an empty array by default.
 This will control the visibility of the `defaultLangCode` in the URL.
 If `defaultLangCode` is `en` and if `showDefaultLangCode` is true your index page will be `/en` instead of `/`.
 It's false by default.
+
+#### `trailingSlash`
+
+Determines if trailing slashes should be included in URLs or not.
+Possible values are `always` and `never`.
+It's `never` by default.
 
 #### `translations`
 
@@ -423,6 +430,7 @@ The `langCode` gets updated thanks to `astroI18n.init`, because of this it is on
 -   `defaultLangCode`: see [configuration](#configuration).
 -   `supportedLangCodes`: see [configuration](#configuration).
 -   `showDefaultLangCode`: see [configuration](#configuration).
+-   `trailingSlash`: see [configuration](#configuration).
 -   `translations`: see [configuration](#configuration).
 -   `routeTranslations`: see [configuration](#configuration).
 -   `init`: A function to initialize astro-i18n for the current request/page, it will set [`astroI18n.langCode`](#astroi18n) to the current one. You can pass an object containing your custom formatters for them to be available, e.g. `astroI18n.init(Astro, { myFormatter: (value) => String(value)})`.
@@ -447,7 +455,7 @@ The `l` function is a function used to get translated routes, it can take up to 
 -   `route`: The route to translate, it can take parameters, e.g. `"/posts/[id]"`.
 -   `params`: (optional) An object containing all the `route`'s params.
 -   `targetLangCode`: (optional) The target language, it will default to [`astroI18n.langCode`](#astroi18n).
--   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overriden and the auto-detection fails it will default to the `defaultLangCode`.
+-   `routeLangCode`: (optional) The `route` langCode, the `l` function will try to auto-detect it but you can override it here. If not overridden and the auto-detection fails it will default to the `defaultLangCode`.
 
 #### `HrefLangs`
 
@@ -474,7 +482,7 @@ An astro component that will automatically generate hreflang tags for the curren
 #### `astro-i18n sync`
 
 -   Generates translated routes (`astro-i18n sync:pages`).
--   Generates types for your current translations & routet translations (`astro-i18n sync:types`).
+-   Generates types for your current translations & route translations (`astro-i18n sync:types`).
 
 | Option   | Shortcut | Default        | Description                                                                                   |
 | -------- | -------- | -------------- | --------------------------------------------------------------------------------------------- |
@@ -506,6 +514,16 @@ An astro component that will automatically generate hreflang tags for the curren
 							alt="Fabian Lars">
 						<br />
 						<figcaption><sub>Fabian Lars</sub></figcaption>
+					</figure>
+				</a>
+			</td>
+			<td align="center">
+				<a href="https://github.com/lorenzolewis">
+					<figure>
+						<img src="https://avatars.githubusercontent.com/u/15347255?v=4?s=100" width="100px;"
+							alt="Lorenzo Lewis">
+						<br />
+						<figcaption><sub>Lorenzo Lewis</sub></figcaption>
 					</figure>
 				</a>
 			</td>

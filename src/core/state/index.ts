@@ -19,6 +19,8 @@ class AstroI18n implements AstroI18nConfig {
 
 	showDefaultLangCode: AstroI18nConfig["showDefaultLangCode"]
 
+	trailingSlash: AstroI18nConfig["trailingSlash"]
+
 	translations: AstroI18nConfig["translations"]
 
 	routeTranslations: AstroI18nConfig["routeTranslations"]
@@ -51,6 +53,7 @@ class AstroI18n implements AstroI18nConfig {
 		this.defaultLangCode = defaultConfig.defaultLangCode
 		this.supportedLangCodes = defaultConfig.supportedLangCodes
 		this.showDefaultLangCode = defaultConfig.showDefaultLangCode
+		this.trailingSlash = defaultConfig.trailingSlash
 		this.translations = defaultConfig.translations
 		this.routeTranslations = defaultConfig.routeTranslations
 		this.#langCode = this.defaultLangCode

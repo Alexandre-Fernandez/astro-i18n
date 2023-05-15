@@ -48,6 +48,16 @@ export function assertIsPartialUninitializedAstroI18nConfig(
 		)
 	}
 
+	// trailingSlash
+	if (
+		subject.trailingSlash !== undefined &&
+		!(subject.trailingSlash == "always" || subject.trailingSlash == "never")
+	) {
+		throw new TypeError(
+			`${DEFAULT_CONFIG_NAME}.trailingSlash must be "always" or "never".`,
+		)
+	}
+
 	// translations
 	if (subject.translations) {
 		assertIsUninitializedTranslationMap(

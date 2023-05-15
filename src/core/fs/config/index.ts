@@ -42,6 +42,7 @@ const defaultConfig: AstroI18nConfig = {
 	defaultLangCode: "en",
 	supportedLangCodes: [],
 	showDefaultLangCode: false,
+	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
 }
@@ -118,6 +119,7 @@ function initializeAstroI18nConfig(
 		defaultLangCode,
 		supportedLangCodes,
 		showDefaultLangCode,
+		trailingSlash,
 		translations,
 		routeTranslations,
 	}: Partial<UninitializedAstroI18nConfig> = {},
@@ -130,6 +132,7 @@ function initializeAstroI18nConfig(
 	if (showDefaultLangCode !== undefined) {
 		config.showDefaultLangCode = showDefaultLangCode
 	}
+	if (trailingSlash) config.trailingSlash = trailingSlash
 	if (root) {
 		const langCodes = [config.defaultLangCode, ...config.supportedLangCodes]
 		if (translations) {
