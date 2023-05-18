@@ -1,6 +1,6 @@
 {
 	"name": "astro-i18n",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"author": "alexandre-fernandez",
 	"description": "A TypeScript-first internationalization library for Astro.",
 	"keywords": [
