@@ -417,6 +417,7 @@ The `defineAstroI18nConfig` is an helper to give you autocompletion and type-saf
 #### `extractRouteLangCode`
 
 This function will extract a supported lang code (either the default one or one inside `supportedLangCodes`) from the given route.
+It can also be used to extract the page lang code inside getStaticPaths, for that you use it with `import.meta.url`.
 
 #### `appendQueryString`
 
@@ -460,6 +461,7 @@ The `l` function is a function used to get translated routes, it can take up to 
 #### `HrefLangs`
 
 An astro component that will automatically generate hreflang tags for the current page. This is used for SEO, add it to the `<head>` of your page.
+Import it from `"astro-i18n/components"`
 
 ---
 
