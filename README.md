@@ -417,7 +417,11 @@ The `defineAstroI18nConfig` is an helper to give you autocompletion and type-saf
 #### `extractRouteLangCode`
 
 This function will extract a supported lang code (either the default one or one inside `supportedLangCodes`) from the given route.
-It can also be used to extract the page lang code inside getStaticPaths, for that you use it with `import.meta.url`.
+
+#### `createStaticPaths`
+
+This function will create a getStaticPaths handler that provides the current page lang code inside the first function parameter.
+Example: `export const getStaticPaths = createStaticPaths(({langCode}) => { /* getStaticPaths logic... */ }, import.meta.url)`.
 
 #### `appendQueryString`
 

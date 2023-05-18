@@ -4,6 +4,7 @@ import {
 	removeTrailingSep,
 	writeNestedFile,
 } from "$lib/filesystem"
+import { PACKAGE_NAME } from "$src/constants"
 
 export function generatePageProxy(
 	pagesDirectory: string,
@@ -19,11 +20,11 @@ export function generatePageProxy(
 	const importPath = `"${posix.join(
 		"../".repeat(depth),
 		pagePath.replaceAll("\\", "/"),
-	)}"\n\n`
+	)}"\n`
 
 	let pageProxy = `---\nimport Page from ${importPath}`
 	if (importGetStaticPaths) {
-		pageProxy += `export { getStaticPaths } from ${importPath}`
+		pageProxy += getStaticPaths(importPath)
 	}
 	if (exportPrerender) {
 		pageProxy += "export const prerender = true\n\n"
@@ -32,4 +33,8 @@ export function generatePageProxy(
 	pageProxy += "const { props } = Astro\n---\n\n<Page {...props} />"
 
 	writeNestedFile(join(pagesDirectory, proxyPath), pageProxy)
+}
+
+function getStaticPaths(importPath: string) {
+	return `import { getStaticPaths as proxyGetStaticPaths } from ${importPath}import { extractRouteLangCode } from "${PACKAGE_NAME}"\n\n/* @ts-ignore */\nexport const getStaticPaths = (props) => proxyGetStaticPaths({\n\t...props,\n\tlangCode: extractRouteLangCode(import.meta.url),\n})\n\n`
 }

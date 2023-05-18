@@ -14,3 +14,8 @@ export type AstroHooks = {
 	"build:ssr": NonNullable<AstroIntegration["hooks"]["astro:build:ssr"]>
 	"build:done": NonNullable<AstroIntegration["hooks"]["astro:build:done"]>
 }
+
+export type GetStaticPathsProps = {
+	paginate: Function
+	rss: Function
+}
