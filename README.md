@@ -423,6 +423,12 @@ This function will extract a supported lang code (either the default one or one 
 This function will create a getStaticPaths handler that provides the current page lang code inside the first function parameter.
 Example: `export const getStaticPaths = createStaticPaths(({langCode}) => { /* getStaticPaths logic... */ }, import.meta.url)`.
 
+#### `renderContent`
+
+A replacement for the Astro's [render function](https://docs.astro.build/en/guides/content-collections/#rendering-content-to-html).
+There is a [issue](https://github.com/Alexandre-Fernandez/astro-i18n/issues/34#issuecomment-1553764243) with the native render function, you can use this replacement to achieve the same result.
+The only difference is that you'll get an HTML string instead of an Astro component. You can display it using `<div set:html={html} />`.
+
 #### `appendQueryString`
 
 A helper function to append a query string to a url/route.
