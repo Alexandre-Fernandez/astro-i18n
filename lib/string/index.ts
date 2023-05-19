@@ -1,3 +1,5 @@
+import latinMap from "$lib/string/latin"
+
 /**
  * @returns The rest of the `string` after `searchString`.
  */
@@ -133,4 +135,26 @@ export function getExecs(regex: RegExp, string: string) {
 	}
 
 	return execs
+}
+
+export function latinize(string: string) {
+	let result = ""
+	for (const char of string) {
+		result += latinMap[char] || char
+	}
+	return result
+}
+
+//
+const slugChars = new Set(
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
+)
+export function slugify(string: string) {
+	let slug = ""
+	for (const char of latinize(string).toLowerCase()) {
+		if (char === " ") slug += "-"
+		if (!slugChars.has(char)) continue
+		slug += char
+	}
+	return slug
 }

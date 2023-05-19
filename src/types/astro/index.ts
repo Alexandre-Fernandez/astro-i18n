@@ -19,3 +19,61 @@ export type GetStaticPathsProps = {
 	paginate: Function
 	rss: Function
 }
+
+export interface AstroContent {
+	id: string
+	collection: string
+	data: Record<string, any>
+	slug: string
+	body: string
+}
+
+export interface AstroGlobal {
+	clientAddress: string
+	cookies: AstroCookies
+	url: URL
+	params: Record<string, string | undefined>
+	props: Record<string, any>
+	request: Request
+	response: ResponseInit & {
+		readonly headers: Headers
+	}
+	redirect(path: string, status?: 301 | 302 | 303 | 307 | 308): Response
+	slots: Record<string, true | undefined> & {
+		has(slotName: string): boolean
+		render(slotName: string, args?: any[]): Promise<string>
+	}
+	site: URL | undefined
+	generator: string
+	__renderMarkdown?: (md: string) => Promise<string>
+}
+
+type AstroCookies = {
+	delete(
+		key: string,
+		options?: Pick<AstroCookieSetOptions, "domain" | "path">,
+	): void
+	get(key: string): {
+		value: string | undefined
+		json(): any
+		number(): number
+		boolean(): boolean
+	}
+	has(key: string): boolean
+	set(
+		key: string,
+		value: string | Record<string, any>,
+		options?: AstroCookieSetOptions,
+	): void
+	headers(): Generator<string, void, unknown>
+}
+
+interface AstroCookieSetOptions {
+	domain?: string
+	expires?: Date
+	httpOnly?: boolean
+	maxAge?: number
+	path?: string
+	sameSite?: boolean | "lax" | "none" | "strict"
+	secure?: boolean
+}
