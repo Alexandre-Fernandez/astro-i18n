@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: For feature requests use the discussions tab.
 title: ''
 labels: ''
 assignees: Alexandre-Fernandez
