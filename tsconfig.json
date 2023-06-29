@@ -1,38 +1,11 @@
 {
-	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"moduleResolution": "node",
-		"allowUnusedLabels": false,
-		"allowUnreachableCode": false,
-		"exactOptionalPropertyTypes": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"importsNotUsedAsValues": "error",
-		"checkJs": true,
-		"target": "ES6",
-		"emitDeclarationOnly": true,
-		"declaration": true,
-		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"$src": ["./src"],
-			"$src/*": ["./src/*"],
-			"$lib": ["./lib"],
-			"$lib/*": ["./lib/*"]
-		},
-		"plugins": [
-			{
-				"transform": "typescript-transform-paths",
-				"afterDeclarations": true
-			}
-		]
-	},
-	"include": ["src", "lib"]
+			"@lib": ["./astro-i18n/lib"],
+			"@lib/*": ["./astro-i18n/lib/*"],
+			"@src": ["./astro-i18n/src"],
+			"@src/*": ["./astro-i18n/src/*"]
+		}
+	}
 }

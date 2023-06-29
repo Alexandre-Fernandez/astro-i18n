@@ -1,0 +1,40 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": ["**/.env.*local"],
+	"pipeline": {
+		"lint": {},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", "!.next/cache/**"]
+		},
+		"patch": {
+			"cache": false
+		},
+		"minor": {
+			"cache": false
+		},
+		"major": {
+			"cache": false
+		},
+		"upload": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"publish:patch": {
+			"dependsOn": ["build", "patch", "upload"],
+			"cache": false
+		},
+		"publish:minor": {
+			"dependsOn": ["build", "minor", "upload"],
+			"cache": false
+		},
+		"publish:major": {
+			"dependsOn": ["build", "major", "upload"],
+			"cache": false
+		}
+	}
+}

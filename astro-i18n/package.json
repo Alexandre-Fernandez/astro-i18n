@@ -1,0 +1,55 @@
+{
+	"name": "astro-i18n",
+	"version": "1.8.1",
+	"author": "alexandre-fernandez",
+	"description": "A TypeScript-first internationalization library for Astro.",
+	"keywords": [
+		"astro",
+		"i18n",
+		"l10n",
+		"internationalization",
+		"localization",
+		"typescript",
+		"astro-component",
+		"seo",
+		"accessibility"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/alexandre-fernandez/astro-i18n",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexandre-fernandez/astro-i18n"
+	},
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs",
+		"patch": "npm version patch",
+		"minor": "npm version minor",
+		"major": "npm version major",
+		"upload": "node bin/pre-publish.cjs && npm publish ; node bin/post-publish.cjs",
+		"lint": "eslint --ignore-path .eslintignore ."
+	},
+	"dependencies": {
+		"get-file-exports": "latest"
+	},
+	"devDependencies": {
+		"@types/node": "^20.1.4",
+		"af-prettierrc": "^1.0.0",
+		"af-tsconfig": "^1.0.2",
+		"esbuild": "^0.17.18",
+		"eslint": "^8.40.0",
+		"eslint-config-af-typescript": "^1.6.0",
+		"tsc-alias": "^1.8.6",
+		"typescript": "^5.0.4"
+	},
+	"contributors": [
+		{
+			"name": "Alexandre Fernandez",
+			"url": "https://github.com/alexandre-fernandez"
+		}
+	]
+}

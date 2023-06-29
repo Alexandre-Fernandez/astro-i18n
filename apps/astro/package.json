@@ -1,0 +1,28 @@
+{
+	"name": "astro",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"devDependencies": {
+		"af-prettierrc": "^1.0.0",
+		"af-tsconfig": "^1.0.2",
+		"astro": "^2.5.0",
+		"eslint": "^8.40.0",
+		"eslint-config-af-typescript": "^1.6.0",
+		"eslint-plugin-astro": "^0.27.0",
+		"prettier": "^2.8.8",
+		"prettier-plugin-astro": "^0.8.1"
+	},
+	"dependencies": {
+		"astro-i18n": "workspace:*"
+	},
+	"peerDependencies": {
+		"astro": "^2.5.0"
+	}
+}

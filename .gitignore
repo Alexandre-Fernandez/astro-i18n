@@ -1,4 +1,16 @@
-# Logs
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# logs
 logs
 *.log
 npm-debug.log*
@@ -7,7 +19,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Editor directories and files
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+*.local
+
+# turbo
+.turbo
+
+# vercel
+.vercel
+
+# editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -17,8 +44,14 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+*.pem
 
-# Custom
-node_modules
+# build
 dist
-*.local
+build
+
+# astro
+.astro/
+
+# backup
+*.bk
