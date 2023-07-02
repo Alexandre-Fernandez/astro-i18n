@@ -69,12 +69,48 @@ export function matchNull(string: string): ReturnType<Matcher> {
 	return null
 }
 
-export function matchObject() {
-	//
+export function matchObject(string: string): ReturnType<Matcher> {
+	if (!string.startsWith("{")) return null
+
+	let depth = 0
+	for (let i = 0; i < string.length; i += 1) {
+		const char = string[i]
+
+		if (char === "{") depth += 1
+		else if (char === "}") depth -= 1
+
+		if (depth === 0) {
+			const end = i + 1
+			return {
+				range: [0, end],
+				match: [string.slice(0, end)],
+			}
+		}
+	}
+
+	return null
 }
 
-export function matchArray() {
-	//
+export function matchArray(string: string) {
+	if (!string.startsWith("[")) return null
+
+	let depth = 0
+	for (let i = 0; i < string.length; i += 1) {
+		const char = string[i]
+
+		if (char === "[") depth += 1
+		else if (char === "]") depth -= 1
+
+		if (depth === 0) {
+			const end = i + 1
+			return {
+				range: [0, end],
+				match: [string.slice(0, end)],
+			}
+		}
+	}
+
+	return null
 }
 
 // {# 'default value'(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
