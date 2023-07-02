@@ -113,31 +113,6 @@ export function matchArray(string: string) {
 	return null
 }
 
-const val = {
-	name: undefined,
-	alias: "value",
-	default: {
-		getter: ({ nested }: Record<string, any>) => ({ var: nested }),
-		variables: ["nested"],
-	},
-	formatters: [
-		{
-			name: "formatter1",
-			arguments: [
-				{
-					name: undefined,
-					alias: "args",
-					default: {
-						getter: () => ({}),
-						variables: [],
-					},
-					formatters: [],
-				},
-			],
-		},
-	],
-}
-
 // {# {var: nested}(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
 
 // {# { prop: { val1: nestedVariable, val2: 1 }(value)>formatter1(args:{}) #}
