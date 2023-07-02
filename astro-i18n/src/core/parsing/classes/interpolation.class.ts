@@ -9,7 +9,7 @@ import {
 	matchString,
 	matchUndefined,
 	matchVariable,
-} from "@src/core/parsing/functions/matcher.functions"
+} from "@src/core/parsing/functions/matching.functions"
 import type {
 	InterpolationValue,
 	InterpolationFormatter,
