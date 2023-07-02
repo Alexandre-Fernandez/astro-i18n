@@ -1,12 +1,25 @@
 {
-	"extends": "af-tsconfig",
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@lib": ["../../astro-i18n/lib"],
-			"@lib/*": ["../../astro-i18n/lib/*"],
-			"@src": ["../../astro-i18n/src", "./src"],
-			"@src/*": ["../../astro-i18n/src/*", "./src/*"]
-		}
-	}
+  "extends": "af-tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "node16",
+    "paths": {
+      "@lib": [
+        "../../astro-i18n/lib"
+      ],
+      "@lib/*": [
+        "../../astro-i18n/lib/*"
+      ],
+      "@src": [
+        "../../astro-i18n/src",
+        "./src"
+      ],
+      "@src/*": [
+        "../../astro-i18n/src/*",
+        "./src/*"
+      ]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
 }

@@ -7,12 +7,13 @@
 		"dev": "astro dev",
 		"start": "astro dev",
 		"preview": "astro preview",
+		"build": "astro build",
 		"astro": "astro"
 	},
 	"devDependencies": {
 		"af-prettierrc": "^1.0.0",
 		"af-tsconfig": "^1.0.2",
-		"astro": "^2.5.0",
+		"astro": "^2.7.2",
 		"eslint": "^8.40.0",
 		"eslint-config-af-typescript": "^1.6.0",
 		"eslint-plugin-astro": "^0.27.0",
@@ -20,7 +21,12 @@
 		"prettier-plugin-astro": "^0.8.1"
 	},
 	"dependencies": {
-		"astro-i18n": "workspace:*"
+		"@astrojs/react": "^2.2.1",
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"astro-i18n": "workspace:*",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0"
 	},
 	"peerDependencies": {
 		"astro": "^2.5.0"
