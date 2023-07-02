@@ -7,3 +7,5 @@ export const VARNAME_PATTERN = RegexBuilder.fromRegex(FIRST_VARCHAR_PATTERN)
 	.build()
 
 export const NUMBER_PATTERN = new Regex(/\d+(?:\.\d+)?/)
+
+export const INTERPOLATION_PATTERN = new Regex(/{#(.+)#}/)
