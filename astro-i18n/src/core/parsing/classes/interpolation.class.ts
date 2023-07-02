@@ -68,8 +68,8 @@ class Interpolation {
 		return this
 	}
 
-	#parseInterpolation(raw: string) {
-		const rawValue = this.#parseRawValue(raw)
+	#parseInterpolation(trimmedInterpolation: string) {
+		const rawValue = this.#parseRawValue(trimmedInterpolation)
 	}
 
 	/**
