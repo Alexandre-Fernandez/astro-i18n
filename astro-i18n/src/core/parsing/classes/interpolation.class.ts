@@ -13,6 +13,7 @@ import {
 import type {
 	InterpolationValue,
 	InterpolationFormatter,
+	RawInterpolationValue,
 } from "@src/core/parsing/types"
 
 class Interpolation {
@@ -76,12 +77,13 @@ class Interpolation {
 	 * Separates the interpolation value string from `raw` and determines its
 	 * type.
 	 */
-	#parseRawValue(raw: string) {
+	#parseRawValue(raw: string): RawInterpolationValue {
 		let matched = matchUndefined(raw)
 		if (matched) {
 			return {
 				type: InterpolationValueType.Undefined,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -89,7 +91,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Null,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -97,7 +100,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Boolean,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -105,7 +109,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Number,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -113,7 +118,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Variable,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -121,7 +127,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.String,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -129,7 +136,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Object,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
@@ -137,7 +145,8 @@ class Interpolation {
 		if (matched) {
 			return {
 				type: InterpolationValueType.Array,
-				value: matched.match[0],
+				value: matched.match[0] || "💥",
+				end: matched.range[1],
 			}
 		}
 
