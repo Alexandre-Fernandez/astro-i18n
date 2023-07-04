@@ -41,9 +41,8 @@ class Interpolation {
 	 */
 	formatters: InterpolationFormatter[] = []
 
-	static fromString(raw: string) {
-		const trimmed = raw.trim()
-		return trimmed
+	constructor(interpolation: string) {
+		const trimmed = interpolation.trim()
 	}
 
 	setAlias(alias: string | null) {
