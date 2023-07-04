@@ -18,12 +18,6 @@ import type {
 
 class Interpolation {
 	/**
-	 * For `"{# myvar #}"`, `var` will be equal to `"myvar"`, for
-	 * `"{# 'text'(alias) #}"` it will be equal to `null`.
-	 */
-	var: string | null = null
-
-	/**
 	 * For `"{# myvar(somename) #}"` or `"{# 'text'(somename) #}"`, `alias`
 	 * will be equal to `"somename"`.
 	 */
@@ -32,9 +26,12 @@ class Interpolation {
 	/**
 	 * For `"{# { prop: nestedvar }(alias) #}"`, `value` will be equal to
 	 * `{ get: ({ nestedvar }) => ({ prop: nestedvar }), vars: ["nestedvar"] }`.
-	 * If `var` is not `null`, `value` will be null.
 	 */
-	value: InterpolationValue = null
+	value: InterpolationValue = {
+		raw: "undefined",
+		type: InterpolationValueType.Undefined,
+		get: () => undefined,
+	}
 
 	/**
 	 * For `"{# val>timify('Europe/Andorra'(tz), true)>uppercase #}"`,
@@ -47,11 +44,6 @@ class Interpolation {
 	static fromString(raw: string) {
 		const trimmed = raw.trim()
 		return trimmed
-	}
-
-	setVar(variable: string | null) {
-		this.var = variable
-		return this
 	}
 
 	setAlias(alias: string | null) {
@@ -71,6 +63,7 @@ class Interpolation {
 
 	#parseInterpolation(trimmedInterpolation: string) {
 		const rawValue = this.#parseRawValue(trimmedInterpolation)
+		// when parsing objects/arrays every new value is an interpolation
 	}
 
 	/**

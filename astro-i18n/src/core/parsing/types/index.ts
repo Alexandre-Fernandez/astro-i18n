@@ -18,12 +18,13 @@ export type RawInterpolationValue = {
 }
 
 export type InterpolationValue = {
+	raw: string
+	type: InterpolationValueType
 	get: (
 		options: Record<string, any>,
 		formatters: Record<string, Formatter>,
 	) => unknown
-	vars: string[]
-} | null
+}
 
 export type InterpolationFormatter = {
 	name: string
