@@ -18,7 +18,7 @@ export function matchInterpolationValue(
 	let matched = matchUndefined(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Undefined,
 			end: matched.range[1],
 		}
@@ -27,7 +27,7 @@ export function matchInterpolationValue(
 	matched = matchNull(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Null,
 			end: matched.range[1],
 		}
@@ -36,7 +36,7 @@ export function matchInterpolationValue(
 	matched = matchBoolean(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Boolean,
 			end: matched.range[1],
 		}
@@ -45,7 +45,7 @@ export function matchInterpolationValue(
 	matched = matchNumber(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Number,
 			end: matched.range[1],
 		}
@@ -54,7 +54,7 @@ export function matchInterpolationValue(
 	matched = matchVariable(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Variable,
 			end: matched.range[1],
 		}
@@ -63,7 +63,7 @@ export function matchInterpolationValue(
 	matched = matchString(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.String,
 			end: matched.range[1],
 		}
@@ -72,7 +72,7 @@ export function matchInterpolationValue(
 	matched = matchObject(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Object,
 			end: matched.range[1],
 		}
@@ -81,7 +81,7 @@ export function matchInterpolationValue(
 	matched = matchArray(interpolation)
 	if (matched) {
 		return {
-			value: matched.match[0] || "💥",
+			value: matched.match[0] || "🚫",
 			type: InterpolationValueType.Array,
 			end: matched.range[1],
 		}
