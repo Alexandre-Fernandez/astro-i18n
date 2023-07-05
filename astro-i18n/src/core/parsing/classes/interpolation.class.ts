@@ -1,6 +1,6 @@
 import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
-import { matchInterpolationValue } from "@src/core/parsing/functions/matching.functions"
+import { matchInterpolationValue } from "@src/core/parsing/functions/matching/interpolation.functions"
 import type { InterpolationFormatter, Formatter } from "@src/core/parsing/types"
 
 class Interpolation {

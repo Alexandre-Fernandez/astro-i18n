@@ -1,14 +1,17 @@
-import { RegexBuilder } from "@lib/regex"
 import {
-	NUMBER_PATTERN,
-	VARNAME_PATTERN,
-} from "@src/constants/patterns.constants"
-import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
-import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
+	matchArray,
+	matchBoolean,
+	matchNull,
+	matchNumber,
+	matchObject,
+	matchString,
+	matchUndefined,
+	matchVariable,
+} from "@src/core/parsing/functions/matching/primitives.functions"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
-import type { InterpolationValueMatch, Matcher } from "@src/core/parsing/types"
-
-// match interpolation
+import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
+import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
+import type { InterpolationValueMatch } from "@src/core/parsing/types"
 
 export function matchInterpolationValue(
 	interpolation: string,
@@ -88,120 +91,6 @@ export function matchInterpolationValue(
 	}
 
 	throw new UnknownValue(interpolation)
-}
-
-export function matchUndefined(string: string): ReturnType<Matcher> {
-	if (string.startsWith("undefined")) {
-		return {
-			range: [0, 9],
-			match: ["undefined"],
-		}
-	}
-
-	return null
-}
-
-export function matchNull(string: string): ReturnType<Matcher> {
-	if (string.startsWith("null")) {
-		return {
-			range: [0, 4],
-			match: ["null"],
-		}
-	}
-
-	return null
-}
-
-export function matchBoolean(string: string): ReturnType<Matcher> {
-	if (string.startsWith("true")) {
-		return {
-			range: [0, 4],
-			match: ["true"],
-		}
-	}
-
-	if (string.startsWith("false")) {
-		return {
-			range: [0, 5],
-			match: ["false"],
-		}
-	}
-
-	return null
-}
-
-const numberMatcher: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)
-	.assertStarting()
-	.build()
-	.toMatcher()
-export function matchNumber(string: string) {
-	return numberMatcher(string)
-}
-
-const variableMatcher: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
-	.assertStarting()
-	.build()
-	.toMatcher()
-export function matchVariable(string: string) {
-	return variableMatcher(string)
-}
-
-export function matchString(string: string): ReturnType<Matcher> {
-	const quoteType = string[0]
-	if (quoteType !== '"' && quoteType !== "'") return null
-
-	let end = string.slice(1).indexOf(quoteType)
-	if (end === -1) return null
-	end += 2 // adding first char back + last char
-
-	return {
-		range: [0, end],
-		match: [string.slice(0, end)],
-	}
-}
-
-export function matchObject(string: string): ReturnType<Matcher> {
-	if (!string.startsWith("{")) return null
-
-	let depth = 0
-	for (let i = 0; i < string.length; i += 1) {
-		const char = string[i]
-
-		if (char === "{") depth += 1
-		else if (char === "}") depth -= 1
-
-		if (depth === 0) {
-			const end = i + 1
-			return {
-				range: [0, end],
-				match: [string.slice(0, end)],
-			}
-		}
-	}
-
-	return null
-}
-
-export function matchArray(string: string): ReturnType<Matcher> {
-	if (!string.startsWith("[")) return null
-
-	let depth = 0
-	for (let i = 0; i < string.length; i += 1) {
-		const char = string[i]
-
-		if (char === "[") depth += 1
-		else if (char === "]") depth -= 1
-
-		if (depth === 0) {
-			const end = i + 1
-			return {
-				range: [0, end],
-				match: [string.slice(0, end)],
-			}
-		}
-	}
-
-	return null
 }
 
 // {# {var: nested}(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
