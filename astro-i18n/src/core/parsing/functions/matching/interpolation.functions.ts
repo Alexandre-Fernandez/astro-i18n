@@ -98,7 +98,7 @@ export function matchInterpolationValue(
 // {# { prop: { val1: nestedVariable, val2: 1 }(value)>formatter1(args:{}) #}
 
 /*
-const demo = "{ prop: 'my_value', prop2: { nested: 1, num: 2, deep: { done: true } } }"
+const demo = "{ prop: 'my_value', prop2: { nested: 1, num: 2, deep: { done: true } }, horizontal: true }"
 
 function parseObjectValue(value: string) {
     const result = {}
