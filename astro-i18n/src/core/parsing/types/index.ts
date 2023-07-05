@@ -8,6 +8,12 @@ export type Matcher = (string: string) => Match | null
 
 export type Formatter = (value: unknown) => unknown
 
+export type InterpolationValueMatch = {
+	type: InterpolationValueType
+	value: Match["match"][0]
+	end: Match["range"][1]
+}
+
 /**
  * Split string InterpolationValue with type
  */
@@ -21,7 +27,7 @@ export type InterpolationValue = {
 	raw: string
 	type: InterpolationValueType
 	get: (
-		options: Record<string, any>,
+		props: Record<string, any>,
 		formatters: Record<string, Formatter>,
 	) => unknown
 }

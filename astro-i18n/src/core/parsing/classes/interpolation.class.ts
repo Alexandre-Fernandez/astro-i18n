@@ -1,37 +1,28 @@
 import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
-import {
-	matchArray,
-	matchBoolean,
-	matchNull,
-	matchNumber,
-	matchObject,
-	matchString,
-	matchUndefined,
-	matchVariable,
-} from "@src/core/parsing/functions/matching.functions"
-import type {
-	InterpolationValue,
-	InterpolationFormatter,
-	RawInterpolationValue,
-} from "@src/core/parsing/types"
+import { matchInterpolationValue } from "@src/core/parsing/functions/matching.functions"
+import type { InterpolationFormatter, Formatter } from "@src/core/parsing/types"
 
 class Interpolation {
+	/**
+	 * The original interpolation string (trimmed).
+	 */
+	raw: string
+
+	/**
+	 * For `"{# { prop: nestedvar }(alias) #}"`, `value` will be equal to
+	 * `({ nestedvar }) => ({ prop: nestedvar })`.
+	 */
+	value: (
+		options: Record<string, any>,
+		formatters: Record<string, Formatter>,
+	) => unknown
+
 	/**
 	 * For `"{# myvar(somename) #}"` or `"{# 'text'(somename) #}"`, `alias`
 	 * will be equal to `"somename"`.
 	 */
 	alias: string | null = null
-
-	/**
-	 * For `"{# { prop: nestedvar }(alias) #}"`, `value` will be equal to
-	 * `{ get: ({ nestedvar }) => ({ prop: nestedvar }), vars: ["nestedvar"] }`.
-	 */
-	value: InterpolationValue = {
-		raw: "undefined",
-		type: InterpolationValueType.Undefined,
-		get: () => undefined,
-	}
 
 	/**
 	 * For `"{# val>timify('Europe/Andorra'(tz), true)>uppercase #}"`,
@@ -42,107 +33,62 @@ class Interpolation {
 	formatters: InterpolationFormatter[] = []
 
 	constructor(interpolation: string) {
-		const trimmed = interpolation.trim()
-	}
+		let current = interpolation.trim()
 
-	setAlias(alias: string | null) {
-		this.alias = alias
-		return this
-	}
+		this.raw = current
 
-	setValue(value: InterpolationValue) {
-		this.value = value
-		return this
-	}
+		const { value, type, end } = matchInterpolationValue(current)
 
-	setFormatters(formatters: InterpolationFormatter[]) {
-		this.formatters = formatters
-		return this
-	}
-
-	#parseInterpolation(trimmedInterpolation: string) {
-		const rawValue = this.#parseRawValue(trimmedInterpolation)
-		// when parsing objects/arrays every new value is an interpolation
-	}
-
-	/**
-	 * Separates the interpolation value string from `raw` and determines its
-	 * type.
-	 */
-	#parseRawValue(raw: string): RawInterpolationValue {
-		let matched = matchUndefined(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Undefined,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
+		switch (type) {
+			case InterpolationValueType.Undefined: {
+				this.value = () => undefined
+				break
+			}
+			case InterpolationValueType.Null: {
+				this.value = () => null
+				break
+			}
+			// @ts-expect-error
+			case InterpolationValueType.Boolean: {
+				if (value === "true") {
+					this.value = () => true
+					break
+				}
+				if (value === "false") {
+					this.value = () => false
+					break
+				}
+				// fallthrough
+			}
+			case InterpolationValueType.Number: {
+				this.value = () =>
+					value.includes(".")
+						? Number.parseFloat(value)
+						: Number.parseInt(value, 10)
+				break
+			}
+			case InterpolationValueType.Variable: {
+				this.value = (props) => props[value]
+				break
+			}
+			case InterpolationValueType.String: {
+				this.value = () => value.slice(1, -1)
+				break
+			}
+			case InterpolationValueType.Object: {
+				this.value = () => ({}) // parse object (every prop value = interpolation)
+				break
+			}
+			case InterpolationValueType.Array: {
+				this.value = () => [] // parse array (every prop value = interpolation)
+				break
+			}
+			default: {
+				throw new UnknownValue(value)
 			}
 		}
 
-		matched = matchNull(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Null,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchBoolean(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Boolean,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchNumber(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Number,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchVariable(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Variable,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchString(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.String,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchObject(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Object,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		matched = matchArray(raw)
-		if (matched) {
-			return {
-				type: InterpolationValueType.Array,
-				value: matched.match[0] || "💥",
-				end: matched.range[1],
-			}
-		}
-
-		throw new UnknownValue(raw)
+		current = current.slice(end) // slice processed value off
 	}
 }
 

@@ -3,7 +3,90 @@ import {
 	NUMBER_PATTERN,
 	VARNAME_PATTERN,
 } from "@src/constants/patterns.constants"
-import type { Matcher } from "@src/core/parsing/types"
+import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
+import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
+import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
+import type { InterpolationValueMatch, Matcher } from "@src/core/parsing/types"
+
+export function matchInterpolationValue(
+	interpolation: string,
+): InterpolationValueMatch {
+	if (/^\s/.test(interpolation)) throw new UntrimmedString(interpolation)
+
+	let matched = matchUndefined(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Undefined,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchNull(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Null,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchBoolean(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Boolean,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchNumber(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Number,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchVariable(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Variable,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchString(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.String,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchObject(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Object,
+			end: matched.range[1],
+		}
+	}
+
+	matched = matchArray(interpolation)
+	if (matched) {
+		return {
+			value: matched.match[0] || "💥",
+			type: InterpolationValueType.Array,
+			end: matched.range[1],
+		}
+	}
+
+	throw new UnknownValue(interpolation)
+}
 
 export function matchUndefined(string: string): ReturnType<Matcher> {
 	if (string.startsWith("undefined")) {
@@ -38,7 +121,7 @@ export function matchBoolean(string: string): ReturnType<Matcher> {
 	if (string.startsWith("false")) {
 		return {
 			range: [0, 5],
-			match: ["true"],
+			match: ["false"],
 		}
 	}
 
