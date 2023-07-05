@@ -8,6 +8,8 @@ import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
 import type { InterpolationValueMatch, Matcher } from "@src/core/parsing/types"
 
+// match interpolation
+
 export function matchInterpolationValue(
 	interpolation: string,
 ): InterpolationValueMatch {
@@ -128,15 +130,21 @@ export function matchBoolean(string: string): ReturnType<Matcher> {
 	return null
 }
 
-export const matchNumber: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)
+const numberMatcher: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)
 	.assertStarting()
 	.build()
 	.toMatcher()
+export function matchNumber(string: string) {
+	return numberMatcher(string)
+}
 
-export const matchVariable: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
+const variableMatcher: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
 	.assertStarting()
 	.build()
 	.toMatcher()
+export function matchVariable(string: string) {
+	return variableMatcher(string)
+}
 
 export function matchString(string: string): ReturnType<Matcher> {
 	const quoteType = string[0]
@@ -199,6 +207,43 @@ export function matchArray(string: string): ReturnType<Matcher> {
 // {# {var: nested}(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
 
 // {# { prop: { val1: nestedVariable, val2: 1 }(value)>formatter1(args:{}) #}
+
+/*
+const demo = "{ prop: 'my_value', prop2: { nested: 1, num: 2, deep: { done: true } } }"
+
+function parseObjectValue(value: string) {
+    const result = {}
+ 
+    let depth = 0
+    let isKey = true
+    let key = ""
+    for(let i = 0; i < value.length; i +=1 ) {
+        const char = value[i]
+
+        if (char === "{") {
+            depth += 1
+            continue
+        }
+		if (char === "}") {
+            depth -= 1
+            continue
+        }
+        if(char === ":" && isKey) {
+            isKey = false
+            continue
+        } 
+        if(depth > 1) continue
+        if(/\s/.test(char)) continue
+
+        if(isKey) {
+            key += char
+            console.log(key)
+            continue
+        }
+
+    }
+}
+*/
 
 //
 

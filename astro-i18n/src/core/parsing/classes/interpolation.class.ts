@@ -19,16 +19,13 @@ class Interpolation {
 	) => unknown
 
 	/**
-	 * For `"{# myvar(somename) #}"` or `"{# 'text'(somename) #}"`, `alias`
-	 * will be equal to `"somename"`.
+	 * For `"{# myvar(name) #}"` or `"{# 'text'(name) #}"`, `alias` will be
+	 * equal to `"name"`.
 	 */
 	alias: string | null = null
 
 	/**
-	 * For `"{# val>timify('Europe/Andorra'(tz), true)>uppercase #}"`,
-	 * `formatters` will be equal to `[{ name: "timify", arguments: [{ var:
-	 * null, alias: "tz", value: { get: () => "Europe/Andorra", vars: [] } },
-	 * { var: null, alias: null, value: { get: () => true, vars: [] } }] }]`.
+	 * For `"{# val>timify('Europe/Andorra'(tz), true)>uppercase #}"`
 	 */
 	formatters: InterpolationFormatter[] = []
 
@@ -89,6 +86,14 @@ class Interpolation {
 		}
 
 		current = current.slice(end) // slice processed value off
+	}
+
+	#parseObjectValue(value: string) {
+		//
+	}
+
+	#parseArrayValue() {
+		//
 	}
 }
 
