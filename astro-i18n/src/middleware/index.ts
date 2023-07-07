@@ -1,4 +1,4 @@
-import "@src/core/interpolation/classes/interpolation.class"
+import "@src/core/parsing/classes/interpolation.class"
 import type { AstroMiddleware } from "@src/types/astro"
 
 export const singleton = {

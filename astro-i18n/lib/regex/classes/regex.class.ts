@@ -9,6 +9,18 @@ class Regex {
 		this.regexp = new RegExp(regexp.source, regexp.flags)
 	}
 
+	static fromString(source: string, flags?: string) {
+		return new Regex(new RegExp(source, flags))
+	}
+
+	get source() {
+		return this.regexp.source
+	}
+
+	get flags() {
+		return this.regexp.flags
+	}
+
 	add(regexp: RegExp) {
 		this.regexp = new RegExp(
 			`${this.regexp.source}${regexp.source}`,

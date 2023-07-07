@@ -5,6 +5,16 @@ import {
 } from "@src/constants/patterns.constants"
 import type { Matcher } from "@src/core/parsing/types"
 
+const numberMatcher: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)
+	.assertStarting()
+	.build()
+	.toMatcher()
+
+const variableMatcher: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
+	.assertStarting()
+	.build()
+	.toMatcher()
+
 export function matchUndefined(string: string): ReturnType<Matcher> {
 	if (string.startsWith("undefined")) {
 		return {
@@ -45,18 +55,10 @@ export function matchBoolean(string: string): ReturnType<Matcher> {
 	return null
 }
 
-const numberMatcher: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)
-	.assertStarting()
-	.build()
-	.toMatcher()
 export function matchNumber(string: string) {
 	return numberMatcher(string)
 }
 
-const variableMatcher: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
-	.assertStarting()
-	.build()
-	.toMatcher()
 export function matchVariable(string: string) {
 	return variableMatcher(string)
 }
