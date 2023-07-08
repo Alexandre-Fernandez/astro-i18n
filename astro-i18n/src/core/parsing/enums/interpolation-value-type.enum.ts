@@ -1,4 +1,5 @@
 export enum InterpolationValueType {
+	Unknown,
 	Undefined,
 	Null,
 	Boolean,
