@@ -60,6 +60,10 @@ class Interpolation {
 		this.alias = alias
 	}
 
+	/**
+	 * Creates the interpolation value getter for the given `string`.
+	 * @param string for example: "{ prop: interpolationValue }".
+	 */
 	static #parseValue(string: string, type: InterpolationValueType) {
 		let value: Interpolation["value"]
 
@@ -115,6 +119,10 @@ class Interpolation {
 		return value
 	}
 
+	/**
+	 * Matches every part of an interpolation and returns them separately.
+	 * @param interpolation for example `"'value'(alias)>formatter(arg)"`.
+	 */
 	static #match(interpolation: string) {
 		interpolation = interpolation.trim()
 
@@ -167,10 +175,14 @@ class Interpolation {
 		}
 	}
 
-	static #matchValue(interpolation: string) {
-		if (/^\s/.test(interpolation)) throw new UntrimmedString(interpolation)
+	/**
+	 * Matches an interpolation's value.
+	 * @param value for example "`{ prop: varName }(alias)>formatter1...`"
+	 */
+	static #matchValue(value: string) {
+		if (/^\s/.test(value)) throw new UntrimmedString(value)
 
-		let matched = matchUndefined(interpolation)
+		let matched = matchUndefined(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -179,7 +191,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchNull(interpolation)
+		matched = matchNull(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -188,7 +200,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchBoolean(interpolation)
+		matched = matchBoolean(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -197,7 +209,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchNumber(interpolation)
+		matched = matchNumber(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -206,7 +218,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchVariable(interpolation)
+		matched = matchVariable(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -215,7 +227,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchString(interpolation)
+		matched = matchString(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -224,7 +236,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchObject(interpolation)
+		matched = matchObject(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -233,7 +245,7 @@ class Interpolation {
 			}
 		}
 
-		matched = matchArray(interpolation)
+		matched = matchArray(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
@@ -242,18 +254,32 @@ class Interpolation {
 			}
 		}
 
-		throw new UnknownValue(interpolation)
+		throw new UnknownValue(value)
 	}
 
-	static #matchAlias(string: string) {
-		return interpolationAliasMatcher(string)
+	/**
+	 * Matches an interpolation's alias.
+	 * @param alias gor example "`(alias_name)>formatter1...`"
+	 */
+	static #matchAlias(alias: string) {
+		return interpolationAliasMatcher(alias)
 	}
 
-	static #matchArgumentlessFormatter(string: string) {
-		return interpolationArgumentlessFormatterMatcher(string)
+	/**
+	 * Matches a formatter until its first parenthesis (start of arguments).
+	 * @param formatter for example `">formatter1("true, "arg2", 1.5)>formatter2..."`
+	 */
+	static #matchArgumentlessFormatter(formatter: string) {
+		return interpolationArgumentlessFormatterMatcher(formatter)
 	}
 
-	static #matchFormatterArguments(interpolation: string) {
+	/**
+	 * Matches the formatter's arguments until the end of the formatter
+	 * (closing `")"`).
+	 * @param args The formatter's arguments, starts after the first `"("`.
+	 * For example `"true, "arg2", 1.5)>formatter2..."`.
+	 */
+	static #matchFormatterArguments(args: string) {
 		const result = {
 			args: [] as string[],
 			end: 0,
@@ -262,8 +288,8 @@ class Interpolation {
 		let depth = 0
 		let current = ""
 		// eslint-disable-next-line unicorn/no-for-loop
-		for (let i = 0; i < interpolation.length; i += 1) {
-			const char = interpolation[i] || throwError(new UnreachableCode())
+		for (let i = 0; i < args.length; i += 1) {
+			const char = args[i] || throwError(new UnreachableCode())
 
 			if (char === "{" || char === "[") depth += 1
 			else if (char === "}" || char === "]") depth -= 1
