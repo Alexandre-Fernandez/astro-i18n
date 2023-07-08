@@ -85,12 +85,6 @@ export function matchInterpolation(interpolation: string) {
 	return result
 }
 
-const interpolation = matchInterpolation(
-	"  { test: myvar }  (   myalias  )   >formatter1([{arg1: nestedInterpolation>nf1()>nf2('')}], 'arg2')>formatter2('xd')         ",
-)
-
-console.log(interpolation)
-
 export function matchInterpolationFormatterArguments(interpolation: string) {
 	const result = {
 		args: [] as string[],
