@@ -8,6 +8,8 @@ export const VARNAME_PATTERN = RegexBuilder.fromRegex(FIRST_VARCHAR_PATTERN)
 
 export const NUMBER_PATTERN = new Regex(/\d+(?:\.\d+)?/)
 
+export const VARIANT_PATTERN = new Regex(/{{(.+)}}/)
+
 export const INTERPOLATION_PATTERN = new Regex(/{#(.+)#}/)
 
 export const INTERPOLATION_ALIAS_PATTERN = Regex.fromString(

@@ -39,6 +39,8 @@ const interpolationArgumentlessFormatterMatcher: Matcher =
 		.build()
 		.toMatcher()
 
+// TODO: make formatters accept parenthesisless names when no arguments are needed for example ">uppercase>lowercase"
+
 class Interpolation {
 	raw: string
 
