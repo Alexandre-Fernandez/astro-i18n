@@ -55,57 +55,64 @@ class Interpolation {
 
 		this.raw = raw
 
-		this.alias = alias
+		this.value = Interpolation.#parseValue(value, type)
 
-		// parsing value
+		this.alias = alias
+	}
+
+	static #parseValue(string: string, type: InterpolationValueType) {
+		let value: Interpolation["value"]
+
 		switch (type) {
 			case InterpolationValueType.Undefined: {
-				this.value = () => undefined
+				value = () => undefined
 				break
 			}
 			case InterpolationValueType.Null: {
-				this.value = () => null
+				value = () => null
 				break
 			}
 			// @ts-expect-error
 			case InterpolationValueType.Boolean: {
-				if (value === "true") {
-					this.value = () => true
+				if (string === "true") {
+					value = () => true
 					break
 				}
-				if (value === "false") {
-					this.value = () => false
+				if (string === "false") {
+					value = () => false
 					break
 				}
 				// fallthrough
 			}
 			case InterpolationValueType.Number: {
-				this.value = () =>
-					value.includes(".")
-						? Number.parseFloat(value)
-						: Number.parseInt(value, 10)
+				value = () =>
+					string.includes(".")
+						? Number.parseFloat(string)
+						: Number.parseInt(string, 10)
 				break
 			}
 			case InterpolationValueType.Variable: {
-				this.value = (props) => props[value]
+				value = (props) => props[string]
 				break
 			}
 			case InterpolationValueType.String: {
-				this.value = () => value.slice(1, -1)
+				value = () => string.slice(1, -1)
 				break
 			}
 			case InterpolationValueType.Object: {
-				this.value = () => ({}) // parse object (every prop value = interpolation)
+				value = () => ({}) // parse object (every prop value = interpolation)
 				break
 			}
 			case InterpolationValueType.Array: {
-				this.value = () => [] // parse array (every prop value = interpolation)
+				value = () => [] // parse array (every prop value = interpolation)
 				break
 			}
 			default: {
-				throw new UnknownValue(value)
+				throw new UnknownValue(string)
 			}
 		}
+
+		return value
 	}
 
 	static #match(interpolation: string) {
