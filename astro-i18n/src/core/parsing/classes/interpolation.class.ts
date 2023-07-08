@@ -68,8 +68,8 @@ class Interpolation {
 	}
 
 	/**
-	 * Creates the interpolation value getter for the given `string`.
-	 * @param string for example: "{ prop: interpolationValue }".
+	 * Creates the interpolation value for the given `value`.
+	 * @param value for example: "{ prop: interpolationValue }".
 	 */
 	static #parseValue(
 		value: string,
@@ -152,6 +152,9 @@ class Interpolation {
 		return parsed
 	}
 
+	/**
+	 * Creates the interpolation value of type object.
+	 */
 	static #parseObject(
 		object: string,
 		properties: Record<string, unknown>,
@@ -201,6 +204,9 @@ class Interpolation {
 		return parsed
 	}
 
+	/**
+	 * Creates the interpolation value of type array.
+	 */
 	static #parseArray(
 		array: string,
 		properties: Record<string, unknown>,
