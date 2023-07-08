@@ -64,10 +64,6 @@ class Interpolation {
 			availableFormatters,
 		)
 
-		console.log("---------------")
-		console.log("raw:", raw, ":")
-		console.log("value:", this.value)
-
 		this.alias = alias
 	}
 
@@ -103,7 +99,7 @@ class Interpolation {
 					parsed = false
 					break
 				}
-				// fallthrough
+				// fallthrough (default case if not true or false)
 			}
 			case InterpolationValueType.Number: {
 				parsed = value.includes(".")
@@ -128,7 +124,11 @@ class Interpolation {
 				break
 			}
 			case InterpolationValueType.Array: {
-				parsed = [] // parse array (every prop value = interpolation)
+				parsed = this.#parseArray(
+					value,
+					properties,
+					availableFormatters,
+				)
 				break
 			}
 			default: {
@@ -195,6 +195,45 @@ class Interpolation {
 			}
 
 			if (!isKey) value += char
+			return null
+		})
+
+		return parsed
+	}
+
+	static #parseArray(
+		array: string,
+		properties: Record<string, unknown>,
+		availableFormatters: Record<string, Formatter>,
+	) {
+		const parsed: unknown[] = []
+
+		let value = ""
+		depthAwareforEach(array, (char, _, depth, isOpening) => {
+			if (depth === 0) {
+				parsed.push(
+					new Interpolation(value, properties, availableFormatters)
+						.value,
+				)
+				return CALLBACK_BREAK
+			}
+
+			if (depth === 1) {
+				if (isOpening) return null // ignore opening bracket
+				if (char === ",") {
+					parsed.push(
+						new Interpolation(
+							value,
+							properties,
+							availableFormatters,
+						).value,
+					)
+					value = ""
+					return null
+				}
+			}
+
+			value += char
 			return null
 		})
 
@@ -395,27 +434,4 @@ class Interpolation {
 	}
 }
 
-// {# {var: nested}(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
-
 export default Interpolation
-
-const properties = { variableName: "MYVAR" }
-
-const formatters = {
-	formatter1: (item: any, ...args: any[]) => {
-		console.log("formatter1 args:", args)
-		console.log("formatter1 return:", item)
-		return item
-	},
-	formatter2: (item: any, ...args: any[]) => {
-		console.log("formatter2 args:", args)
-		console.log("formatter2 return:", item)
-		return item
-	},
-}
-
-const a = new Interpolation(
-	"{ prop1: 'prop1', prop2: { nested: variableName }}(myAlias)>formatter1([{ some: 'prop'}], false, 0.657)>formatter2(`a lot of text`, 'yes')",
-	properties,
-	formatters,
-)
