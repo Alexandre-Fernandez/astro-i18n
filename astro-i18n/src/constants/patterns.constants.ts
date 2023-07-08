@@ -14,8 +14,6 @@ export const INTERPOLATION_ALIAS_PATTERN = Regex.fromString(
 	`\\(\\s*(${VARNAME_PATTERN.source})\\s*\\)`,
 )
 
-export const INTERPOLATION_FORMATTER_PATTERN = Regex.fromString(
-	`>\\s*(${VARNAME_PATTERN.source})\\s*\\(.+\\)`,
+export const INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN = Regex.fromString(
+	`>\\s*(${VARNAME_PATTERN.source})\\s*\\(`,
 )
-
-console.log(INTERPOLATION_FORMATTER_PATTERN.source)
