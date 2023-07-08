@@ -7,6 +7,9 @@ import {
 import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
 import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
+import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
+import { CALLBACK_BREAK } from "@src/constants/app.constants"
+import UnreachableCode from "@src/errors/unreachable-code.error"
 import {
 	matchArray,
 	matchBoolean,
@@ -17,14 +20,11 @@ import {
 	matchUndefined,
 	matchVariable,
 } from "@src/core/parsing/functions/matching.functions"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import type {
 	Formatter,
 	Matcher,
 	FormatterMatch,
 } from "@src/core/parsing/types"
-import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
-import { CALLBACK_BREAK } from "@src/constants/app.constants"
 
 const interpolationAliasMatcher: Matcher = RegexBuilder.fromRegex(
 	INTERPOLATION_ALIAS_PATTERN,
