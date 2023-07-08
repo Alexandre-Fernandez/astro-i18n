@@ -95,8 +95,10 @@ export function matchInterpolationFormatterArguments(interpolation: string) {
 	let current = ""
 	// eslint-disable-next-line unicorn/no-for-loop
 	for (let i = 0; i < interpolation.length; i += 1) {
-		const char = interpolation[i]
-		if (!char) continue
+		const char =
+			interpolation[i] ||
+			new UnreachableCode(matchInterpolationFormatterArguments.name)
+				.message
 
 		if (char === "{" || char === "[") depth += 1
 		else if (char === "}" || char === "]") depth -= 1
