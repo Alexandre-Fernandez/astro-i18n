@@ -65,7 +65,7 @@ export function matchVariable(string: string) {
 
 export function matchString(string: string): ReturnType<Matcher> {
 	const quoteType = string[0]
-	if (quoteType !== '"' && quoteType !== "'") return null
+	if (quoteType !== '"' && quoteType !== "'" && quoteType !== "`") return null
 
 	let end = string.slice(1).indexOf(quoteType)
 	if (end === -1) return null

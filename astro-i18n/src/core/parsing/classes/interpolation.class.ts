@@ -19,10 +19,12 @@ import {
 } from "@src/core/parsing/functions/matching.functions"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import type {
-	InterpolationFormatter,
 	Formatter,
 	Matcher,
+	FormatterMatch,
 } from "@src/core/parsing/types"
+import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
+import { CALLBACK_BREAK } from "@src/constants/app.constants"
 
 const interpolationAliasMatcher: Matcher = RegexBuilder.fromRegex(
 	INTERPOLATION_ALIAS_PATTERN,
@@ -40,22 +42,31 @@ const interpolationArgumentlessFormatterMatcher: Matcher =
 class Interpolation {
 	raw: string
 
-	value: (
-		options: Record<string, any>,
-		formatters: Record<string, Formatter>,
-	) => unknown
+	value: unknown
 
 	alias: string | null = null
 
-	formatters: InterpolationFormatter[] = []
-
-	constructor(interpolation: string) {
+	constructor(
+		interpolation: string,
+		properties: Record<string, unknown>,
+		availableFormatters: Record<string, Formatter>,
+	) {
 		const { raw, value, type, alias, formatters } =
 			Interpolation.#match(interpolation)
 
 		this.raw = raw
 
-		this.value = Interpolation.#parseValue(value, type)
+		this.value = Interpolation.#parseValue(
+			value,
+			type,
+			formatters,
+			properties,
+			availableFormatters,
+		)
+
+		console.log("---------------")
+		console.log("raw:", raw, ":")
+		console.log("value:", this.value)
 
 		this.alias = alias
 	}
@@ -64,59 +75,130 @@ class Interpolation {
 	 * Creates the interpolation value getter for the given `string`.
 	 * @param string for example: "{ prop: interpolationValue }".
 	 */
-	static #parseValue(string: string, type: InterpolationValueType) {
-		let value: Interpolation["value"]
+	static #parseValue(
+		value: string,
+		type: InterpolationValueType,
+		formatters: FormatterMatch[],
+		properties: Record<string, unknown>,
+		availableFormatters: Record<string, Formatter>,
+	) {
+		let parsed: unknown
 
 		switch (type) {
 			case InterpolationValueType.Undefined: {
-				value = () => undefined
+				parsed = undefined
 				break
 			}
 			case InterpolationValueType.Null: {
-				value = () => null
+				parsed = null
 				break
 			}
 			// @ts-expect-error
 			case InterpolationValueType.Boolean: {
-				if (string === "true") {
-					value = () => true
+				if (value === "true") {
+					parsed = true
 					break
 				}
-				if (string === "false") {
-					value = () => false
+				if (value === "false") {
+					parsed = false
 					break
 				}
 				// fallthrough
 			}
 			case InterpolationValueType.Number: {
-				value = () =>
-					string.includes(".")
-						? Number.parseFloat(string)
-						: Number.parseInt(string, 10)
+				parsed = value.includes(".")
+					? Number.parseFloat(value)
+					: Number.parseInt(value, 10)
 				break
 			}
 			case InterpolationValueType.Variable: {
-				value = (props) => props[string]
+				parsed = properties[value]
 				break
 			}
 			case InterpolationValueType.String: {
-				value = () => string.slice(1, -1)
+				parsed = value.slice(1, -1)
 				break
 			}
 			case InterpolationValueType.Object: {
-				value = () => ({}) // parse object (every prop value = interpolation)
+				parsed = this.#parseObject(
+					value,
+					properties,
+					availableFormatters,
+				)
 				break
 			}
 			case InterpolationValueType.Array: {
-				value = () => [] // parse array (every prop value = interpolation)
+				parsed = [] // parse array (every prop value = interpolation)
 				break
 			}
 			default: {
-				throw new UnknownValue(string)
+				throw new UnknownValue(value)
 			}
 		}
 
-		return value
+		// chain formatters
+		for (const { name, args: rawArgs } of formatters) {
+			const formatter = availableFormatters[name]
+			if (!formatter) return undefined
+
+			const args = rawArgs.map(
+				(arg) =>
+					new Interpolation(arg, properties, availableFormatters)
+						.value,
+			)
+			parsed = formatter(parsed, ...args)
+		}
+
+		return parsed
+	}
+
+	static #parseObject(
+		object: string,
+		properties: Record<string, unknown>,
+		availableFormatters: Record<string, Formatter>,
+	) {
+		const parsed: Record<string, unknown> = {}
+
+		let key = ""
+		let value = ""
+		let isKey = true
+		depthAwareforEach(object, (char, _, depth, isOpening) => {
+			if (depth === 0) {
+				parsed[key] = new Interpolation(
+					value,
+					properties,
+					availableFormatters,
+				).value
+				return CALLBACK_BREAK
+			}
+
+			if (depth === 1) {
+				if (isKey) {
+					if (isOpening) return null // ignore opening bracket
+					if (/\s/.test(char)) return null
+					if (char === ":") {
+						isKey = false
+						return null
+					}
+					key += char
+				} else if (char === ",") {
+					parsed[key] = new Interpolation(
+						value,
+						properties,
+						availableFormatters,
+					).value
+					key = ""
+					value = ""
+					isKey = true
+					return null
+				}
+			}
+
+			if (!isKey) value += char
+			return null
+		})
+
+		return parsed
 	}
 
 	/**
@@ -143,7 +225,7 @@ class Interpolation {
 			interpolation = interpolation.slice(range[1]).trim()
 		}
 
-		const formatters: { name: string; arguments: string[] }[] = []
+		const formatters: FormatterMatch[] = []
 
 		while (interpolation.length > 0) {
 			const argumentlessFormatterMatch =
@@ -162,7 +244,7 @@ class Interpolation {
 
 			formatters.push({
 				name,
-				arguments: args,
+				args,
 			})
 		}
 
@@ -285,34 +367,29 @@ class Interpolation {
 			end: 0,
 		}
 
-		let depth = 0
 		let current = ""
-		// eslint-disable-next-line unicorn/no-for-loop
-		for (let i = 0; i < args.length; i += 1) {
-			const char = args[i] || throwError(new UnreachableCode())
 
-			if (char === "{" || char === "[") depth += 1
-			else if (char === "}" || char === "]") depth -= 1
-
+		depthAwareforEach(args, (char, i, depth) => {
 			if (depth > 0) {
 				current += char
-				continue
+				return null
 			}
 
 			if (char === ",") {
 				result.args.push(current.trim())
 				current = ""
-				continue
+				return null
 			}
 
 			if (char === ")") {
 				result.args.push(current.trim())
 				result.end = i + 1
-				break
+				return CALLBACK_BREAK
 			}
 
 			current += char
-		}
+			return null
+		})
 
 		return result
 	}
@@ -321,3 +398,24 @@ class Interpolation {
 // {# {var: nested}(value)>formatter1({}(args))>formatter2({lol: {xd: nestedvar, val: 1}}, var(alias)>formatter3: 0}) #}
 
 export default Interpolation
+
+const properties = { variableName: "MYVAR" }
+
+const formatters = {
+	formatter1: (item: any, ...args: any[]) => {
+		console.log("formatter1 args:", args)
+		console.log("formatter1 return:", item)
+		return item
+	},
+	formatter2: (item: any, ...args: any[]) => {
+		console.log("formatter2 args:", args)
+		console.log("formatter2 return:", item)
+		return item
+	},
+}
+
+const a = new Interpolation(
+	"{ prop1: 'prop1', prop2: { nested: variableName }}(myAlias)>formatter1([{ some: 'prop'}], false, 0.657)>formatter2(`a lot of text`, 'yes')",
+	properties,
+	formatters,
+)
