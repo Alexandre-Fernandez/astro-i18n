@@ -4,7 +4,7 @@ import {
 	INTERPOLATION_ALIAS_PATTERN,
 	INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN,
 } from "@src/constants/patterns.constants"
-import { InterpolationValueType } from "@src/core/parsing/enums/interpolation-value-type.enum"
+import { ValueType } from "@src/core/parsing/enums/value-type.enum"
 import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
 import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
 import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
@@ -71,11 +71,11 @@ class Interpolation {
 
 	/**
 	 * Creates the interpolation value for the given `value`.
-	 * @param value for example: "{ prop: interpolationValue }".
+	 * @param value for example: `"{ prop: interpolationValue }"`.
 	 */
 	static #parseValue(
 		value: string,
-		type: InterpolationValueType,
+		type: ValueType,
 		formatters: FormatterMatch[],
 		properties: Record<string, unknown>,
 		availableFormatters: Record<string, Formatter>,
@@ -83,16 +83,16 @@ class Interpolation {
 		let parsed: unknown
 
 		switch (type) {
-			case InterpolationValueType.Undefined: {
+			case ValueType.Undefined: {
 				parsed = undefined
 				break
 			}
-			case InterpolationValueType.Null: {
+			case ValueType.Null: {
 				parsed = null
 				break
 			}
 			// @ts-expect-error
-			case InterpolationValueType.Boolean: {
+			case ValueType.Boolean: {
 				if (value === "true") {
 					parsed = true
 					break
@@ -103,21 +103,21 @@ class Interpolation {
 				}
 				// fallthrough (default case if not true or false)
 			}
-			case InterpolationValueType.Number: {
+			case ValueType.Number: {
 				parsed = value.includes(".")
 					? Number.parseFloat(value)
 					: Number.parseInt(value, 10)
 				break
 			}
-			case InterpolationValueType.Variable: {
+			case ValueType.Variable: {
 				parsed = properties[value]
 				break
 			}
-			case InterpolationValueType.String: {
+			case ValueType.String: {
 				parsed = value.slice(1, -1)
 				break
 			}
-			case InterpolationValueType.Object: {
+			case ValueType.Object: {
 				parsed = this.#parseObject(
 					value,
 					properties,
@@ -125,7 +125,7 @@ class Interpolation {
 				)
 				break
 			}
-			case InterpolationValueType.Array: {
+			case ValueType.Array: {
 				parsed = this.#parseArray(
 					value,
 					properties,
@@ -315,7 +315,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Undefined,
+				type: ValueType.Undefined,
 				end: matched.range[1],
 			}
 		}
@@ -324,7 +324,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Null,
+				type: ValueType.Null,
 				end: matched.range[1],
 			}
 		}
@@ -333,7 +333,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Boolean,
+				type: ValueType.Boolean,
 				end: matched.range[1],
 			}
 		}
@@ -342,7 +342,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Number,
+				type: ValueType.Number,
 				end: matched.range[1],
 			}
 		}
@@ -351,7 +351,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Variable,
+				type: ValueType.Variable,
 				end: matched.range[1],
 			}
 		}
@@ -360,7 +360,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.String,
+				type: ValueType.String,
 				end: matched.range[1],
 			}
 		}
@@ -369,7 +369,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Object,
+				type: ValueType.Object,
 				end: matched.range[1],
 			}
 		}
@@ -378,7 +378,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: InterpolationValueType.Array,
+				type: ValueType.Array,
 				end: matched.range[1],
 			}
 		}

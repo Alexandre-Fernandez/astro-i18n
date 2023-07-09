@@ -4,6 +4,9 @@ import UnreachableCode from "@src/errors/unreachable-code.error"
 
 /**
  * Traverses a `string` taking the object/array/string depth into account.
+ * For example if you are inside curly brackets `depth` will be `1`. Expanding
+ * on that example, if you additionally are inside array brackets `depth` will
+ * be `2`, and so on.
  */
 export function depthAwareforEach(
 	string: string,
