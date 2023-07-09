@@ -255,10 +255,41 @@ class Variant {
 
 		throw new InvalidVariantPropertyValue(value)
 	}
+
+	/**
+	 * Calculates the matching score for the given properties.
+	 */
+	calculateMatchingScore(properties: Record<string, unknown>) {
+		let score = 0
+
+		for (const { name, values } of this.properties) {
+			if (!Object.hasOwn(properties, name)) continue
+			const property = properties[name]
+
+			const valueScores: number[] = []
+			for (const value of values) {
+				if (typeof property === "number" && typeof value === "number") {
+					const difference = property - value
+					if (difference === 0) {
+						valueScores.push(1000)
+						continue
+					}
+
+					// we remove 1 because `difference === 1` would give same score as `difference === 0`
+					valueScores.push(Math.abs(1000 / difference) - 1)
+					continue
+				}
+				if (property === value) {
+					valueScores.push(1000)
+				}
+			}
+			if (valueScores.length === 0) continue
+
+			score += Math.max(...valueScores)
+		}
+
+		return score + this.priority
+	}
 }
 
 export default Variant
-
-const a = new Variant(
-	" string: 'string_prop', numbers: [0, 1, 2], mixed: ['str', 3], $priority: 5",
-)
