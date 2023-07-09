@@ -1,5 +1,3 @@
-// original maps translation.key to array of variants
-
 import { throwError } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import { ValueType } from "@src/core/parsing/enums/value-type.enum"
