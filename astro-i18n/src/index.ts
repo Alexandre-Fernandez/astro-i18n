@@ -1,4 +1,4 @@
-import { singleton } from "@src/middleware"
+import { singleton } from "@src/core/astro/middleware"
 import type { AstroIntegration } from "astro"
 // import type { AstroHooks } from "@src/types/astro"
 
@@ -14,7 +14,7 @@ export default function i18n(): AstroIntegration {
 		},
 	}
 }
-export { useAstroI18n } from "@src/middleware"
+export { useAstroI18n } from "@src/core/astro/middleware"
 
 export function getSingleton() {
 	return singleton.value

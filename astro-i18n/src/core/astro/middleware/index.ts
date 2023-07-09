@@ -8,6 +8,17 @@ export const singleton = {
 
 export const useAstroI18n: () => AstroMiddleware = () => {
 	return async (ctx, next) => {
+		// check what page it is
+		// build translations for that page (common + specific)
+		// build route translations for that page
+
+		// how to do this for route translations ?
+		// giving all routes out is bad security wise
+		// need group feature ?
+
+		// add these translations to the singleton & to the dom inside <script type="text/json"></script> (so that it can be fetched on the client side)
+
+		const mode = import.meta.env.MODE
 		ctx.locals.pwd = process.env.PWD
 		singleton.value += 1
 		return next()
@@ -24,6 +35,26 @@ computed translations :
 		]
 	}
 }
+
+useAstroI18n({
+	mode: "full-stack" | "server"
+	defaultLocale: "en",
+	otherLocales: [],
+	showDefaultLocale: false,
+	trailingSlash: "always" | "never" | "ignore",
+	translations: {
+		common: {
+
+		},
+		page: {
+			"/page1": {
+				
+			}
+		}
+	},
+	routeTranslations: {},
+})
+
 */
 
 // PROD = load translation from FS once
