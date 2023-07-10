@@ -37,22 +37,41 @@ computed translations :
 }
 
 useAstroI18n({
-	mode: "full-stack" | "server"
-	defaultLocale: "en",
-	otherLocales: [],
-	showDefaultLocale: false,
+	run: "client+server" | "server"
+	primaryLocale: "en",
+	secondaryLocales: ["fr"],
+	showPrimaryLocale: false,
 	trailingSlash: "always" | "never" | "ignore",
 	translations: {
-		common: {
-
+		fr: {
+			common: { ... },
+			"/about": { ... }
+			"admin": { ... },
 		},
-		page: {
-			"/page1": {
-				
+		en: {
+			common: { ... },
+			"/about": { ... }
+			"admin": { ... },
+		},
+		$load: [
+			{
+				route: "^admin", // applies load on route match
+				namespaces: ["admin"] // load namespace translations (key= "admin:my.translation")
 			}
-		}
+		]
 	},
-	routeTranslations: {},
+	routes: {
+		fr: {
+			about: "a-propos",
+			admin: "administration"
+		},
+		$restrict: [
+			{
+				routes: ["^admin"] // doesn't add segment translations in dom if no route match
+				segments: ["admin"] // segments
+			}
+		]
+	},
 })
 
 */
