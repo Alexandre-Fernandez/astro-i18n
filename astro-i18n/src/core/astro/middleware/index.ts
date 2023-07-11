@@ -1,5 +1,6 @@
 import "@src/core/parsing/classes/interpolation.class"
 import "@src/core/parsing/classes/variant.class"
+import Config from "@src/core/state/classes/config.class"
 import type { AstroMiddleware } from "@src/types/astro"
 
 export const singleton = {
@@ -19,6 +20,8 @@ export const useAstroI18n: () => AstroMiddleware = () => {
 		// add these translations to the singleton & to the dom inside <script type="text/json"></script> (so that it can be fetched on the client side)
 
 		// load from file or load from config that's it
+
+		await Config.findConfig()
 
 		const mode = import.meta.env.MODE
 		ctx.locals.pwd = process.env.PWD

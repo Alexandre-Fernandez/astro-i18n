@@ -10,7 +10,7 @@ import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions
 import {
 	isPrimitive,
 	isPrimitiveArray,
-} from "@src/core/parsing/guards/is-primitive.guard"
+} from "@src/core/parsing/guards/primitive.guard"
 import {
 	matchArray,
 	matchBoolean,

@@ -1,3 +1,19 @@
+export interface AstroI18nConfig {
+	primaryLocale: string
+
+	secondaryLocales: string[]
+
+	showPrimaryLocale: boolean
+
+	trailingSlash: "always" | "never"
+
+	run: "server" | "client+server"
+
+	translations: ConfigTranslations
+
+	routes: ConfigRoutes
+}
+
 export type ConfigTranslations = {
 	[namespace: string]: {
 		[locale: string]: DeepStringRecord

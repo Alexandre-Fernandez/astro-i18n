@@ -25,7 +25,9 @@ class AsyncNode {
 	): Promise<AsyncNodeJsCache[T]> {
 		if (this.#cache[name]) return this.#cache[name]!
 
-		const module: AsyncNodeJsCache[T] = await import(`node:${name}`)
+		const module: AsyncNodeJsCache[T] = await import(
+			`node:${name}` /* @vite-ignore */
+		)
 		this.#cache[name] = module
 
 		return module
