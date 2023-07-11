@@ -18,6 +18,8 @@ export const useAstroI18n: () => AstroMiddleware = () => {
 
 		// add these translations to the singleton & to the dom inside <script type="text/json"></script> (so that it can be fetched on the client side)
 
+		// load from file or load from config that's it
+
 		const mode = import.meta.env.MODE
 		ctx.locals.pwd = process.env.PWD
 		singleton.value += 1
@@ -36,43 +38,6 @@ computed translations :
 	}
 }
 
-useAstroI18n({
-	run: "client+server" | "server"
-	primaryLocale: "en",
-	secondaryLocales: ["fr"],
-	showPrimaryLocale: false,
-	trailingSlash: "always" | "never" | "ignore",
-	translations: {
-		fr: {
-			common: { ... },
-			"/about": { ... }
-			"admin": { ... },
-		},
-		en: {
-			common: { ... },
-			"/about": { ... }
-			"admin": { ... },
-		},
-		$load: [
-			{
-				route: "^admin", // applies load on route match
-				namespaces: ["admin"] // load namespace translations (key= "admin:my.translation")
-			}
-		]
-	},
-	routes: {
-		fr: {
-			about: "a-propos",
-			admin: "administration"
-		},
-		$restrict: [
-			{
-				routes: ["^admin"] // doesn't add segment translations in dom if no route match
-				segments: ["admin"] // segments
-			}
-		]
-	},
-})
 
 */
 

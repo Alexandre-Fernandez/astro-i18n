@@ -7,6 +7,11 @@ class AsyncNode {
 		return this.#getModule("path")
 	}
 
+	static get posix() {
+		// eslint-disable-next-line github/no-then
+		return this.path.then(({ posix }) => posix)
+	}
+
 	static get fs() {
 		return this.#getModule("fs")
 	}
