@@ -42,7 +42,7 @@ export function isConfig(config: unknown): config is AstroI18nConfig {
 		}
 	}
 
-	return false
+	return true
 }
 /*
 	export type ConfigTranslations = {

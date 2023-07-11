@@ -24,7 +24,7 @@ class Config implements AstroI18nConfig {
 		// load from object
 	}
 
-	static async loadFromFilesystem() {}
+	static async fromFilesystem() {}
 
 	static async findConfig() {
 		const [{ fileURLToPath }, { readdirSync }] = await Promise.all([
