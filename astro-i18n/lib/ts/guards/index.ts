@@ -11,3 +11,9 @@ export function assertGuard<T>(
 		)
 	}
 }
+
+export function isStringArray(array: unknown): array is string[] {
+	return (
+		Array.isArray(array) && array.every((item) => typeof item === "string")
+	)
+}

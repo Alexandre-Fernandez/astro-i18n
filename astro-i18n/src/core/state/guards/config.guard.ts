@@ -1,3 +1,5 @@
+import { isStringArray } from "@lib/ts/guards"
+import { isConfigTranslations } from "@src/core/state/guards/config-translations.guard"
 import type { AstroI18nConfig } from "@src/core/state/types"
 
 export function isConfig(config: unknown): config is AstroI18nConfig {
@@ -10,10 +12,7 @@ export function isConfig(config: unknown): config is AstroI18nConfig {
 				break
 			}
 			case "secondaryLocales": {
-				if (!Array.isArray(value)) return false
-				if (!value.every((item) => typeof item === "string")) {
-					return false
-				}
+				if (!isStringArray(value)) return false
 				break
 			}
 			case "showPrimaryLocale": {
@@ -31,7 +30,8 @@ export function isConfig(config: unknown): config is AstroI18nConfig {
 				break
 			}
 			case "translations": {
-				return false
+				if (!isConfigTranslations(value)) return false
+				break
 			}
 			case "routes": {
 				return false
@@ -43,19 +43,4 @@ export function isConfig(config: unknown): config is AstroI18nConfig {
 	}
 
 	return true
-}
-/*
-	export type ConfigTranslations = {
-		[namespace: string]: {
-			[locale: string]: DeepStringRecord
-		}
-	} & {
-		$load?: {
-			namespaces: string[]
-			routes: string[]
-		}[]
-	}
-*/
-function isConfigTranslations(translations: unknown) {
-	//
 }
