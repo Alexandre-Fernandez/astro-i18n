@@ -1,4 +1,4 @@
-import { isStringArray } from "@lib/ts/guards"
+import { isObject, isStringArray } from "@lib/ts/guards"
 import type {
 	ConfigTranslations,
 	DeepStringRecord,
@@ -7,17 +7,17 @@ import type {
 export function isConfigTranslations(
 	configTranslations: unknown,
 ): configTranslations is ConfigTranslations {
-	if (!configTranslations || typeof configTranslations !== "object") {
-		return false
-	}
+	if (!isObject(configTranslations)) return false
 
 	for (const [key, value] of Object.entries(configTranslations)) {
 		// is loader array:
 		if (key === "$load") {
 			if (!Array.isArray(value)) return false
 			for (const loader of value) {
-				if (!loader || typeof loader !== "object") return false
-				for (const [loaderKey, array] of Object.entries(loader)) {
+				if (!isObject(loader)) return false
+				const entries = Object.entries(loader)
+				if (entries.length < 2) return false
+				for (const [loaderKey, array] of entries) {
 					switch (loaderKey) {
 						case "namespaces": {
 							if (!isStringArray(array)) return false
@@ -36,7 +36,7 @@ export function isConfigTranslations(
 			continue
 		}
 		// is translations:
-		if (!value || typeof value !== "object") return false
+		if (!isObject(value)) return false
 		for (const translations of Object.values(value)) {
 			if (!isDeepStringRecord(translations)) return false
 		}
@@ -51,8 +51,7 @@ function isDeepStringRecord(
 ): deepStringRecord is DeepStringRecord {
 	if (root) {
 		// Record<string, string | self>
-		if (deepStringRecord == null) return false
-		if (typeof deepStringRecord !== "object") return false
+		if (!isObject(deepStringRecord)) return false
 		for (const value of Object.values(deepStringRecord)) {
 			if (!isDeepStringRecord(value, false)) return false
 		}
@@ -60,7 +59,7 @@ function isDeepStringRecord(
 	}
 	// string | Record<string, self>
 	if (typeof deepStringRecord === "string") return true
-	if (!deepStringRecord || typeof deepStringRecord !== "object") return false
+	if (!isObject(deepStringRecord)) return false
 	for (const value of Object.values(deepStringRecord)) {
 		if (!isDeepStringRecord(value, false)) return false
 	}

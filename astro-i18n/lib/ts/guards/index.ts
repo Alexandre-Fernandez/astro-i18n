@@ -31,8 +31,29 @@ export function assertGuard<T>(
 	}
 }
 
+export function isArray(array: unknown): array is unknown[] {
+	return Array.isArray(array)
+}
+
 export function isStringArray(array: unknown): array is string[] {
-	return (
-		Array.isArray(array) && array.every((item) => typeof item === "string")
-	)
+	return isArray(array) && array.every((item) => typeof item === "string")
+}
+
+export function isObject(object: unknown): object is object {
+	return !!object && typeof object === "object"
+}
+
+export function isRecord(record: unknown): record is Record<string, unknown> {
+	if (!isObject(record)) return false
+	return Object.getPrototypeOf(record) === Object.prototype
+}
+
+export function isStringRecord(
+	record: unknown,
+): record is Record<string, string> {
+	if (!isRecord(record)) return false
+	for (const value of Object.values(record)) {
+		if (typeof value !== "string") return false
+	}
+	return true
 }

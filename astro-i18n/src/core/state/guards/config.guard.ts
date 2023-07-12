@@ -1,4 +1,5 @@
 import { isStringArray } from "@lib/ts/guards"
+import { isConfigRoutes } from "@src/core/state/guards/config-routes.guard"
 import { isConfigTranslations } from "@src/core/state/guards/config-translations.guard"
 import type { AstroI18nConfig } from "@src/core/state/types"
 
@@ -34,7 +35,8 @@ export function isConfig(config: unknown): config is AstroI18nConfig {
 				break
 			}
 			case "routes": {
-				return false
+				if (!isConfigRoutes(value)) return false
+				break
 			}
 			default: {
 				return false
