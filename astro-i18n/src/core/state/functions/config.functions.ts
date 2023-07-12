@@ -27,6 +27,12 @@ export async function autofindConfig(startingPath: string) {
 	return `${root}/${config}`
 }
 
+// go back one level
+// readdir
+// ignore node_module, .*, src
+// if find package.json check crawl other directories
+// else go step 1
+
 async function findProjectRoot(startingPath: string) {
 	const { readdirSync } = await AsyncNode.fs
 
