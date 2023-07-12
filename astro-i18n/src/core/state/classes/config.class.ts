@@ -1,9 +1,11 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
-import { toPosixPath } from "@lib/async-node/functions"
+import { toPosixPath } from "@lib/async-node/functions/path.functions"
 import { throwError } from "@lib/error"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import { ASTRO_I18N_CONFIG_PATTERN } from "@src/constants/patterns.constants"
 import type { AstroI18nConfig } from "@src/core/state/types"
+import { autofindConfig } from "@src/core/state/functions/config.functions"
+import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 
 class Config implements AstroI18nConfig {
 	primaryLocale = "en"
@@ -58,14 +60,14 @@ class Config implements AstroI18nConfig {
 			const { match } = ASTRO_I18N_CONFIG_PATTERN.match(file) || {}
 			if (!match) continue
 			const name = match[0] || throwError(new UnreachableCode())
-			const extension = match[1] || throwError(new UnreachableCode())
-
-			path = `${cwd}/${name}` // return new Config()
+			path = `${cwd}/${name}`
+			break
 		}
-	}
 
-	static async autofindConfig(startingPath: string) {
-		//
+		if (!path) {
+			path =
+				(await autofindConfig(cwd)) || throwError(new ConfigNotFound())
+		}
 	}
 }
 
