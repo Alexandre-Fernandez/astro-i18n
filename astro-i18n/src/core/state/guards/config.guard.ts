@@ -1,10 +1,12 @@
-import { isStringArray } from "@lib/ts/guards"
+import { isObject, isStringArray } from "@lib/ts/guards"
 import { isConfigRoutes } from "@src/core/state/guards/config-routes.guard"
 import { isConfigTranslations } from "@src/core/state/guards/config-translations.guard"
 import type { AstroI18nConfig } from "@src/core/state/types"
 
-export function isConfig(config: unknown): config is AstroI18nConfig {
-	if (!config || typeof config !== "object") return false
+export function isPartialConfig(
+	config: unknown,
+): config is Partial<AstroI18nConfig> {
+	if (!isObject(config)) return false
 
 	for (const [key, value] of Object.entries(config)) {
 		switch (key) {

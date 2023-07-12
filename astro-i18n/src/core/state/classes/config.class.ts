@@ -8,25 +8,37 @@ import type { AstroI18nConfig } from "@src/core/state/types"
 class Config implements AstroI18nConfig {
 	primaryLocale = "en"
 
-	secondaryLocales = []
+	secondaryLocales = [] as AstroI18nConfig["secondaryLocales"]
 
 	showPrimaryLocale = false
 
-	trailingSlash = "never" as const
+	trailingSlash = "never" as AstroI18nConfig["trailingSlash"]
 
-	run = "client+server" as const
+	run = "client+server" as AstroI18nConfig["run"]
 
-	translations = {}
+	translations = {} as AstroI18nConfig["translations"]
 
-	routes = {}
+	routes = {} as AstroI18nConfig["routes"]
 
-	constructor() {
-		// load from object
+	constructor({
+		primaryLocale,
+		secondaryLocales,
+		showPrimaryLocale,
+		trailingSlash,
+		run,
+		translations,
+		routes,
+	}: Partial<AstroI18nConfig>) {
+		if (primaryLocale) this.primaryLocale = primaryLocale
+		if (secondaryLocales) this.secondaryLocales = secondaryLocales
+		if (showPrimaryLocale) this.showPrimaryLocale = showPrimaryLocale
+		if (trailingSlash) this.trailingSlash = trailingSlash
+		if (run) this.run = run
+		if (translations) this.translations = translations
+		if (routes) this.routes = routes
 	}
 
-	static async fromFilesystem() {}
-
-	static async findConfig() {
+	static async fromFilesystem() {
 		const [{ fileURLToPath }, { readdirSync }] = await Promise.all([
 			AsyncNode.url,
 			AsyncNode.fs,
@@ -50,8 +62,10 @@ class Config implements AstroI18nConfig {
 
 			path = `${cwd}/${name}` // return new Config()
 		}
+	}
 
-		console.log(path)
+	static async autofindConfig(startingPath: string) {
+		//
 	}
 }
 
