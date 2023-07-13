@@ -47,29 +47,24 @@ class Config implements AstroI18nConfig {
 			AsyncNode.posix,
 		])
 
-		const cwd = await toPosixPath(
-			process.env["PWD"] || fileURLToPath(import.meta.url),
+		// find from PWD
+		let config = await autofindConfig(
+			await toPosixPath(process.env["PWD"] || ""),
 		)
 
-		return autofindConfig(fileURLToPath(import.meta.url))
-
-		const config = readdirSync(cwd).find((file) =>
-			ASTRO_I18N_CONFIG_PATTERN.test(file),
-		)
-
-		let path = ""
-		for (const file of readdirSync(cwd)) {
-			const { match } = ASTRO_I18N_CONFIG_PATTERN.match(file) || {}
-			if (!match) continue
-			const name = match[0] || throwError(new UnreachableCode())
-			path = `${cwd}/${name}`
-			break
+		// find from import.meta.url
+		if (!config) {
+			config = await autofindConfig(
+				await toPosixPath(fileURLToPath(import.meta.url)),
+			)
 		}
 
-		if (!path) {
-			path =
-				(await autofindConfig(cwd)) || throwError(new ConfigNotFound())
-		}
+		//
+
+		console.log(config)
+		// parse config
+
+		return config
 	}
 }
 
