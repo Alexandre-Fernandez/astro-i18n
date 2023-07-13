@@ -1,6 +1,6 @@
 import { Regex, RegexBuilder } from "@lib/regex"
 import { SUPPORTED_CONFIG_FORMATS } from "@src/constants/app.constants"
-import { ASTRO_PACKAGE_NAME, PACKAGE_NAME } from "@src/constants/meta.constants"
+import { PACKAGE_NAME } from "@src/constants/meta.constants"
 
 export const FIRST_VARCHAR_PATTERN = new Regex(/[$A-Z_a-z]/)
 

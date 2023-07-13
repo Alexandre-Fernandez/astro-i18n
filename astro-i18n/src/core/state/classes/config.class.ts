@@ -51,6 +51,8 @@ class Config implements AstroI18nConfig {
 			process.env["PWD"] || fileURLToPath(import.meta.url),
 		)
 
+		return autofindConfig(fileURLToPath(import.meta.url))
+
 		const config = readdirSync(cwd).find((file) =>
 			ASTRO_I18N_CONFIG_PATTERN.test(file),
 		)
