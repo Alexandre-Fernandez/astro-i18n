@@ -4,7 +4,7 @@ import {
 	importScript,
 } from "@lib/async-node/functions/import.functions"
 import { toPosixPath } from "@lib/async-node/functions/path.functions"
-import { assertGuard } from "@lib/ts/guards"
+import { assert } from "@lib/ts/guards"
 import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import { autofindConfig } from "@src/core/state/functions/config.functions"
 import { isPartialConfig } from "@src/core/state/guards/config.guard"
@@ -64,7 +64,7 @@ class Config implements AstroI18nConfig {
 			? await importJson(path)
 			: (await importScript(path))["default"]
 
-		assertGuard(config, isPartialConfig, "AstroI18nConfig")
+		assert(config, isPartialConfig, "AstroI18nConfig")
 
 		return new Config(config)
 	}

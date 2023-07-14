@@ -1,4 +1,4 @@
-export function assertGuard<T>(
+export function assert<T>(
 	value: unknown,
 	guard: (value: unknown) => value is T,
 	expectedType?: string,
