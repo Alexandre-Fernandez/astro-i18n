@@ -20,6 +20,10 @@ class AsyncNode {
 		return this.#getModule("url")
 	}
 
+	static get module() {
+		return this.#getModule("module")
+	}
+
 	static async #getModule<T extends keyof AsyncNodeJsCache>(
 		name: T,
 	): Promise<AsyncNodeJsCache[T]> {

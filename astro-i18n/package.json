@@ -34,14 +34,13 @@
 		"lint": "eslint --ignore-path .eslintignore ."
 	},
 	"dependencies": {
-		"get-file-exports": "latest"
+		"esbuild": "^0.17.18"
 	},
 	"devDependencies": {
 		"@types/node": "^20.1.4",
 		"af-prettierrc": "^1.0.0",
 		"af-tsconfig": "^1.0.2",
 		"astro": "^2.7.2",
-		"esbuild": "^0.17.18",
 		"eslint": "^8.40.0",
 		"eslint-config-af-typescript": "^1.6.0",
 		"tsc-alias": "^1.8.6",
