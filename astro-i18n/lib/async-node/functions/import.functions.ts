@@ -30,6 +30,15 @@ export async function importScript(filename: string) {
 		: {}
 }
 
+export async function importJson(filename: string) {
+	if (!isFile(filename)) throw new FileNotFound(filename)
+	if (!/\.json$/.test(filename)) throw new InvalidFileType(["json"])
+
+	const { readFileSync } = await AsyncNode.fs
+
+	return JSON.parse(readFileSync(filename, { encoding: "utf8" })) as unknown
+}
+
 async function extractCommonJsExports(commonJs: string, filename: string) {
 	const Module = await AsyncNode.module
 	const dirname = filename.split("/").slice(0, -1).join("/")
