@@ -1,6 +1,13 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
+import {
+	importJson,
+	importScript,
+} from "@lib/async-node/functions/import.functions"
 import { toPosixPath } from "@lib/async-node/functions/path.functions"
+import { assertGuard } from "@lib/ts/guards"
+import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import { autofindConfig } from "@src/core/state/functions/config.functions"
+import { isPartialConfig } from "@src/core/state/guards/config.guard"
 import type { AstroI18nConfig } from "@src/core/state/types"
 
 class Config implements AstroI18nConfig {
@@ -37,30 +44,28 @@ class Config implements AstroI18nConfig {
 	}
 
 	static async fromFilesystem() {
-		const [{ fileURLToPath }, { readdirSync }] = await Promise.all([
-			AsyncNode.url,
-			AsyncNode.fs,
-			AsyncNode.posix,
-		])
+		const { fileURLToPath } = await AsyncNode.url
 
 		// find from PWD
-		let config = await autofindConfig(
+		let path = await autofindConfig(
 			await toPosixPath(process.env["PWD"] || ""),
 		)
 
 		// find from import.meta.url
-		if (!config) {
-			config = await autofindConfig(
+		if (!path) {
+			path = await autofindConfig(
 				await toPosixPath(fileURLToPath(import.meta.url)),
 			)
 		}
 
-		//
+		if (!path) throw new ConfigNotFound()
 
-		console.log(config)
-		// parse config
+		const config = path.endsWith(".json")
+			? await importJson(path)
+			: await importScript(path)
+		assertGuard(config, isPartialConfig, "AstroI18nConfig")
 
-		return config
+		return new Config(config)
 	}
 }
 

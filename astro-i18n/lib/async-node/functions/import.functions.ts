@@ -3,7 +3,9 @@ import FileNotFound from "@lib/async-node/errors/file-not-found.error"
 import InvalidFileType from "@lib/async-node/errors/invalid-file-type.error"
 import { isFile } from "@lib/async-node/functions/fs.functions"
 
-export async function importScript(filename: string) {
+export async function importScript(
+	filename: string,
+): Promise<Record<string, unknown>> {
 	const esbuild = await import("esbuild")
 
 	const supportedExtensions = /\.(js|cjs|mjs|ts)$/
