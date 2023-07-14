@@ -5,11 +5,13 @@ import { isFile } from "@lib/async-node/functions/fs.functions"
 
 export async function importScript(filename: string) {
 	const esbuild = await import("esbuild")
+
 	const supportedExtensions = /\.(js|cjs|mjs|ts)$/
 	if (!isFile(filename)) throw new FileNotFound(filename)
 	if (!supportedExtensions.test(filename)) {
 		throw new InvalidFileType(["js", "cjs", "mjs", "ts"])
 	}
+
 	const { outputFiles } = await esbuild.build({
 		entryPoints: [filename],
 		bundle: true,
