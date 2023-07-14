@@ -1,10 +1,6 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import { toPosixPath } from "@lib/async-node/functions/path.functions"
-import { throwError } from "@lib/error"
-import UnreachableCode from "@src/errors/unreachable-code.error"
-import { ASTRO_I18N_CONFIG_PATTERN } from "@src/constants/patterns.constants"
 import { autofindConfig } from "@src/core/state/functions/config.functions"
-import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import type { AstroI18nConfig } from "@src/core/state/types"
 
 class Config implements AstroI18nConfig {
@@ -47,27 +43,24 @@ class Config implements AstroI18nConfig {
 			AsyncNode.posix,
 		])
 
-		const cwd = await toPosixPath(
-			process.env["PWD"] || fileURLToPath(import.meta.url),
+		// find from PWD
+		let config = await autofindConfig(
+			await toPosixPath(process.env["PWD"] || ""),
 		)
 
-		const config = readdirSync(cwd).find((file) =>
-			ASTRO_I18N_CONFIG_PATTERN.test(file),
-		)
-
-		let path = ""
-		for (const file of readdirSync(cwd)) {
-			const { match } = ASTRO_I18N_CONFIG_PATTERN.match(file) || {}
-			if (!match) continue
-			const name = match[0] || throwError(new UnreachableCode())
-			path = `${cwd}/${name}`
-			break
+		// find from import.meta.url
+		if (!config) {
+			config = await autofindConfig(
+				await toPosixPath(fileURLToPath(import.meta.url)),
+			)
 		}
 
-		if (!path) {
-			path =
-				(await autofindConfig(cwd)) || throwError(new ConfigNotFound())
-		}
+		//
+
+		console.log(config)
+		// parse config
+
+		return config
 	}
 }
 

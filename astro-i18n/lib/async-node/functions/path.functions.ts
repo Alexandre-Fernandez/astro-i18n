@@ -29,6 +29,7 @@ export function isRootPath(path: string) {
 			return true
 		}
 		default: {
+			// path has no separators
 			return !/[/\\]/.test(path)
 		}
 	}
