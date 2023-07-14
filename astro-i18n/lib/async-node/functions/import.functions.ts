@@ -20,11 +20,12 @@ export async function importScript(filename: string) {
 	})
 	const commonJs = new TextDecoder().decode(outputFiles[0]?.contents)
 
-	if (!commonJs) return {}
-	return extractCommonJsExports(
-		commonJs,
-		filename.replace(supportedExtensions, ".cjs"),
-	)
+	return commonJs
+		? extractCommonJsExports(
+				commonJs,
+				filename.replace(supportedExtensions, ".cjs"),
+		  )
+		: {}
 }
 
 async function extractCommonJsExports(commonJs: string, filename: string) {
