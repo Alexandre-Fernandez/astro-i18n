@@ -33,7 +33,7 @@ class Config implements AstroI18nConfig {
 		run,
 		translations,
 		routes,
-	}: Partial<AstroI18nConfig>) {
+	}: Partial<AstroI18nConfig> = {}) {
 		if (primaryLocale) this.primaryLocale = primaryLocale
 		if (secondaryLocales) this.secondaryLocales = secondaryLocales
 		if (showPrimaryLocale) this.showPrimaryLocale = showPrimaryLocale

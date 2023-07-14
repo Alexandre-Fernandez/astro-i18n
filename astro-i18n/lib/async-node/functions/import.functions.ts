@@ -42,14 +42,15 @@ export async function importJson(filename: string) {
 }
 
 async function extractCommonJsExports(commonJs: string, filename: string) {
-	const Module = await AsyncNode.module
+	const { Module } = await AsyncNode.module
 	const dirname = filename.split("/").slice(0, -1).join("/")
 	const global = {
-		module: new Module(filename, require.main),
+		module: new Module(filename),
 		require(id: string) {
 			return this.module.require(id)
 		},
 	}
+
 	// eslint-disable-next-line no-underscore-dangle
 	global.module.paths = Module._nodeModulePaths(dirname)
 	global.module.filename = filename
@@ -59,6 +60,7 @@ async function extractCommonJsExports(commonJs: string, filename: string) {
 		// eslint-disable-next-line no-underscore-dangle
 		resolve: (req: string) => Module._resolveFilename(req, global.module),
 	})
+
 	// eslint-disable-next-line no-new-func
 	new Function(
 		"exports",
