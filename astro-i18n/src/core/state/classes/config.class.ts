@@ -62,7 +62,8 @@ class Config implements AstroI18nConfig {
 
 		const config = path.endsWith(".json")
 			? await importJson(path)
-			: await importScript(path)
+			: (await importScript(path))["default"]
+
 		assertGuard(config, isPartialConfig, "AstroI18nConfig")
 
 		return new Config(config)
