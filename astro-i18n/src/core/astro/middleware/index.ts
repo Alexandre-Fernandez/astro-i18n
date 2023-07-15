@@ -1,7 +1,7 @@
 import "@src/core/parsing/classes/interpolation.class"
 import "@src/core/parsing/classes/variant.class"
 import Config from "@src/core/state/classes/config.class"
-import type { AstroMiddleware } from "@src/types/astro"
+import type { AstroMiddleware } from "@src/types/astro.types"
 
 export const singleton = {
 	value: 0,
@@ -31,20 +31,6 @@ export const useAstroI18n: () => AstroMiddleware = () => {
 		return next()
 	}
 }
-
-/*
-computed translations :
-{
-	"my.translation.key": {
-		default: "Hello I'm a default translation.",
-		variants: [
-			Variant
-		]
-	}
-}
-
-
-*/
 
 // PROD = load translation from FS once
 // DEV = load translation from FS on request

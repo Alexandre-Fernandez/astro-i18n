@@ -2,8 +2,8 @@ import type { Primitive } from "@src/core/parsing/types"
 
 export function isPrimitive(primitive: unknown): primitive is Primitive {
 	return (
-		primitive === undefined ||
 		primitive === null ||
+		typeof primitive === "undefined" ||
 		typeof primitive === "boolean" ||
 		typeof primitive === "number" ||
 		typeof primitive === "string"

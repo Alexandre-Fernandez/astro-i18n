@@ -83,16 +83,16 @@ class Interpolation {
 		let parsed: unknown
 
 		switch (type) {
-			case ValueType.Undefined: {
+			case ValueType.UNDEFINED: {
 				parsed = undefined
 				break
 			}
-			case ValueType.Null: {
+			case ValueType.NULL: {
 				parsed = null
 				break
 			}
 			// @ts-expect-error
-			case ValueType.Boolean: {
+			case ValueType.BOOLEAN: {
 				if (value === "true") {
 					parsed = true
 					break
@@ -103,21 +103,21 @@ class Interpolation {
 				}
 				// fallthrough (default case if not true or false)
 			}
-			case ValueType.Number: {
+			case ValueType.NUMBER: {
 				parsed = value.includes(".")
 					? Number.parseFloat(value)
 					: Number.parseInt(value, 10)
 				break
 			}
-			case ValueType.Variable: {
+			case ValueType.VARIABLE: {
 				parsed = properties[value]
 				break
 			}
-			case ValueType.String: {
+			case ValueType.STRING: {
 				parsed = value.slice(1, -1)
 				break
 			}
-			case ValueType.Object: {
+			case ValueType.OBJECT: {
 				parsed = this.#parseObject(
 					value,
 					properties,
@@ -125,7 +125,7 @@ class Interpolation {
 				)
 				break
 			}
-			case ValueType.Array: {
+			case ValueType.ARRAY: {
 				parsed = this.#parseArray(
 					value,
 					properties,
@@ -315,7 +315,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Undefined,
+				type: ValueType.UNDEFINED,
 				end: matched.range[1],
 			}
 		}
@@ -324,7 +324,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Null,
+				type: ValueType.NULL,
 				end: matched.range[1],
 			}
 		}
@@ -333,7 +333,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Boolean,
+				type: ValueType.BOOLEAN,
 				end: matched.range[1],
 			}
 		}
@@ -342,7 +342,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Number,
+				type: ValueType.NUMBER,
 				end: matched.range[1],
 			}
 		}
@@ -351,7 +351,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Variable,
+				type: ValueType.VARIABLE,
 				end: matched.range[1],
 			}
 		}
@@ -360,7 +360,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.String,
+				type: ValueType.STRING,
 				end: matched.range[1],
 			}
 		}
@@ -369,7 +369,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Object,
+				type: ValueType.OBJECT,
 				end: matched.range[1],
 			}
 		}
@@ -378,7 +378,7 @@ class Interpolation {
 		if (matched) {
 			return {
 				value: matched.match[0] || throwError(new UnreachableCode()),
-				type: ValueType.Array,
+				type: ValueType.ARRAY,
 				end: matched.range[1],
 			}
 		}

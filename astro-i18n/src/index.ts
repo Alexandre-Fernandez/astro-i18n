@@ -1,6 +1,8 @@
+import "@src/core/state/singletons/astro-i18n.singleton" // init astro-i18n.singleton
 import { singleton } from "@src/core/astro/middleware"
 import type { AstroIntegration } from "astro"
-// import type { AstroHooks } from "@src/types/astro"
+
+export { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 
 export default function i18n(): AstroIntegration {
 	return {

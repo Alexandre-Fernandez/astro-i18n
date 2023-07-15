@@ -1,10 +1,10 @@
 export enum ValueType {
-	Undefined,
-	Null,
-	Boolean,
-	Number,
-	Variable,
-	String,
-	Object,
-	Array,
+	UNDEFINED,
+	NULL,
+	BOOLEAN,
+	NUMBER,
+	VARIABLE,
+	STRING,
+	OBJECT,
+	ARRAY,
 }
