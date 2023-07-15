@@ -25,3 +25,7 @@ export const INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN = Regex.fromString(
 export const ASTRO_I18N_CONFIG_PATTERN = Regex.fromString(
 	`${PACKAGE_NAME}\\.config\\.(${SUPPORTED_CONFIG_FORMATS.join("|")})`,
 )
+
+export const ASTRO_CONFIG_PATTERN = Regex.fromString(
+	`astro\\.config\\.(js|cjs|mjs|ts)`,
+)

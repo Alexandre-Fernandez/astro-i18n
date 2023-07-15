@@ -25,6 +25,10 @@ export type ConfigTranslations = {
 		/** Regex patterns where namespaces will be loaded. */
 		routes: string[]
 	}[]
+	$directory?: {
+		main?: string
+		pages?: string
+	}
 }
 
 export type ConfigRoutes = {

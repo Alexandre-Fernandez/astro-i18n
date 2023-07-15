@@ -35,6 +35,13 @@ export function isConfigTranslations(
 			}
 			continue
 		}
+		if (key === "$directory") {
+			if (!isObject(value)) return false
+			for (const [location, name] of Object.entries(value)) {
+				if (typeof name !== "string") return false
+				if (location !== "main" && location !== "pages") return false
+			}
+		}
 		// is translations:
 		if (!isObject(value)) return false
 		for (const translations of Object.values(value)) {

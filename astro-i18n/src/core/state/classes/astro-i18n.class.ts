@@ -1,7 +1,10 @@
+import Config from "@src/core/state/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 
 class AstroI18n {
 	environment: Environment
+
+	#config = new Config()
 
 	constructor() {
 		this.environment = AstroI18n.#detectEnvironment()
@@ -21,6 +24,10 @@ class AstroI18n {
 		}
 
 		return Environment.NONE
+	}
+
+	toHtml() {
+		return `<script type="text/json"></script>`
 	}
 }
 
