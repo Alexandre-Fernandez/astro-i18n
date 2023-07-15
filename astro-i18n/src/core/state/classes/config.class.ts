@@ -6,9 +6,11 @@ import {
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { assert } from "@lib/ts/guards"
 import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
+import RootNotFound from "@src/core/state/errors/root-not-found.error"
 import {
 	autofindAstroI18nConfig,
 	autofindProjectRoot,
+	hasAstroConfig,
 } from "@src/core/state/functions/config.functions"
 import { isPartialConfig } from "@src/core/state/guards/config.guard"
 import type { AstroI18nConfig } from "@src/core/state/types"
@@ -71,10 +73,13 @@ class Config implements AstroI18nConfig {
 
 		assert(config, isPartialConfig, "AstroI18nConfig")
 
-		// autofind root, if it fails we take parent dir
-		const root = (await autofindProjectRoot(path)) || (await popPath(path))
+		let root = await popPath(path)
 
-		//
+		if (!(await hasAstroConfig(root))) {
+			const found = await autofindProjectRoot(path)
+			if (!found) throw new RootNotFound()
+			root = found
+		}
 
 		return new Config(config)
 	}

@@ -77,6 +77,15 @@ export async function autofindProjectRoot(startingPath: string) {
 	return null
 }
 
+export async function hasAstroConfig(directory: string) {
+	const { readdirSync } = await AsyncNode.fs
+	return (
+		typeof readdirSync(directory).find((content) =>
+			astroConfigPattern.test(content),
+		) === "string"
+	)
+}
+
 /**
  * Removes all the path segments inside node_modules (including node_modules).
  */
