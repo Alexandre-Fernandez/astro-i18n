@@ -3,7 +3,7 @@ import {
 	importJson,
 	importScript,
 } from "@lib/async-node/functions/import.functions"
-import { toPosixPath } from "@lib/async-node/functions/path.functions"
+import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { assert } from "@lib/ts/guards"
 import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import {
@@ -46,13 +46,15 @@ class Config implements AstroI18nConfig {
 		if (routes) this.routes = routes
 	}
 
-	static async fromFilesystem() {
+	static async fromFilesystem(path: string | null = null) {
 		const { fileURLToPath } = await AsyncNode.url
 
 		// find from PWD
-		let path = await autofindAstroI18nConfig(
-			await toPosixPath(process.env["PWD"] || ""),
-		)
+		if (!path) {
+			path = await autofindAstroI18nConfig(
+				await toPosixPath(process.env["PWD"] || ""),
+			)
+		}
 
 		// find from import.meta.url
 		if (!path) {
@@ -69,10 +71,10 @@ class Config implements AstroI18nConfig {
 
 		assert(config, isPartialConfig, "AstroI18nConfig")
 
-		console.log(
-			"root ==",
-			await autofindProjectRoot(fileURLToPath(import.meta.url)),
-		)
+		// autofind root, if it fails we take parent dir
+		const root = (await autofindProjectRoot(path)) || (await popPath(path))
+
+		//
 
 		return new Config(config)
 	}
