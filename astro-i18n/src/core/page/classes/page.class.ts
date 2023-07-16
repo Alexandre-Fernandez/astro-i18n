@@ -35,7 +35,15 @@ class Page {
 			...config.translations?.$directory,
 		}
 		const i18nPagesDir = `${root}/src/${$directory.main}/pages`
-		const localI18nDirPattern = Regex.fromString(`^_?${$directory.pages}$`)
+		const locales = [
+			config.primaryLocale || "en",
+			...(config.secondaryLocales || []),
+		]
+		const translationFilePattern = Regex.fromString(
+			`(\\/[^\\/\\s]+)?(?:\\/_?${$directory.pages})?\\/_?(${locales.join(
+				"|",
+			)})(\\.[^\\.\\s]+)?\\.json$`,
+		)
 
 		await forEachDirectory(pagesDir, async (dir, contents) => {
 			if (secondaryLocalePaths.some((path) => dir.includes(path))) {
@@ -67,11 +75,21 @@ class Page {
 					continue
 				}
 
-				// is json ? has good naming secondaryLocale.optionalRouteTranslation.json + logic for localI18nDirPattern
+				if (!relative.endsWith(".json")) continue
+
+				const { match, range } =
+					translationFilePattern.match(relative) || {}
+				if (!match || !range) continue
+
+				const route = `${relative.slice(0, range[0])}${match[1] || "/"}`
+				const locale = match[2] || throwError(new UnreachableCode())
+				const translatedRoute = match[3]
+					? match[3].replace(".", "")
+					: null
+
+				console.log(route, locale, translatedRoute)
 			}
 		})
-
-		console.log(pageData)
 	}
 }
 
