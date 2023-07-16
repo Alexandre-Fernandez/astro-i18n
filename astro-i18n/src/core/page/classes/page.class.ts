@@ -58,8 +58,8 @@ class Page {
 							? match[1].replace("/", "")
 							: match[2]?.replace("/", "") ||
 							  throwError(new UnreachableCode())
-
-					if (name.startsWith("_")) continue // private
+					// check if is private
+					if (name.startsWith("_")) continue
 
 					const route = `${relative.slice(0, range[0])}/${name}`
 
