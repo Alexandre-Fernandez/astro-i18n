@@ -44,9 +44,9 @@ class Page {
 
 			for (const content of contents) {
 				const path = `${dir}/${content}`
-				const relative = path.replace(pagesDir, "")
-
 				if (await isDirectory(path)) continue
+
+				const relative = path.replace(pagesDir, "")
 
 				if (relative.endsWith(".astro")) {
 					const { match, range } =
