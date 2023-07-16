@@ -52,7 +52,7 @@ export function isConfigTranslations(
 	return true
 }
 
-function isDeepStringRecord(
+export function isDeepStringRecord(
 	deepStringRecord: unknown,
 	root = true,
 ): deepStringRecord is DeepStringRecord {

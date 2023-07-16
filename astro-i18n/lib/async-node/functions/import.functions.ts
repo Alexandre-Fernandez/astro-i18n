@@ -1,6 +1,7 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import FileNotFound from "@lib/async-node/errors/file-not-found.error"
 import InvalidFileType from "@lib/async-node/errors/invalid-file-type.error"
+import InvalidJson from "@lib/async-node/errors/invalid-json.error"
 import { isFile } from "@lib/async-node/functions/fs.functions"
 
 export async function importScript(
@@ -38,7 +39,13 @@ export async function importJson(filename: string) {
 
 	const { readFileSync } = await AsyncNode.fs
 
-	return JSON.parse(readFileSync(filename, { encoding: "utf8" })) as unknown
+	const json = readFileSync(filename, { encoding: "utf8" })
+
+	try {
+		return JSON.parse(json) as unknown
+	} catch (_) {
+		throw new InvalidJson(filename)
+	}
 }
 
 async function extractCommonJsExports(commonJs: string, filename: string) {
