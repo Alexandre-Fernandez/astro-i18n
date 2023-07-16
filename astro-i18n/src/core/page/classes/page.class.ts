@@ -128,13 +128,15 @@ class Page {
 			}
 		})
 
-		const pages: PageProps[] = []
+		const pages: PageProps[] = [] // all pages with an astro component
 		for (const page of Object.values(pageData)) {
 			if (!page.path || !page.name || !page.route) continue
 			pages.push({ translations: {}, routes: {}, ...page } as any)
 		}
 
 		const i18nPagesDir = `${root}/src/${$directory.main}/pages`
+
+		// fetch page translations from i18nPagesDir and merge them
 
 		console.log(pages)
 	}
