@@ -2,9 +2,13 @@ import {
 	forEachDirectory,
 	isDirectory,
 } from "@lib/async-node/functions/fs.functions"
+import { throwError } from "@lib/error"
 import { Regex } from "@lib/regex"
+import { FILE_ROUTE_NAME_PATTERN } from "@src/core/page/constants/page-patterns.constants"
 import PagesNotFound from "@src/core/page/errors/pages-not-found.error"
+import type { PageProps } from "@src/core/page/types"
 import type { AstroI18nConfig } from "@src/core/state/types"
+import UnreachableCode from "@src/errors/unreachable-code.error"
 
 class Page {
 	/*
@@ -21,6 +25,7 @@ class Page {
 		const pagesDir = `${root}/src/pages`
 		if (!(await isDirectory(pagesDir))) throw new PagesNotFound()
 
+		const pageData: { [relative: string]: Partial<PageProps> } = {}
 		const secondaryLocalePaths = (config.secondaryLocales || []).map(
 			(locale) => `/src/pages/${locale}`,
 		)
@@ -29,10 +34,10 @@ class Page {
 			pages: "i18n",
 			...config.translations?.$directory,
 		}
-		const mainDirPattern = Regex.fromString(`^_?${$directory.main}$`)
-		const pageDirPattern = Regex.fromString(`^_?${$directory.pages}$`)
+		const i18nPagesDir = `${root}/src/${$directory.main}/pages`
+		const localI18nDirPattern = Regex.fromString(`^_?${$directory.pages}$`)
 
-		forEachDirectory(pagesDir, (dir, contents) => {
+		await forEachDirectory(pagesDir, async (dir, contents) => {
 			if (secondaryLocalePaths.some((path) => dir.includes(path))) {
 				return
 			}
@@ -40,11 +45,30 @@ class Page {
 			for (const content of contents) {
 				const path = `${dir}/${content}`
 				const relative = path.replace(pagesDir, "")
-				console.log(relative)
+
+				if (await isDirectory(path)) continue
+
+				if (relative.endsWith(".astro")) {
+					const { match, range } =
+						FILE_ROUTE_NAME_PATTERN.match(relative) || {}
+					if (!match || !range) continue
+
+					const name =
+						match[1] && match[2] === "/index"
+							? match[1].replace("/", "")
+							: match[2]?.replace("/", "") ||
+							  throwError(new UnreachableCode())
+
+					if (name.startsWith("_")) continue // private
+
+					const route = `${relative.slice(0, range[0])}/${name}`
+
+					pageData[route] = { ...pageData[route], name, route, path }
+				}
 			}
 		})
 
-		// https://github.com/Alexandre-Fernandez/astro-i18n/blob/0a7767c95d743c0beb5000ff2f96b1ea596cf0ad/src/core/fs/index.ts#L51
+		console.log(pageData)
 	}
 }
 

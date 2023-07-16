@@ -29,11 +29,11 @@ export async function forEachDirectory(
 
 	const contents = readdirSync(startingDirectory)
 
-	callback(await toPosixPath(startingDirectory), contents)
+	await callback(await toPosixPath(startingDirectory), contents)
 
 	for (const content of contents) {
 		const path = `${startingDirectory}/${content}`
 		if (!(await isDirectory(path))) continue
-		forEachDirectory(path, callback)
+		await forEachDirectory(path, callback)
 	}
 }
