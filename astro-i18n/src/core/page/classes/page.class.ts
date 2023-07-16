@@ -25,7 +25,7 @@ class Page {
 		const pagesDir = `${root}/src/pages`
 		if (!(await isDirectory(pagesDir))) throw new PagesNotFound()
 
-		const pageData: { [relative: string]: Partial<PageProps> } = {}
+		const pageData: { [route: string]: Partial<PageProps> } = {}
 		const secondaryLocalePaths = (config.secondaryLocales || []).map(
 			(locale) => `/src/pages/${locale}`,
 		)
