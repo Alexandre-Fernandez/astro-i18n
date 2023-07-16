@@ -4,7 +4,7 @@ import {
 } from "@lib/async-node/functions/fs.functions"
 import { throwError } from "@lib/error"
 import { Regex } from "@lib/regex"
-import { FILE_ROUTE_NAME_PATTERN } from "@src/core/page/constants/page-patterns.constants"
+import { ASTRO_COMPONENT_ROUTE_NAME_PATTERN } from "@src/core/page/constants/page-patterns.constants"
 import PagesNotFound from "@src/core/page/errors/pages-not-found.error"
 import type { PageProps } from "@src/core/page/types"
 import type { AstroI18nConfig } from "@src/core/state/types"
@@ -50,7 +50,7 @@ class Page {
 
 				if (relative.endsWith(".astro")) {
 					const { match, range } =
-						FILE_ROUTE_NAME_PATTERN.match(relative) || {}
+						ASTRO_COMPONENT_ROUTE_NAME_PATTERN.match(relative) || {}
 					if (!match || !range) continue
 
 					const name =
