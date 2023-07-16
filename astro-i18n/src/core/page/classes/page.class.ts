@@ -64,7 +64,10 @@ class Page {
 					const route = `${relative.slice(0, range[0])}/${name}`
 
 					pageData[route] = { ...pageData[route], name, route, path }
+					continue
 				}
+
+				// is json ? has good naming secondaryLocale.optionalRouteTranslation.json + logic for localI18nDirPattern
 			}
 		})
 
