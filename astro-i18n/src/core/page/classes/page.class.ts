@@ -104,6 +104,7 @@ class Page {
 					localeTranslations,
 					pageData[route]?.translations?.[locale] || {},
 				)
+
 				const translations = {
 					...pageData[route]?.translations,
 					[locale]: localeTranslations,
