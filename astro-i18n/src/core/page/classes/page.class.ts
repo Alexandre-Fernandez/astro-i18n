@@ -136,6 +136,8 @@ class Page {
 
 		const i18nPagesDir = `${root}/src/${$directory.main}/pages`
 
+		if (!(await isDirectory(i18nPagesDir))) return pages // TODO: map to create Page instances
+
 		// fetch page translations from i18nPagesDir and merge them
 
 		console.log(pages)
