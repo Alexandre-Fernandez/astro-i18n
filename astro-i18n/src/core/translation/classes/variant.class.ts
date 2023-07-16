@@ -1,16 +1,16 @@
 import { throwError } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
-import { ValueType } from "@src/core/parsing/enums/value-type.enum"
-import InvalidVariantPriority from "@src/core/parsing/errors/invalid-variant-priority.error"
-import InvalidVariantPropertyKey from "@src/core/parsing/errors/invalid-variant-property-key.error"
-import InvalidVariantPropertyValue from "@src/core/parsing/errors/invalid-variant-property-value.error"
-import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
+import { ValueType } from "@src/core/translation/enums/value-type.enum"
+import InvalidVariantPriority from "@src/core/translation/errors/invalid-variant-priority.error"
+import InvalidVariantPropertyKey from "@src/core/translation/errors/invalid-variant-property-key.error"
+import InvalidVariantPropertyValue from "@src/core/translation/errors/invalid-variant-property-value.error"
+import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
 import UnreachableCode from "@src/errors/unreachable-code.error"
-import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
+import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
 import {
 	isPrimitive,
 	isPrimitiveArray,
-} from "@src/core/parsing/guards/primitive.guard"
+} from "@src/core/translation/guards/primitive.guard"
 import {
 	matchArray,
 	matchBoolean,
@@ -19,8 +19,8 @@ import {
 	matchString,
 	matchUndefined,
 	matchVariable,
-} from "@src/core/parsing/functions/matching.functions"
-import type { VariantProperty } from "@src/core/parsing/types"
+} from "@src/core/translation/functions/matching.functions"
+import type { VariantProperty } from "@src/core/translation/types"
 
 class Variant {
 	static priorityKey = "$priority"

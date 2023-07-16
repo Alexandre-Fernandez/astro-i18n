@@ -1,4 +1,4 @@
-import type { Primitive } from "@src/core/parsing/types"
+import type { Primitive } from "@src/core/translation/types"
 
 export function isPrimitive(primitive: unknown): primitive is Primitive {
 	return (

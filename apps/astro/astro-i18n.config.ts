@@ -1,3 +1,4 @@
 export default {
-	primaryLocale: "fr",
+	primaryLocale: "en",
+	secondaryLocales: ["fr"],
 }

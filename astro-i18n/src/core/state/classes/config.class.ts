@@ -5,6 +5,7 @@ import {
 } from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { assert } from "@lib/ts/guards"
+import Page from "@src/core/page/classes/page.class"
 import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import RootNotFound from "@src/core/state/errors/root-not-found.error"
 import {
@@ -81,7 +82,9 @@ class Config implements AstroI18nConfig {
 			root = found
 		}
 
-		return new Config(config)
+		console.log(Page.getPages(root, config))
+
+		return {} || new Config(config)
 	}
 }
 

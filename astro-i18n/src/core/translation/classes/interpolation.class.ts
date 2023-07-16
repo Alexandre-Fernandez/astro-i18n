@@ -4,10 +4,10 @@ import {
 	INTERPOLATION_ALIAS_PATTERN,
 	INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN,
 } from "@src/constants/patterns.constants"
-import { ValueType } from "@src/core/parsing/enums/value-type.enum"
-import UnknownValue from "@src/core/parsing/errors/unknown-value.error"
-import UntrimmedString from "@src/core/parsing/errors/untrimmed-string.error"
-import { depthAwareforEach } from "@src/core/parsing/functions/utility.functions"
+import { ValueType } from "@src/core/translation/enums/value-type.enum"
+import UnknownValue from "@src/core/translation/errors/unknown-value.error"
+import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
+import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import {
@@ -19,12 +19,12 @@ import {
 	matchString,
 	matchUndefined,
 	matchVariable,
-} from "@src/core/parsing/functions/matching.functions"
+} from "@src/core/translation/functions/matching.functions"
 import type {
 	Formatter,
 	Matcher,
 	FormatterMatch,
-} from "@src/core/parsing/types"
+} from "@src/core/translation/types"
 
 const interpolationAliasMatcher: Matcher = RegexBuilder.fromRegex(
 	INTERPOLATION_ALIAS_PATTERN,

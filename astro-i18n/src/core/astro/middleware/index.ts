@@ -1,5 +1,5 @@
-import "@src/core/parsing/classes/interpolation.class"
-import "@src/core/parsing/classes/variant.class"
+import "@src/core/translation/classes/interpolation.class"
+import "@src/core/translation/classes/variant.class"
 import Config from "@src/core/state/classes/config.class"
 import type { AstroMiddleware } from "@src/types/astro.types"
 
