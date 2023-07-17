@@ -1,8 +1,8 @@
 {
 	"extends": "af-tsconfig",
 	"compilerOptions": {
-		"target": "es2017",
-		"module": "es2020",
+		"target": "es2022",
+		"module": "es2022",
 		"emitDeclarationOnly": true,
 		"declaration": true,
 		"outDir": "./dist",

@@ -1,14 +1,22 @@
-import Config from "@src/core/config/classes/config.class"
+import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import "@src/core/translation/classes/interpolation.class"
 import "@src/core/translation/classes/variant.class"
-import type { AstroMiddleware } from "@src/types/astro.types"
+import Environment from "@src/core/state/enums/environment.enum"
+import type { AstroI18nConfig } from "@src/core/config/types"
+import type { AstroMiddleware } from "@src/core/astro/types"
 
 export const singleton = {
 	value: 0,
 }
 
-export const useAstroI18n: () => AstroMiddleware = () => {
-	return async (ctx, next) => {
+export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
+	astroI18n.init(config)
+
+	return ((ctx, next) => {
+		if (import.meta.env.DEV && astroI18n.environment === Environment.NODE) {
+			astroI18n.init(config) // get filesystem translations on every request
+		}
+
 		// check what page it is
 		// build translations for that page (common + specific)
 		// build route translations for that page
@@ -23,13 +31,13 @@ export const useAstroI18n: () => AstroMiddleware = () => {
 
 		// await Config.findConfig()
 
-		console.log(JSON.stringify(await Config.fromFilesystem(), null, 2))
+		// console.log(JSON.stringify(await Config.fromFilesystem(), null, 2))
 
 		const mode = import.meta.env.MODE
 		ctx.locals.pwd = process.env.PWD
 		singleton.value += 1
 		return next()
-	}
+	}) as AstroMiddleware
 }
 
 // PROD = load translation from FS once

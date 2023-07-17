@@ -119,7 +119,6 @@ class Variant {
 				parsed = null
 				break
 			}
-			// @ts-expect-error
 			case ValueType.BOOLEAN: {
 				if (value === "true") {
 					parsed = true
