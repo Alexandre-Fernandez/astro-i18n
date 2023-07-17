@@ -2,6 +2,7 @@ import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
 import type { AstroI18nConfig } from "@src/core/config/types"
+import UnreachableCode from "@src/errors/unreachable-code.error"
 
 class AstroI18n {
 	environment: Environment
@@ -49,7 +50,7 @@ class AstroI18n {
 				break
 			}
 			default: {
-				break
+				throw new UnreachableCode()
 			}
 		}
 	}
