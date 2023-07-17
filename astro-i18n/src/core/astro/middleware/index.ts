@@ -9,6 +9,8 @@ export const singleton = {
 	value: 0,
 }
 
+// TODO { config?: Partial<AstroI18nConfig> | string, formatters?: Formatter[] }
+// serialize formatter
 export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 	astroI18n.init(config)
 
