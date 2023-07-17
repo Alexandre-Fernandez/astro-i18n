@@ -1,6 +1,6 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import { importJson } from "@lib/async-node/functions/import.functions"
-import { throwError } from "@lib/error"
+import { throwError, throwFalsy } from "@lib/error"
 import { merge } from "@lib/object"
 import { assert } from "@lib/ts/guards"
 import { Regex } from "@lib/regex"
@@ -10,7 +10,6 @@ import {
 } from "@lib/async-node/functions/fs.functions"
 import PagesNotFound from "@src/core/page/errors/pages-not-found.error"
 import { ASTRO_COMPONENT_ROUTE_NAME_PATTERN } from "@src/core/page/constants/page-patterns.constants"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import Page from "@src/core/page/classes/page.class"
 import InvalidTranslationFilePattern from "@src/core/page/errors/invalid-translation-file-pattern.error"
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
@@ -70,8 +69,7 @@ export async function getProjectPages(
 				const name =
 					match[1] && match[2] === "/index"
 						? match[1].replace("/", "")
-						: match[2]?.replace("/", "") ||
-						  throwError(new UnreachableCode())
+						: match[2]?.replace("/", "") || throwFalsy()
 				if (name.startsWith("_")) continue // ignore if private
 				const route =
 					name === "index"
@@ -89,7 +87,7 @@ export async function getProjectPages(
 			if (!match || !range) continue
 
 			const route = `${relative.slice(0, range[0])}${match[1] || "/"}`
-			const locale = match[2] || throwError(new UnreachableCode())
+			const locale = match[2] || throwFalsy()
 			const name = route.split("/").slice(-1).join("") || "index"
 			const translatedName = match[3] ? match[3].replace(".", "") : null
 

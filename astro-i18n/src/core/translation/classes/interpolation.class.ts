@@ -1,4 +1,4 @@
-import { throwError } from "@lib/error"
+import { throwFalsy } from "@lib/error"
 import { RegexBuilder } from "@lib/regex"
 import {
 	INTERPOLATION_ALIAS_PATTERN,
@@ -9,7 +9,6 @@ import UnknownValue from "@src/core/translation/errors/unknown-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
 import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import {
 	matchArray,
 	matchBoolean,
@@ -266,7 +265,7 @@ class Interpolation {
 		if (aliasMatch) {
 			const { match, range } = aliasMatch
 
-			alias = match[1] || throwError(new UnreachableCode())
+			alias = match[1] || throwFalsy()
 
 			interpolation = interpolation.slice(range[1]).trim()
 		}
@@ -280,7 +279,7 @@ class Interpolation {
 
 			const { match, range } = argumentlessFormatterMatch
 
-			const name = match[1] || throwError(new UnreachableCode())
+			const name = match[1] || throwFalsy()
 
 			interpolation = interpolation.slice(range[1]).trim()
 
@@ -313,7 +312,7 @@ class Interpolation {
 		let matched = matchUndefined(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.UNDEFINED,
 				end: matched.range[1],
 			}
@@ -322,7 +321,7 @@ class Interpolation {
 		matched = matchNull(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.NULL,
 				end: matched.range[1],
 			}
@@ -331,7 +330,7 @@ class Interpolation {
 		matched = matchBoolean(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.BOOLEAN,
 				end: matched.range[1],
 			}
@@ -340,7 +339,7 @@ class Interpolation {
 		matched = matchNumber(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.NUMBER,
 				end: matched.range[1],
 			}
@@ -349,7 +348,7 @@ class Interpolation {
 		matched = matchVariable(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.VARIABLE,
 				end: matched.range[1],
 			}
@@ -358,7 +357,7 @@ class Interpolation {
 		matched = matchString(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.STRING,
 				end: matched.range[1],
 			}
@@ -367,7 +366,7 @@ class Interpolation {
 		matched = matchObject(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.OBJECT,
 				end: matched.range[1],
 			}
@@ -376,7 +375,7 @@ class Interpolation {
 		matched = matchArray(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.ARRAY,
 				end: matched.range[1],
 			}

@@ -1,11 +1,10 @@
-import { throwError } from "@lib/error"
+import { throwFalsy } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
 import InvalidVariantPriority from "@src/core/translation/errors/invalid-variant-priority.error"
 import InvalidVariantPropertyKey from "@src/core/translation/errors/invalid-variant-property-key.error"
 import InvalidVariantPropertyValue from "@src/core/translation/errors/invalid-variant-property-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
 import {
 	isPrimitive,
@@ -201,7 +200,7 @@ class Variant {
 		let matched = matchUndefined(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.UNDEFINED,
 				end: matched.range[1],
 			}
@@ -210,7 +209,7 @@ class Variant {
 		matched = matchNull(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.NULL,
 				end: matched.range[1],
 			}
@@ -219,7 +218,7 @@ class Variant {
 		matched = matchBoolean(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.BOOLEAN,
 				end: matched.range[1],
 			}
@@ -228,7 +227,7 @@ class Variant {
 		matched = matchNumber(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.NUMBER,
 				end: matched.range[1],
 			}
@@ -237,7 +236,7 @@ class Variant {
 		matched = matchString(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.STRING,
 				end: matched.range[1],
 			}
@@ -246,7 +245,7 @@ class Variant {
 		matched = matchArray(value)
 		if (matched) {
 			return {
-				value: matched.match[0] || throwError(new UnreachableCode()),
+				value: matched.match[0] || throwFalsy(),
 				type: ValueType.ARRAY,
 				end: matched.range[1],
 			}

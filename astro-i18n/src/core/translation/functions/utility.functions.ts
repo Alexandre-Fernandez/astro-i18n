@@ -1,6 +1,5 @@
-import { throwError } from "@lib/error"
+import { throwFalsy } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 
 /**
  * Traverses a `string` taking the object/array/string depth into account.
@@ -23,7 +22,7 @@ export function depthAwareforEach(
 	let quoteType = null as string | null
 	// eslint-disable-next-line unicorn/no-for-loop
 	for (let i = 0; i < string.length; i += 1) {
-		const char = string[i] || throwError(new UnreachableCode())
+		const char = string[i] || throwFalsy()
 		const isQuote = char === '"' || char === "'" || char === "`"
 
 		let isOpening = false
