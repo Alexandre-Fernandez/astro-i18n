@@ -5,7 +5,7 @@ import {
 } from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { assert } from "@lib/ts/guards"
-import Page from "@src/core/page/classes/page.class"
+import { getProjectPages } from "@src/core/page/functions/page.functions"
 import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
 import RootNotFound from "@src/core/state/errors/root-not-found.error"
 import {
@@ -14,22 +14,26 @@ import {
 	hasAstroConfig,
 } from "@src/core/state/functions/config.functions"
 import { isPartialConfig } from "@src/core/state/guards/config.guard"
-import type { AstroI18nConfig } from "@src/core/state/types"
+import type {
+	AstroI18nConfig,
+	ConfigRoutes,
+	ConfigTranslations,
+} from "@src/core/state/types"
 
 class Config implements AstroI18nConfig {
 	primaryLocale = "en"
 
-	secondaryLocales = [] as AstroI18nConfig["secondaryLocales"]
+	secondaryLocales: string[] = []
 
 	showPrimaryLocale = false
 
-	trailingSlash = "never" as AstroI18nConfig["trailingSlash"]
+	trailingSlash: "always" | "never" = "never"
 
-	run = "client+server" as AstroI18nConfig["run"]
+	run: "server" | "client+server" = "client+server"
 
-	translations = {} as AstroI18nConfig["translations"]
+	translations: ConfigTranslations = {}
 
-	routes = {} as AstroI18nConfig["routes"]
+	routes: ConfigRoutes = {}
 
 	constructor({
 		primaryLocale,
@@ -82,7 +86,7 @@ class Config implements AstroI18nConfig {
 			root = found
 		}
 
-		console.log(Page.getPages(root, config))
+		console.log(await getProjectPages(root, config))
 
 		return {} || new Config(config)
 	}
