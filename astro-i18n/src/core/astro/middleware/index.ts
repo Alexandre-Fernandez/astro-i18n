@@ -19,7 +19,7 @@ export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 
 		// check what page it is
 		// build translations for that page (common + specific)
-		// build route translations for that page
+		// build route translations for that page²
 
 		// how to do this for route translations ?
 		// giving all routes out is bad security wise
@@ -33,8 +33,6 @@ export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 
 		// console.log(JSON.stringify(await Config.fromFilesystem(), null, 2))
 
-		const mode = import.meta.env.MODE
-		ctx.locals.pwd = process.env.PWD
 		singleton.value += 1
 		return next()
 	}) as AstroMiddleware
