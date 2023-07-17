@@ -43,7 +43,7 @@ export async function getTranslationNamespaces(
 	projectRoot: string,
 	config: Partial<AstroI18nConfig> = {},
 ) {
-	const i18nDir = `${projectRoot}/${
+	const i18nDir = `${projectRoot}/src/${
 		config.translations?.$directory || DEFAULT_TRANSLATION_DIRNAME
 	}`
 
@@ -63,14 +63,15 @@ export async function getTranslationNamespaces(
 
 	for (const namespace of readdirSync(i18nDir)) {
 		if (namespace === PAGES_DIRNAME) continue
-		if (!(await isDirectory(namespace))) continue
+		const path = `${i18nDir}/${namespace}`
+		if (!(await isDirectory(path))) continue
 
-		for (const file of readdirSync(namespace)) {
+		for (const file of readdirSync(path)) {
 			const { match } = translationFilePattern.match(file) || {}
 			if (!match?.[1]) continue
 			const locale = match[1]
 
-			const translations = await importJson(`${i18nDir}/${file}`)
+			const translations = await importJson(`${path}/${file}`)
 			assert(
 				translations,
 				isDeepStringRecord,

@@ -1,6 +1,6 @@
+import Config from "@src/core/config/classes/config.class"
 import "@src/core/translation/classes/interpolation.class"
 import "@src/core/translation/classes/variant.class"
-import Config from "@src/core/state/classes/config.class"
 import type { AstroMiddleware } from "@src/types/astro.types"
 
 export const singleton = {
