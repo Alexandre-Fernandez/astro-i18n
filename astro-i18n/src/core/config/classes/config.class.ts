@@ -13,6 +13,7 @@ import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import {
 	autofindAstroI18nConfig,
 	autofindProjectRoot,
+	getTranslationNamespaces,
 	hasAstroConfig,
 } from "@src/core/config/functions/config.functions"
 import { isPartialConfig } from "@src/core/config/guards/config.guard"
@@ -106,7 +107,9 @@ class Config implements AstroI18nConfig {
 			merge(config.routes, page.routes)
 		}
 
-		// fetching namespaces
+		const namespaces = await getTranslationNamespaces(root, config)
+		// merging namespaces to the config
+		merge(config.translations, namespaces)
 
 		return config
 	}

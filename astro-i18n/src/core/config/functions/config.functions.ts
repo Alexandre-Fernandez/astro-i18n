@@ -1,9 +1,17 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
-import { canRead, isFile } from "@lib/async-node/functions/fs.functions"
+import {
+	canRead,
+	isDirectory,
+	isFile,
+} from "@lib/async-node/functions/fs.functions"
 import { importJson } from "@lib/async-node/functions/import.functions"
 import { isRootPath, popPath } from "@lib/async-node/functions/path.functions"
-import { RegexBuilder } from "@lib/regex"
-import { isRecord } from "@lib/ts/guards"
+import { Regex, RegexBuilder } from "@lib/regex"
+import { assert, isRecord } from "@lib/ts/guards"
+import {
+	DEFAULT_TRANSLATION_DIRNAME,
+	PAGES_DIRNAME,
+} from "@src/constants/app.constants"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import {
 	ASTRO_CONFIG_PATTERN,
@@ -17,6 +25,11 @@ import {
 	PACKAGE_DENO_JSON_PATTERN,
 	PACKAGE_JSON_PATTERN,
 } from "@src/core/config/constants/path-patterns.constants"
+import type {
+	AstroI18nConfig,
+	ConfigTranslations,
+} from "@src/core/config/types"
+import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()
@@ -25,6 +38,52 @@ const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 const astroConfigPattern = RegexBuilder.fromRegex(ASTRO_CONFIG_PATTERN)
 	.assertEnding()
 	.build()
+
+export async function getTranslationNamespaces(
+	projectRoot: string,
+	config: Partial<AstroI18nConfig> = {},
+) {
+	const i18nDir = `${projectRoot}/${
+		config.translations?.$directory || DEFAULT_TRANSLATION_DIRNAME
+	}`
+
+	const namespaces: ConfigTranslations = {}
+
+	if (!(await isDirectory(i18nDir))) return namespaces
+
+	const { readdirSync } = await AsyncNode.fs
+
+	const locales = [
+		config.primaryLocale || "en",
+		...(config.secondaryLocales || []),
+	]
+	const translationFilePattern = Regex.fromString(
+		`(${locales.join("|")})\\.json`,
+	)
+
+	for (const namespace of readdirSync(i18nDir)) {
+		if (namespace === PAGES_DIRNAME) continue
+		if (!(await isDirectory(namespace))) continue
+
+		for (const file of readdirSync(namespace)) {
+			const { match } = translationFilePattern.match(file) || {}
+			if (!match?.[1]) continue
+			const locale = match[1]
+
+			const translations = await importJson(`${i18nDir}/${file}`)
+			assert(
+				translations,
+				isDeepStringRecord,
+				`${locale}.NamespaceTranslations`,
+			)
+			namespaces[namespace] = {
+				[locale]: translations,
+			}
+		}
+	}
+
+	return namespaces
+}
 
 /**
  * Crawls directories looking for an astro-i18n's config file and returns its
@@ -88,6 +147,8 @@ export async function hasAstroConfig(directory: string) {
 
 /**
  * Removes all the path segments inside node_modules (including node_modules).
+ * For example, `"/my/project/root/node_modules/nested/library"` will return
+ * `"/my/project/root`.
  */
 function exitNodeModules(path: string) {
 	const { match } = NODE_MODULES_PATH_PATTERN.match(path) || {}
@@ -99,6 +160,8 @@ function exitNodeModules(path: string) {
 /**
  * Crawls every directory and parent directory containing a `package.json` or
  * `deno.json` looking for the given pattern.
+ * If the directory is not a project root (contains `package.json`...), it will
+ * search in the parent directory.
  */
 async function searchProjectRootPattern(
 	path: string,

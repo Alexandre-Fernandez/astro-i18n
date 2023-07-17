@@ -16,6 +16,10 @@ import InvalidTranslationFilePattern from "@src/core/page/errors/invalid-transla
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
 import type { PageProps } from "@src/core/page/types"
 import type { AstroI18nConfig } from "@src/core/config/types"
+import {
+	DEFAULT_TRANSLATION_DIRNAME,
+	PAGES_DIRNAME,
+} from "@src/constants/app.constants"
 
 /**
  * Fetches all the pages and their translations from the project.
@@ -24,16 +28,16 @@ export async function getProjectPages(
 	projectRoot: string,
 	config: Partial<AstroI18nConfig> = {},
 ) {
-	const pagesDir = `${projectRoot}/src/pages`
+	const pagesDir = `${projectRoot}/src/${PAGES_DIRNAME}`
 	if (!(await isDirectory(pagesDir))) throw new PagesNotFound()
 
 	const pageData: { [route: string]: Partial<PageProps> } = {}
 	const secondaryLocalePaths = (config.secondaryLocales || []).map(
-		(locale) => `/src/pages/${locale}`,
+		(locale) => `/src/${PAGES_DIRNAME}/${locale}`,
 	)
 	const $directory = {
-		main: "i18n",
-		pages: "i18n",
+		main: DEFAULT_TRANSLATION_DIRNAME,
+		pages: DEFAULT_TRANSLATION_DIRNAME,
 		...config.translations?.$directory,
 	}
 	const locales = [
@@ -132,7 +136,7 @@ export async function getProjectPages(
 		pages.push({ translations: {}, routes: {}, ...page } as any)
 	}
 
-	const i18nPagesDir = `${projectRoot}/src/${$directory.main}/pages`
+	const i18nPagesDir = `${projectRoot}/src/${$directory.main}/${PAGES_DIRNAME}`
 
 	if (!(await isDirectory(i18nPagesDir))) {
 		return pages.map((page) => new Page(page))
