@@ -7,7 +7,7 @@ import type { AstroI18nConfig } from "@src/core/config/types"
 class AstroI18n {
 	environment: Environment
 
-	config = new Config()
+	#config = new Config()
 
 	constructor() {
 		if (
@@ -23,14 +23,26 @@ class AstroI18n {
 		}
 	}
 
+	get locales() {
+		return [this.#config.primaryLocale, ...this.#config.secondaryLocales]
+	}
+
+	get primaryLocale() {
+		return this.#config.primaryLocale
+	}
+
+	get secondaryLocales() {
+		return this.#config.secondaryLocales
+	}
+
 	async init(config?: Partial<AstroI18nConfig> | string) {
 		switch (this.environment) {
 			case Environment.NODE: {
 				if (typeof config !== "object") {
-					this.config = await Config.fromFilesystem(config)
+					this.#config = await Config.fromFilesystem(config)
 					break
 				}
-				this.config = new Config(config)
+				this.#config = new Config(config)
 				break
 			}
 			case Environment.BROWSER: {
@@ -40,7 +52,7 @@ class AstroI18n {
 				if (typeof config !== "object") {
 					throw new MissingConfigArgument()
 				}
-				this.config = new Config(config)
+				this.#config = new Config(config)
 				break
 			}
 			default: {
