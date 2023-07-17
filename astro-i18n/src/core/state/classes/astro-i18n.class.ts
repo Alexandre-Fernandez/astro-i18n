@@ -1,8 +1,8 @@
 import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
-import type { AstroI18nConfig } from "@src/core/config/types"
 import UnreachableCode from "@src/errors/unreachable-code.error"
+import type { AstroI18nConfig } from "@src/core/config/types"
 
 class AstroI18n {
 	environment: Environment
@@ -10,23 +10,17 @@ class AstroI18n {
 	config = new Config()
 
 	constructor() {
-		this.environment = AstroI18n.#detectEnvironment()
-	}
-
-	static #detectEnvironment() {
 		if (
 			typeof process === "object" &&
 			typeof process.versions === "object" &&
 			typeof process.versions.node !== "undefined"
 		) {
-			return Environment.NODE
+			this.environment = Environment.NODE
+		} else if (typeof window === "undefined") {
+			this.environment = Environment.NONE
+		} else {
+			this.environment = Environment.BROWSER
 		}
-
-		if (typeof window !== "undefined") {
-			return Environment.BROWSER
-		}
-
-		return Environment.NONE
 	}
 
 	async init(config?: Partial<AstroI18nConfig> | string) {
