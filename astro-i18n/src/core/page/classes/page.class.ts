@@ -13,6 +13,7 @@ import type { AstroI18nConfig } from "@src/core/state/types"
 import { assert } from "@lib/ts/guards"
 import { isDeepStringRecord } from "@src/core/state/guards/config-translations.guard"
 import { merge } from "@lib/object"
+import AsyncNode from "@lib/async-node/classes/async-node.class"
 
 class Page {
 	/*
@@ -139,9 +140,73 @@ class Page {
 
 		if (!(await isDirectory(i18nPagesDir))) return pages // TODO: map to create Page instances
 
-		// fetch page translations from i18nPagesDir and merge them
+		const { readdirSync } = await AsyncNode.fs
 
-		console.log(pages)
+		for (const page of pages) {
+			let dir = `${i18nPagesDir}${page.route}`.replace(/\/$/, "")
+			if (!(await isDirectory(dir))) continue
+
+			// merging dir's translations with page
+			for (const content of readdirSync(dir, { encoding: "utf8" })) {
+				const { match } =
+					translationFilePattern.match(`/${content}`) || {}
+				if (!match) continue
+
+				const locale = match[2] || throwError(new UnreachableCode())
+				const translatedName = match[3]
+					? match[3].replace(".", "")
+					: null
+				const localeTranslations = await importJson(`${dir}/${content}`)
+				assert(
+					localeTranslations,
+					isDeepStringRecord,
+					`${locale}.PageTranslations`,
+				)
+				merge(page.translations, {
+					[locale]: localeTranslations,
+				})
+				if (translatedName) {
+					merge(page.routes, {
+						[locale]: {
+							[page.name]: translatedName,
+						},
+					})
+				}
+			}
+
+			// also checking nested translation folder
+			dir = `${dir}/${$directory.main}`
+			if (!(await isDirectory(dir))) continue
+
+			for (const content of readdirSync(dir, { encoding: "utf8" })) {
+				const { match } =
+					translationFilePattern.match(`/${content}`) || {}
+				if (!match) continue
+
+				const locale = match[2] || throwError(new UnreachableCode())
+				const translatedName = match[3]
+					? match[3].replace(".", "")
+					: null
+				const localeTranslations = await importJson(`${dir}/${content}`)
+				assert(
+					localeTranslations,
+					isDeepStringRecord,
+					`${locale}.PageTranslations`,
+				)
+				merge(page.translations, {
+					[locale]: localeTranslations,
+				})
+				if (translatedName) {
+					merge(page.routes, {
+						[locale]: {
+							[page.name]: translatedName,
+						},
+					})
+				}
+			}
+		}
+
+		return pages
 	}
 }
 
