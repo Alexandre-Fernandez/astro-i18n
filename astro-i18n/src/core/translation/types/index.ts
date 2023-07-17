@@ -14,3 +14,7 @@ export type VariantProperty = {
 }
 
 export type Primitive = undefined | null | boolean | string | number
+
+export type DeepStringRecord = {
+	[key: string]: string | DeepStringRecord
+}

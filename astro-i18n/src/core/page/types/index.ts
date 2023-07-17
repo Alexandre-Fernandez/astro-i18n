@@ -1,4 +1,4 @@
-import type { DeepStringRecord } from "@src/core/state/types"
+import type { DeepStringRecord } from "@src/core/translation/types"
 
 export interface PageProps {
 	name: string

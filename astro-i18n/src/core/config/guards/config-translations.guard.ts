@@ -1,8 +1,6 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
-import type {
-	ConfigTranslations,
-	DeepStringRecord,
-} from "@src/core/state/types"
+import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
+import type { ConfigTranslations } from "@src/core/config/types"
 
 export function isConfigTranslations(
 	configTranslations: unknown,
@@ -49,26 +47,5 @@ export function isConfigTranslations(
 		}
 	}
 
-	return true
-}
-
-export function isDeepStringRecord(
-	deepStringRecord: unknown,
-	root = true,
-): deepStringRecord is DeepStringRecord {
-	if (root) {
-		// Record<string, string | self>
-		if (!isObject(deepStringRecord)) return false
-		for (const value of Object.values(deepStringRecord)) {
-			if (!isDeepStringRecord(value, false)) return false
-		}
-		return true
-	}
-	// string | Record<string, self>
-	if (typeof deepStringRecord === "string") return true
-	if (!isObject(deepStringRecord)) return false
-	for (const value of Object.values(deepStringRecord)) {
-		if (!isDeepStringRecord(value, false)) return false
-	}
 	return true
 }

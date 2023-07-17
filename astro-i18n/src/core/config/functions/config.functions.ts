@@ -16,7 +16,7 @@ import {
 	NODE_MODULES_SEGMENT_PATTERN,
 	PACKAGE_DENO_JSON_PATTERN,
 	PACKAGE_JSON_PATTERN,
-} from "@src/core/state/constants/path-patterns.constants"
+} from "@src/core/config/constants/path-patterns.constants"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()

@@ -1,4 +1,4 @@
-import Config from "@src/core/state/classes/config.class"
+import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 
 class AstroI18n {

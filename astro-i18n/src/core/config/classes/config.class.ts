@@ -4,21 +4,24 @@ import {
 	importScript,
 } from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
+import { throwError } from "@lib/error"
+import { merge } from "@lib/object"
 import { assert } from "@lib/ts/guards"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
-import ConfigNotFound from "@src/core/state/errors/config-not-found.error"
-import RootNotFound from "@src/core/state/errors/root-not-found.error"
+import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
+import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import {
 	autofindAstroI18nConfig,
 	autofindProjectRoot,
 	hasAstroConfig,
-} from "@src/core/state/functions/config.functions"
-import { isPartialConfig } from "@src/core/state/guards/config.guard"
+} from "@src/core/config/functions/config.functions"
+import { isPartialConfig } from "@src/core/config/guards/config.guard"
 import type {
 	AstroI18nConfig,
 	ConfigRoutes,
 	ConfigTranslations,
-} from "@src/core/state/types"
+} from "@src/core/config/types"
+import UnreachableCode from "@src/errors/unreachable-code.error"
 
 class Config implements AstroI18nConfig {
 	primaryLocale = "en"
@@ -72,23 +75,40 @@ class Config implements AstroI18nConfig {
 
 		if (!path) throw new ConfigNotFound()
 
-		const config = path.endsWith(".json")
+		const partialConfig = path.endsWith(".json")
 			? await importJson(path)
 			: (await importScript(path))["default"]
 
-		assert(config, isPartialConfig, "AstroI18nConfig")
+		assert(partialConfig, isPartialConfig, "AstroI18nConfig")
 
+		const config = new Config(partialConfig)
+
+		// find project root
 		let root = await popPath(path)
-
 		if (!(await hasAstroConfig(root))) {
 			const found = await autofindProjectRoot(path)
 			if (!found) throw new RootNotFound()
 			root = found
 		}
 
-		console.log(await getProjectPages(root, config))
+		const pages = await getProjectPages(root, config)
+		// merging page translations & routes to the config
+		for (const page of pages) {
+			if (!config.translations[page.route]) {
+				config.translations[page.route] = {}
+			}
+			merge(
+				config.translations[page.route] ||
+					throwError(new UnreachableCode()),
+				page.translations,
+			)
+			if (!config.routes) config.routes = {}
+			merge(config.routes, page.routes)
+		}
 
-		return {} || new Config(config)
+		// fetching namespaces
+
+		return config
 	}
 }
 

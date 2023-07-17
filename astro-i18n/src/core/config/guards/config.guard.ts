@@ -1,7 +1,7 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
-import { isConfigRoutes } from "@src/core/state/guards/config-routes.guard"
-import { isConfigTranslations } from "@src/core/state/guards/config-translations.guard"
-import type { AstroI18nConfig } from "@src/core/state/types"
+import { isConfigRoutes } from "@src/core/config/guards/config-routes.guard"
+import { isConfigTranslations } from "@src/core/config/guards/config-translations.guard"
+import type { AstroI18nConfig } from "@src/core/config/types"
 
 export function isPartialConfig(
 	config: unknown,

@@ -1,5 +1,5 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
-import type { ConfigRoutes } from "@src/core/state/types"
+import type { ConfigRoutes } from "@src/core/config/types"
 
 export function isConfigRoutes(
 	configRoutes: unknown,

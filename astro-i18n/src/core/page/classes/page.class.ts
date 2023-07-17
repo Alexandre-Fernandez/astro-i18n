@@ -4,9 +4,8 @@ import {
 	PRERENDER_EXPORT_PATTERN,
 } from "@src/core/page/constants/page-patterns.constants"
 import AsyncNode from "@lib/async-node/classes/async-node.class"
-import FrontmatterNotFound from "@src/core/page/errors/frontmatter-not-found.error"
-import type { DeepStringRecord } from "@src/core/state/types"
 import type { PageProps } from "@src/core/page/types"
+import type { DeepStringRecord } from "@src/core/translation/types"
 
 class Page implements PageProps {
 	name: string
@@ -31,7 +30,7 @@ class Page implements PageProps {
 		const { readFileSync } = await AsyncNode.fs
 		const component = readFileSync(this.path, { encoding: "utf8" })
 		const frontmatter = FRONTMATTER_PATTERN.match(component)?.match[0]
-		if (!frontmatter) throw new FrontmatterNotFound(this.path)
+		if (!frontmatter) return false
 		return GET_STATIC_PATHS_EXPORT_PATTERN.test(frontmatter)
 	}
 
@@ -39,7 +38,7 @@ class Page implements PageProps {
 		const { readFileSync } = await AsyncNode.fs
 		const component = readFileSync(this.path, { encoding: "utf8" })
 		const frontmatter = FRONTMATTER_PATTERN.match(component)?.match[0]
-		if (!frontmatter) throw new FrontmatterNotFound(this.path)
+		if (!frontmatter) return false
 		return PRERENDER_EXPORT_PATTERN.test(frontmatter)
 	}
 }

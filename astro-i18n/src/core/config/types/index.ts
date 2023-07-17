@@ -1,3 +1,5 @@
+import type { DeepStringRecord } from "@src/core/translation/types"
+
 export interface AstroI18nConfig {
 	primaryLocale: string
 
@@ -42,8 +44,4 @@ export type ConfigRoutes = {
 		/** Regex patterns where segments will be available. */
 		routes: string[]
 	}[]
-}
-
-export type DeepStringRecord = {
-	[key: string]: string | DeepStringRecord
 }

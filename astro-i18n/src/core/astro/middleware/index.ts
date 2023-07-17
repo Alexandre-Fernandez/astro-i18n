@@ -23,7 +23,7 @@ export const useAstroI18n: () => AstroMiddleware = () => {
 
 		// await Config.findConfig()
 
-		console.log(await Config.fromFilesystem())
+		console.log(JSON.stringify(await Config.fromFilesystem(), null, 2))
 
 		const mode = import.meta.env.MODE
 		ctx.locals.pwd = process.env.PWD

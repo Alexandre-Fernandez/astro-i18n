@@ -12,10 +12,10 @@ import PagesNotFound from "@src/core/page/errors/pages-not-found.error"
 import { ASTRO_COMPONENT_ROUTE_NAME_PATTERN } from "@src/core/page/constants/page-patterns.constants"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import Page from "@src/core/page/classes/page.class"
-import { isDeepStringRecord } from "@src/core/state/guards/config-translations.guard"
 import InvalidTranslationFilePattern from "@src/core/page/errors/invalid-translation-file-pattern.error"
+import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
 import type { PageProps } from "@src/core/page/types"
-import type { AstroI18nConfig } from "@src/core/state/types"
+import type { AstroI18nConfig } from "@src/core/config/types"
 
 /**
  * Fetches all the pages and their translations from the project.
@@ -125,9 +125,10 @@ export async function getProjectPages(
 		}
 	})
 
-	const pages: PageProps[] = [] // all pages with an astro component
+	const pages: PageProps[] = []
 	for (const page of Object.values(pageData)) {
 		if (!page.path || !page.name || !page.route) continue
+		// all pages that have an astro component (defined page.path)
 		pages.push({ translations: {}, routes: {}, ...page } as any)
 	}
 
@@ -171,15 +172,14 @@ export async function getProjectPages(
 }
 
 /**
- * This function is a shortcut to avoid repetition. It fetches the translations
- * for a given page from the /src translation directory.
+ * Meant to be used inside getProjectPages to avoid repetition.
  * @param i18nDir A directory in `"src/{i18n}/pages"`.
  * @param pageName The page name for which we are fetching the translations.
  * @param pattern The pattern matching the translation files we are looking for.
  * It should match the route name at index 1 (optional), the route locale at
  * index 2 and the translated name at index 3 (optional).
  */
-export async function getSrcPageTranslations(
+async function getSrcPageTranslations(
 	i18nDir: string,
 	pageName: string,
 	pattern: Regex,
