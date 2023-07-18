@@ -4,6 +4,7 @@ import "@src/core/translation/classes/variant.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
+import { computeDeepStringRecord } from "@src/core/translation/functions/translation.functions"
 
 export const singleton = {
 	value: 0,

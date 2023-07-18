@@ -7,7 +7,7 @@ import {
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
 import UnknownValue from "@src/core/translation/errors/unknown-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
-import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
+import { depthAwareforEach } from "@src/core/translation/functions/parsing.functions"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import {
 	matchArray,

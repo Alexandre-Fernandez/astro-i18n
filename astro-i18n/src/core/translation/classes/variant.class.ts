@@ -5,7 +5,7 @@ import InvalidVariantPriority from "@src/core/translation/errors/invalid-variant
 import InvalidVariantPropertyKey from "@src/core/translation/errors/invalid-variant-property-key.error"
 import InvalidVariantPropertyValue from "@src/core/translation/errors/invalid-variant-property-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
-import { depthAwareforEach } from "@src/core/translation/functions/utility.functions"
+import { depthAwareforEach } from "@src/core/translation/functions/parsing.functions"
 import {
 	isPrimitive,
 	isPrimitiveArray,
