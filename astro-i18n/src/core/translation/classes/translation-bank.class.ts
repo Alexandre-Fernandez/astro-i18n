@@ -1,13 +1,13 @@
 import type { ConfigTranslations } from "@src/core/config/types"
 
-class TranslationDictionary {
+class TranslationBank {
 	static fromConfig(translations: ConfigTranslations) {
 		//
 	}
 }
 
 /*
-export type TranslationBank = {
+export type TranslationMap = {
 	[namespace: string]: {
 		[locale: string]: ComputedTranslations
 	}
@@ -22,4 +22,4 @@ export type ComputedTranslations = {
 
 */
 
-export default TranslationDictionary
+export default TranslationBank

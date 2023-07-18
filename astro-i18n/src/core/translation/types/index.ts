@@ -20,7 +20,7 @@ export type DeepStringRecord = {
 	[key: string]: string | DeepStringRecord
 }
 
-export type TranslationBank = {
+export type TranslationMap = {
 	[namespace: string]: {
 		[locale: string]: ComputedTranslations
 	}
