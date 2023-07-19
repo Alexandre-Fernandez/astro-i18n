@@ -49,18 +49,9 @@ class Regex {
 	}
 
 	match(string: string): ExecResult | null {
-		const global = new Regex(
-			new RegExp(
-				this.regexp.source,
-				this.regexp.flags.includes("g")
-					? this.regexp.flags
-					: `${this.regexp.flags}g`,
-			),
-		)
-
 		let result: ExecResult | null = null
 
-		global.exec(string, (match) => {
+		this.exec(string, (match) => {
 			result = match
 			return Regex.BREAK
 		})
