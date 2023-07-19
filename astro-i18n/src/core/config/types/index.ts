@@ -17,14 +17,14 @@ export interface AstroI18nConfig {
 }
 
 export type ConfigTranslations = {
-	[namespace: string]: {
+	[group: string]: {
 		[locale: string]: DeepStringRecord
 	}
 } & {
 	$load?: {
-		/** Namespaces to load. */
-		namespaces: string[]
-		/** Regex patterns where namespaces will be loaded. */
+		/** Groups to load. */
+		groups: string[]
+		/** Regex patterns where groups will be loaded. */
 		routes: string[]
 	}[]
 	$directory?: {

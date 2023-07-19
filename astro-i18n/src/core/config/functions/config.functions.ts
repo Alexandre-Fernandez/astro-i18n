@@ -39,7 +39,37 @@ const astroConfigPattern = RegexBuilder.fromRegex(ASTRO_CONFIG_PATTERN)
 	.assertEnding()
 	.build()
 
-export async function getTranslationNamespaces(
+/**
+ * Separates ConfigTranslations common group from the route groups and the other
+ * extra groups.
+ */
+export function categorizeConfigTranslationsGroups(
+	configTranslations: ConfigTranslations,
+) {
+	const groups = {
+		routes: [] as string[],
+		extra: [] as string[],
+		common: undefined as string | undefined,
+	}
+	for (const key of Object.keys(configTranslations)) {
+		if (key.startsWith("/")) {
+			groups.routes.push(key)
+			continue
+		}
+		if (key === "common") {
+			groups.common = "common"
+			continue
+		}
+		groups.extra.push(key)
+	}
+	return groups
+}
+
+/**
+ * Extracts all the non-page translation groups from the main astro-i18n
+ * directory.
+ */
+export async function getProjectTranslationGroups(
 	projectRoot: string,
 	config: Partial<AstroI18nConfig> = {},
 ) {
@@ -47,9 +77,9 @@ export async function getTranslationNamespaces(
 		config.translations?.$directory || DEFAULT_TRANSLATION_DIRNAME
 	}`
 
-	const namespaces: ConfigTranslations = {}
+	const groups: ConfigTranslations = {}
 
-	if (!(await isDirectory(i18nDir))) return namespaces
+	if (!(await isDirectory(i18nDir))) return groups
 
 	const { readdirSync } = await AsyncNode.fs
 
@@ -61,9 +91,9 @@ export async function getTranslationNamespaces(
 		`(${locales.join("|")})\\.json`,
 	)
 
-	for (const namespace of readdirSync(i18nDir)) {
-		if (namespace === PAGES_DIRNAME) continue
-		const path = `${i18nDir}/${namespace}`
+	for (const group of readdirSync(i18nDir)) {
+		if (group === PAGES_DIRNAME) continue
+		const path = `${i18nDir}/${group}`
 		if (!(await isDirectory(path))) continue
 
 		for (const file of readdirSync(path)) {
@@ -75,15 +105,15 @@ export async function getTranslationNamespaces(
 			assert(
 				translations,
 				isDeepStringRecord,
-				`${locale}.NamespaceTranslations`,
+				`${locale}.GroupTranslations`,
 			)
-			namespaces[namespace] = {
+			groups[group] = {
 				[locale]: translations,
 			}
 		}
 	}
 
-	return namespaces
+	return groups
 }
 
 /**

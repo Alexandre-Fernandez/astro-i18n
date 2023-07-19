@@ -21,7 +21,7 @@ export type DeepStringRecord = {
 }
 
 export type TranslationMap = {
-	[namespace: string]: {
+	[group: string]: {
 		[locale: string]: ComputedTranslations
 	}
 }
@@ -31,4 +31,8 @@ export type ComputedTranslations = {
 		default?: string
 		variants: Variant[]
 	}
+}
+
+export type LoadDirectives = {
+	[route: string]: string[]
 }

@@ -17,7 +17,7 @@ export function isConfigTranslations(
 				if (entries.length < 2) return false
 				for (const [loaderKey, array] of entries) {
 					switch (loaderKey) {
-						case "namespaces": {
+						case "groups": {
 							if (!isStringArray(array)) return false
 							break
 						}
