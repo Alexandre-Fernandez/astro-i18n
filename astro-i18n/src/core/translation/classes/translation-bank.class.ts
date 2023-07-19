@@ -1,8 +1,10 @@
+import { throwFalsy } from "@lib/error"
 import { Regex } from "@lib/regex"
 import { categorizeConfigTranslationsGroups } from "@src/core/config/functions/config.functions"
-import type { ConfigTranslations } from "@src/core/config/types"
 import { computeDeepStringRecord } from "@src/core/translation/functions/translation.functions"
+import type { ConfigTranslations } from "@src/core/config/types"
 import type {
+	ComputedTranslations,
 	LoadDirectives,
 	TranslationMap,
 } from "@src/core/translation/types"
@@ -20,13 +22,58 @@ class TranslationBank {
 		this.#loadDirectives = loadDirectives
 	}
 
+	get(
+		key: string,
+		route: string,
+		locale: string,
+		properties: Record<string, unknown> = {},
+	) {
+		let translation: ComputedTranslations[string] | null = null
+
+		// search key in loaded groups
+		if (this.#loadDirectives[route]) {
+			for (const group of this.#loadDirectives[route] || throwFalsy()) {
+				const value = this.#translations[group]?.[locale]?.[key]
+				if (!value) continue
+				translation = value
+				break
+			}
+		}
+		// search key in route groups
+		if (!translation && this.#translations[route]?.[locale]?.[key]) {
+			translation =
+				this.#translations[route]?.[locale]?.[key] || throwFalsy()
+		}
+		// search key in common group
+		if (!translation && this.#translations["common"]?.[locale]?.[key]) {
+			translation =
+				this.#translations["common"]?.[locale]?.[key] || throwFalsy()
+		}
+
+		if (!translation) return key
+
+		const bestVariant = {
+			score: Number.MIN_SAFE_INTEGER,
+			value: translation.default || key, // if no variants this won't be changed
+		}
+		for (const variant of translation.variants) {
+			const score = variant.calculateMatchingScore(properties)
+			if (score > bestVariant.score) {
+				bestVariant.score = score
+				bestVariant.value = variant.value
+			}
+		}
+
+		// interpolation
+	}
+
 	static fromConfig(translations: ConfigTranslations) {
 		const translationMap: TranslationMap = {}
 		const loadDirectives: LoadDirectives = {}
 		const {
 			$load,
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			$directory, // we don't need this
+			$directory, // we don't need or want $directory
 			...groups
 		} = translations
 

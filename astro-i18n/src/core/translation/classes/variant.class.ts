@@ -30,12 +30,17 @@ class Variant {
 
 	properties: VariantProperty[] = []
 
-	constructor(variant: string) {
+	value: string
+
+	constructor(variant: string, value: string) {
+		this.value = value // translation value
+
 		const trimmed = variant.trim()
 		this.raw = trimmed
 
-		let key = ""
-		let value = ""
+		// checking properties
+		let propKey = ""
+		let propValue = ""
 		let isKey = true
 		depthAwareforEach(trimmed, (char, i, depth) => {
 			const isLast = i === trimmed.length - 1
@@ -46,24 +51,24 @@ class Variant {
 					isKey = false
 					return null
 				}
-				key += char
+				propKey += char
 				return null
 			}
 
 			if (depth > 0) {
 				// string or array
-				value += char
+				propValue += char
 				return null
 			}
 
-			if (isLast) value += char
+			if (isLast) propValue += char
 
 			if (char === "," || isLast) {
 				// key & value are filled, matching them...
-				const matchedKey = matchVariable(key.trim())?.match[0]
-				if (!matchedKey) throw new InvalidVariantPropertyKey(key)
+				const matchedKey = matchVariable(propKey.trim())?.match[0]
+				if (!matchedKey) throw new InvalidVariantPropertyKey(propKey)
 				const { value: matchedValue, type } = Variant.#matchValue(
-					value.trim(),
+					propValue.trim(),
 				)
 
 				// checking for priority key
@@ -83,7 +88,7 @@ class Variant {
 					: [parsedValue]
 
 				if (!isPrimitiveArray(values)) {
-					throw new InvalidVariantPropertyValue(value)
+					throw new InvalidVariantPropertyValue(propValue)
 				}
 
 				this.properties.push({
@@ -91,13 +96,13 @@ class Variant {
 					values,
 				})
 
-				key = ""
-				value = ""
+				propKey = ""
+				propValue = ""
 				isKey = true
 				return null
 			}
 
-			value += char
+			propValue += char
 			return null
 		})
 	}

@@ -26,7 +26,7 @@ export function computeDeepStringRecord(
 	for (const [curKey, curValue] of Object.entries(deepStringRecord)) {
 		if (typeof curValue === "string") {
 			const { match, range } = VARIANT_PATTERN.match(curKey) || {}
-			// default value
+			// no variant => default
 			if (!match?.[1] || !range) {
 				const key = `${path}.${curKey}`.replace(/^\./, "")
 
@@ -40,17 +40,17 @@ export function computeDeepStringRecord(
 				}
 				continue
 			}
-			// variant value
+			// variant
 			const key = `${path}.${
 				curKey.slice(0, range[0]) + curKey.slice(range[1])
 			}`.replace(/^\./, "")
 
 			if (computed[key]) {
-				computed[key]!.variants.push(new Variant(match[1]))
+				computed[key]!.variants.push(new Variant(match[1], curValue))
 				continue
 			}
 			computed[key] = {
-				variants: [new Variant(match[1])],
+				variants: [new Variant(match[1], curValue)],
 			}
 			continue
 		}
