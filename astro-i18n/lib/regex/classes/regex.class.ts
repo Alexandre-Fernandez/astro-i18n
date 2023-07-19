@@ -85,7 +85,7 @@ class Regex {
 					match: [...match],
 				}
 			}
-			match = this.regexp.exec(string)
+			match = globalRegexp.exec(string)
 		}
 	}
 }
