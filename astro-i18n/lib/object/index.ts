@@ -23,7 +23,7 @@ export function merge(
 
 	for (const [key, objectValue] of Object.entries(object)) {
 		const baseValue = merged[key]
-		if (Object.prototype.hasOwnProperty.call(merged, key)) {
+		if (Object.hasOwn(merged, key)) {
 			if (isRecord(baseValue) && isRecord(objectValue)) {
 				merge(baseValue, objectValue)
 			} else if (mode === "replace") {

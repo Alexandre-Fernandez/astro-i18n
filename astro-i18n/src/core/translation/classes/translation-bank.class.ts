@@ -1,7 +1,10 @@
 import { throwFalsy } from "@lib/error"
 import { Regex } from "@lib/regex"
 import { categorizeConfigTranslationsGroups } from "@src/core/config/functions/config.functions"
-import { computeDeepStringRecord } from "@src/core/translation/functions/translation.functions"
+import {
+	computeDeepStringRecord,
+	interpolate,
+} from "@src/core/translation/functions/translation.functions"
 import type { ConfigTranslations } from "@src/core/config/types"
 import type {
 	ComputedTranslations,
@@ -50,13 +53,12 @@ class TranslationBank {
 				this.#translations["common"]?.[locale]?.[key] || throwFalsy()
 		}
 
-		if (!translation) return key
-
+		// find the best variant, defaults to the default value or key param if none
 		const bestVariant = {
 			score: Number.MIN_SAFE_INTEGER,
-			value: translation.default || key, // if no variants this won't be changed
+			value: translation?.default || key,
 		}
-		for (const variant of translation.variants) {
+		for (const variant of translation?.variants || []) {
 			const score = variant.calculateMatchingScore(properties)
 			if (score > bestVariant.score) {
 				bestVariant.score = score
@@ -64,7 +66,7 @@ class TranslationBank {
 			}
 		}
 
-		// interpolation
+		return interpolate(bestVariant.value, properties)
 	}
 
 	static fromConfig(translations: ConfigTranslations) {
