@@ -18,11 +18,15 @@ class TranslationBank {
 	#translations: TranslationMap
 
 	constructor(
-		translations: TranslationMap,
+		translations: TranslationMap = {},
 		loadDirectives: LoadDirectives = {},
 	) {
 		this.#translations = translations
 		this.#loadDirectives = loadDirectives
+	}
+
+	print() {
+		console.log(JSON.stringify(this.#translations, null, 2))
 	}
 
 	get(
@@ -112,25 +116,8 @@ class TranslationBank {
 				}
 			}
 		}
-
 		return new TranslationBank(translationMap, loadDirectives)
 	}
 }
-
-/*
-export type TranslationMap = {
-	[group: string]: {
-		[locale: string]: ComputedTranslations
-	}
-}
-
-export type ComputedTranslations = {
-	[key: string]: {
-		default?: string
-		variants: Variant[]
-	}
-}
-
-*/
 
 export default TranslationBank

@@ -4,7 +4,6 @@ import "@src/core/translation/classes/variant.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
-import { computeDeepStringRecord } from "@src/core/translation/functions/translation.functions"
 
 export const singleton = {
 	value: 0,
@@ -14,6 +13,8 @@ export const singleton = {
 // serialize formatter
 export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 	astroI18n.init(config)
+
+	astroI18n.test()
 
 	return ((ctx, next) => {
 		if (import.meta.env.DEV && astroI18n.environment === Environment.NODE) {
@@ -33,8 +34,6 @@ export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 		// load from file or load from config that's it
 
 		// await Config.findConfig()
-
-		// console.log(JSON.stringify(await Config.fromFilesystem(), null, 2))
 
 		singleton.value += 1
 		return next()

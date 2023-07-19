@@ -77,13 +77,15 @@ class Regex {
 	}
 
 	*#iterateExec(string: string): Generator<ExecResult, undefined, unknown> {
+		let globalRegexp = this.regexp
 		if (!this.regexp.flags.includes("g")) {
-			throw new Error(
-				`\`/${this.regexp.source}/\` must have the global \`g\` flag to exec over \`"${string}"\`.`,
+			globalRegexp = new RegExp(
+				this.regexp.source,
+				`${this.regexp.flags}g`,
 			)
 		}
 
-		let match: RegExpExecArray | null = this.regexp.exec(string)
+		let match: RegExpExecArray | null = globalRegexp.exec(string)
 
 		while (match !== null) {
 			if (match) {

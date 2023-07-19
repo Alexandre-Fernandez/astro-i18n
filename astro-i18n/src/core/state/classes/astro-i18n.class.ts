@@ -2,12 +2,15 @@ import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
 import UnreachableCode from "@src/errors/unreachable-code.error"
+import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
 
 class AstroI18n {
 	environment: Environment
 
 	#config = new Config()
+
+	#translations = new TranslationBank()
 
 	constructor() {
 		if (
@@ -21,6 +24,10 @@ class AstroI18n {
 		} else {
 			this.environment = Environment.BROWSER
 		}
+	}
+
+	test() {
+		this.#translations.print()
 	}
 
 	get locales() {
@@ -59,6 +66,14 @@ class AstroI18n {
 				throw new UnreachableCode()
 			}
 		}
+
+		this.#translations = TranslationBank.fromConfig(
+			this.#config.translations,
+		)
+
+		console.log(
+			this.#translations.get("product-test", "/product", "en", {}),
+		)
 	}
 
 	toHtml() {
