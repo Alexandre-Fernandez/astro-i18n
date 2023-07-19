@@ -25,10 +25,6 @@ class TranslationBank {
 		this.#loadDirectives = loadDirectives
 	}
 
-	print() {
-		console.log(JSON.stringify(this.#translations, null, 2))
-	}
-
 	get(
 		key: string,
 		route: string,

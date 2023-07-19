@@ -14,13 +14,7 @@ export const singleton = {
 export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
 	astroI18n.init(config)
 
-	astroI18n.test()
-
 	return ((ctx, next) => {
-		if (import.meta.env.DEV && astroI18n.environment === Environment.NODE) {
-			astroI18n.init(config) // get filesystem translations on every request
-		}
-
 		// check what page it is
 		// build translations for that page (common + specific)
 		// build route translations for that page²

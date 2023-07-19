@@ -26,10 +26,6 @@ class AstroI18n {
 		}
 	}
 
-	test() {
-		this.#translations.print()
-	}
-
 	get locales() {
 		return [this.#config.primaryLocale, ...this.#config.secondaryLocales]
 	}
@@ -72,7 +68,9 @@ class AstroI18n {
 		)
 
 		console.log(
-			this.#translations.get("product-test", "/product", "en", {}),
+			this.#translations.get("product-interpolation", "/product", "en", {
+				something: "2", // fix alias not overriding varname
+			}),
 		)
 	}
 
