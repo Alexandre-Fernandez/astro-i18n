@@ -82,7 +82,7 @@ export function interpolate(
 		if (!match[1]) return
 
 		const { value } = new Interpolation(
-			translation,
+			match[1],
 			properties,
 			{} /* TODO: add formaters */,
 		)
