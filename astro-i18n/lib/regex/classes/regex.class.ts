@@ -69,7 +69,7 @@ class Regex {
 
 	*#iterateExec(string: string): Generator<ExecResult, undefined, unknown> {
 		let globalRegexp = this.regexp
-		if (!this.regexp.flags.includes("g")) {
+		if (!globalRegexp.flags.includes("g")) {
 			globalRegexp = new RegExp(
 				this.regexp.source,
 				`${this.regexp.flags}g`,
