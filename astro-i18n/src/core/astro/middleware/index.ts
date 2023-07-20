@@ -1,7 +1,4 @@
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
-import "@src/core/translation/classes/interpolation.class"
-import "@src/core/translation/classes/variant.class"
-import Environment from "@src/core/state/enums/environment.enum"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
 
