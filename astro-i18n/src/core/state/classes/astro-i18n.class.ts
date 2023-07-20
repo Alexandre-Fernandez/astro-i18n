@@ -4,9 +4,15 @@ import MissingConfigArgument from "@src/core/state/errors/missing-config-argumen
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
+import type { TranslationProperties } from "@src/core/translation/types"
+import { Regex } from "@lib/regex"
 
 class AstroI18n {
 	environment: Environment
+
+	locale = ""
+
+	#route = ""
 
 	#config = new Config()
 
@@ -26,6 +32,15 @@ class AstroI18n {
 		}
 	}
 
+	get route() {
+		return this.#route
+	}
+
+	set route(route: string) {
+		this.#route = route
+		this.locale = this.#extractRouteLocale(route)
+	}
+
 	get locales() {
 		return [this.#config.primaryLocale, ...this.#config.secondaryLocales]
 	}
@@ -36,6 +51,14 @@ class AstroI18n {
 
 	get secondaryLocales() {
 		return this.#config.secondaryLocales
+	}
+
+	#extractRouteLocale(route: string) {
+		const pattern = Regex.fromString(
+			`\\/?(${this.locales.join("|")})(?:\\/.*)?$`,
+		)
+		const { match } = pattern.match(route) || {}
+		return match?.[1] || this.primaryLocale
 	}
 
 	/**
@@ -71,6 +94,20 @@ class AstroI18n {
 
 		this.#translations = TranslationBank.fromConfig(
 			this.#config.translations,
+		)
+	}
+
+	t(
+		key: string,
+		properties: TranslationProperties,
+		options: { route?: string; locale?: string },
+	) {
+		const { route, locale } = options
+		return this.#translations.get(
+			key,
+			route || this.route,
+			locale || this.locale,
+			properties,
 		)
 	}
 

@@ -9,6 +9,7 @@ import NonStringVariant from "@src/core/translation/errors/non-string-variant.er
 import type {
 	ComputedTranslations,
 	DeepStringRecord,
+	TranslationProperties,
 } from "@src/core/translation/types"
 
 /*
@@ -74,7 +75,7 @@ export function computeDeepStringRecord(
 
 export function interpolate(
 	translation: string,
-	properties: Record<string, unknown>,
+	properties: TranslationProperties,
 ) {
 	const results: { value: string; range: [number, number] }[] = []
 

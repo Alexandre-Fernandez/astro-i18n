@@ -23,6 +23,7 @@ import type {
 	Formatter,
 	Matcher,
 	FormatterMatch,
+	TranslationProperties,
 } from "@src/core/translation/types"
 
 const interpolationAliasMatcher: Matcher = RegexBuilder.fromRegex(
@@ -49,7 +50,7 @@ class Interpolation {
 
 	constructor(
 		interpolation: string,
-		properties: Record<string, unknown>,
+		properties: TranslationProperties,
 		availableFormatters: Record<string, Formatter>,
 	) {
 		const { raw, value, type, alias, formatters } =
@@ -78,7 +79,7 @@ class Interpolation {
 		alias: string | null,
 		type: ValueType,
 		formatters: FormatterMatch[],
-		properties: Record<string, unknown>,
+		properties: TranslationProperties,
 		availableFormatters: Record<string, Formatter>,
 	) {
 		let parsed: unknown
@@ -163,7 +164,7 @@ class Interpolation {
 	 */
 	static #parseObject(
 		object: string,
-		properties: Record<string, unknown>,
+		properties: TranslationProperties,
 		availableFormatters: Record<string, Formatter>,
 	) {
 		const parsed: Record<string, unknown> = {}
@@ -215,7 +216,7 @@ class Interpolation {
 	 */
 	static #parseArray(
 		array: string,
-		properties: Record<string, unknown>,
+		properties: TranslationProperties,
 		availableFormatters: Record<string, Formatter>,
 	) {
 		const parsed: unknown[] = []

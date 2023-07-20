@@ -10,6 +10,7 @@ import type {
 	ComputedTranslations,
 	LoadDirectives,
 	TranslationMap,
+	TranslationProperties,
 } from "@src/core/translation/types"
 
 class TranslationBank {
@@ -34,7 +35,7 @@ class TranslationBank {
 		key: string,
 		route: string,
 		locale: string,
-		properties: Record<string, unknown> = {},
+		properties: TranslationProperties = {},
 	) {
 		let translation: ComputedTranslations[string] | null = null
 

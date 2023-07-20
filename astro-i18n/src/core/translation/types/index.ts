@@ -36,3 +36,5 @@ export type ComputedTranslations = {
 export type LoadDirectives = {
 	[route: string]: string[]
 }
+
+export type TranslationProperties = Record<string, unknown>

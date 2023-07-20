@@ -19,7 +19,10 @@ import {
 	matchUndefined,
 	matchVariable,
 } from "@src/core/translation/functions/matching.functions"
-import type { VariantProperty } from "@src/core/translation/types"
+import type {
+	TranslationProperties,
+	VariantProperty,
+} from "@src/core/translation/types"
 
 class Variant {
 	static priorityKey = "$priority"
@@ -262,7 +265,7 @@ class Variant {
 	/**
 	 * Calculates the matching score for the given properties.
 	 */
-	calculateMatchingScore(properties: Record<string, unknown>) {
+	calculateMatchingScore(properties: TranslationProperties) {
 		let score = 0
 
 		for (const { name, values } of this.properties) {
