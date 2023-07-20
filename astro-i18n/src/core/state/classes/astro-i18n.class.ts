@@ -38,7 +38,7 @@ class AstroI18n {
 
 	set route(route: string) {
 		this.#route = route
-		this.#locale = this.#extractRouteLocale(route)
+		this.#locale = this.extractRouteLocale(route)
 	}
 
 	get locale() {
@@ -57,7 +57,7 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
-	#extractRouteLocale(route: string) {
+	extractRouteLocale(route: string) {
 		const pattern = Regex.fromString(
 			`\\/?(${this.locales.join("|")})(?:\\/.*)?$`,
 		)
