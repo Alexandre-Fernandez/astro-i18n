@@ -1,3 +1,4 @@
+import { Regex } from "@lib/regex"
 import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
@@ -5,12 +6,11 @@ import UnreachableCode from "@src/errors/unreachable-code.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type { TranslationProperties } from "@src/core/translation/types"
-import { Regex } from "@lib/regex"
 
 class AstroI18n {
 	environment: Environment
 
-	locale = ""
+	#locale = ""
 
 	#route = ""
 
@@ -38,7 +38,11 @@ class AstroI18n {
 
 	set route(route: string) {
 		this.#route = route
-		this.locale = this.#extractRouteLocale(route)
+		this.#locale = this.#extractRouteLocale(route)
+	}
+
+	get locale() {
+		return this.#locale
 	}
 
 	get locales() {
