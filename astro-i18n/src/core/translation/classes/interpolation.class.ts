@@ -57,15 +57,16 @@ class Interpolation {
 
 		this.raw = raw
 
+		this.alias = alias
+
 		this.value = Interpolation.#parseValue(
 			value,
+			alias,
 			type,
 			formatters,
 			properties,
 			availableFormatters,
 		)
-
-		this.alias = alias
 	}
 
 	/**
@@ -74,6 +75,7 @@ class Interpolation {
 	 */
 	static #parseValue(
 		value: string,
+		alias: string | null,
 		type: ValueType,
 		formatters: FormatterMatch[],
 		properties: Record<string, unknown>,
@@ -108,6 +110,10 @@ class Interpolation {
 				break
 			}
 			case ValueType.VARIABLE: {
+				if (alias) {
+					parsed = properties[alias]
+					break
+				}
 				parsed = properties[value]
 				break
 			}

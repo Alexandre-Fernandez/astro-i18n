@@ -69,7 +69,7 @@ class AstroI18n {
 
 		console.log(
 			this.#translations.get("product-interpolation", "/product", "en", {
-				something: "2", // fix alias not overriding varname
+				lol: "2",
 			}),
 		)
 	}
