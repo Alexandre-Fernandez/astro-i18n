@@ -25,6 +25,11 @@ class TranslationBank {
 		this.#loadDirectives = loadDirectives
 	}
 
+	/**
+	 * Get the appropriate translation for the given key, route, locale and
+	 * properties.
+	 * If no translation is found the key will be returned.
+	 */
 	get(
 		key: string,
 		route: string,
@@ -33,7 +38,7 @@ class TranslationBank {
 	) {
 		let translation: ComputedTranslations[string] | null = null
 
-		// search key in loaded groups
+		// search key in the loaded groups for this route
 		if (this.#loadDirectives[route]) {
 			for (const group of this.#loadDirectives[route] || throwFalsy()) {
 				const value = this.#translations[group]?.[locale]?.[key]
@@ -42,12 +47,12 @@ class TranslationBank {
 				break
 			}
 		}
-		// search key in route groups
+		// search key in corresponding route group
 		if (!translation && this.#translations[route]?.[locale]?.[key]) {
 			translation =
 				this.#translations[route]?.[locale]?.[key] || throwFalsy()
 		}
-		// search key in common group
+		// search key in the common group
 		if (!translation && this.#translations["common"]?.[locale]?.[key]) {
 			translation =
 				this.#translations["common"]?.[locale]?.[key] || throwFalsy()
@@ -69,6 +74,9 @@ class TranslationBank {
 		return interpolate(bestVariant.value, properties)
 	}
 
+	/**
+	 * Create a TranslationBank from a config's translations.
+	 */
 	static fromConfig(translations: ConfigTranslations) {
 		const translationMap: TranslationMap = {}
 		const loadDirectives: LoadDirectives = {}

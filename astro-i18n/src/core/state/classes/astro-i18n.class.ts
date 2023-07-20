@@ -38,6 +38,12 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
+	/**
+	 * Initializes state accordingly to the environment (node, browser, etc)
+	 * where it's runned.
+	 * For example in a node environment it might parse the config from the
+	 * filesystem.
+	 */
 	async init(config?: Partial<AstroI18nConfig> | string) {
 		switch (this.environment) {
 			case Environment.NODE: {
@@ -65,12 +71,6 @@ class AstroI18n {
 
 		this.#translations = TranslationBank.fromConfig(
 			this.#config.translations,
-		)
-
-		console.log(
-			this.#translations.get("product-interpolation", "/product", "en", {
-				lol: "2",
-			}),
 		)
 	}
 
