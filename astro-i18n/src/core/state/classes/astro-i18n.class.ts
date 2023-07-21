@@ -4,8 +4,12 @@ import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
+import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
-import type { TranslationProperties } from "@src/core/translation/types"
+import type {
+	Formatters,
+	TranslationProperties,
+} from "@src/core/translation/types"
 
 class AstroI18n {
 	environment: Environment
@@ -17,6 +21,8 @@ class AstroI18n {
 	#config = new Config()
 
 	#translations = new TranslationBank()
+
+	#formatters = new FormatterBank()
 
 	constructor() {
 		if (
@@ -71,7 +77,10 @@ class AstroI18n {
 	 * For example in a node environment it might parse the config from the
 	 * filesystem.
 	 */
-	async init(config?: Partial<AstroI18nConfig> | string) {
+	async init(
+		config?: Partial<AstroI18nConfig> | string,
+		formatters: Formatters = {},
+	) {
 		switch (this.environment) {
 			case Environment.NODE: {
 				if (typeof config !== "object") {
@@ -99,19 +108,22 @@ class AstroI18n {
 		this.#translations = TranslationBank.fromConfig(
 			this.#config.translations,
 		)
+
+		this.#formatters = new FormatterBank(formatters)
 	}
 
 	t(
 		key: string,
 		properties: TranslationProperties,
-		options: { route?: string; locale?: string },
+		options: { route?: string; locale?: string; formatters?: Formatters },
 	) {
-		const { route, locale } = options
+		const { route, locale, formatters } = options
 		return this.#translations.get(
 			key,
 			route || this.route,
 			locale || this.locale,
 			properties,
+			formatters ? new FormatterBank(formatters) : this.#formatters,
 		)
 	}
 

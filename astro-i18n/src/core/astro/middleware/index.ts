@@ -1,15 +1,22 @@
+import { isObject } from "@lib/ts/guards"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
+import type { Formatters } from "@src/core/translation/types"
 
 export const singleton = {
 	value: 0,
 }
 
-// TODO { config?: Partial<AstroI18nConfig> | string, formatters?: Formatter[] }
-// serialize formatter
-export function useAstroI18n(config?: Partial<AstroI18nConfig> | string) {
-	astroI18n.init(config)
+// TODO: serialize formatters
+export function useAstroI18n(
+	config?: Partial<AstroI18nConfig> | string,
+	formatters?: Formatters,
+) {
+	if (isObject(config) && Object.keys(config).length === 0) {
+		config = undefined
+	}
+	astroI18n.init(config, formatters)
 
 	return ((ctx, next) => {
 		// check what page it is
