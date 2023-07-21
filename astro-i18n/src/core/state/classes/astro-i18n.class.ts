@@ -123,7 +123,12 @@ class AstroI18n {
 			route || this.route,
 			locale || this.locale,
 			properties,
-			formatters ? new FormatterBank(formatters) : this.#formatters,
+			formatters
+				? new FormatterBank({
+						...this.#formatters.custom,
+						...formatters,
+				  }).toObject()
+				: this.#formatters.toObject(),
 		)
 	}
 

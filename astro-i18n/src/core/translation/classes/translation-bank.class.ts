@@ -8,11 +8,11 @@ import {
 import type { ConfigTranslations } from "@src/core/config/types"
 import type {
 	ComputedTranslations,
+	Formatters,
 	LoadDirectives,
 	TranslationMap,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import type FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -36,8 +36,8 @@ class TranslationBank {
 		key: string,
 		route: string,
 		locale: string,
-		properties: TranslationProperties,
-		formatters: FormatterBank,
+		properties: TranslationProperties = {},
+		formatters: Formatters = {},
 	) {
 		let translation: ComputedTranslations[string] | null = null
 
