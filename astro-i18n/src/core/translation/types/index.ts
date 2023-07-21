@@ -5,9 +5,11 @@ export type Match = ExecResult
 
 export type Matcher = (string: string) => Match | null
 
+export type FormatterMatch = { name: string; args: string[] }
+
 export type Formatter = (value: unknown, ...args: unknown[]) => unknown
 
-export type FormatterMatch = { name: string; args: string[] }
+export type Formatters = Record<string, Formatter>
 
 export type VariantProperty = {
 	name: string

@@ -20,10 +20,10 @@ import {
 	matchVariable,
 } from "@src/core/translation/functions/matching.functions"
 import type {
-	Formatter,
 	Matcher,
 	FormatterMatch,
 	TranslationProperties,
+	Formatters,
 } from "@src/core/translation/types"
 
 const interpolationAliasMatcher: Matcher = RegexBuilder.fromRegex(
@@ -51,7 +51,7 @@ class Interpolation {
 	constructor(
 		interpolation: string,
 		properties: TranslationProperties,
-		availableFormatters: Record<string, Formatter>,
+		availableFormatters: Formatters,
 	) {
 		const { raw, value, type, alias, formatters } =
 			Interpolation.#match(interpolation)
@@ -80,7 +80,7 @@ class Interpolation {
 		type: ValueType,
 		formatters: FormatterMatch[],
 		properties: TranslationProperties,
-		availableFormatters: Record<string, Formatter>,
+		availableFormatters: Formatters,
 	) {
 		let parsed: unknown
 
@@ -165,7 +165,7 @@ class Interpolation {
 	static #parseObject(
 		object: string,
 		properties: TranslationProperties,
-		availableFormatters: Record<string, Formatter>,
+		availableFormatters: Formatters,
 	) {
 		const parsed: Record<string, unknown> = {}
 
@@ -217,7 +217,7 @@ class Interpolation {
 	static #parseArray(
 		array: string,
 		properties: TranslationProperties,
-		availableFormatters: Record<string, Formatter>,
+		availableFormatters: Formatters,
 	) {
 		const parsed: unknown[] = []
 
