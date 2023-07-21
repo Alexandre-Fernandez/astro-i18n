@@ -55,7 +55,7 @@ export default {
 		return typeof value === "string" ? value : defaultValue
 	},
 
-	format_number(value, options = {}, locale = "") {
+	intl_format_number(value, options = {}, locale = astroI18n.locale) {
 		// value
 		if (typeof value === "string") value = Number.parseFloat(value)
 		if (typeof value !== "number" || Number.isNaN(value)) {
@@ -73,75 +73,11 @@ export default {
 				`format_number locale must be a string, found ${locale}.`,
 			)
 		}
-		return new Intl.NumberFormat(
-			locale || astroI18n.locale,
-			options,
-		).format(value)
+
+		return new Intl.NumberFormat(locale, options).format(value)
 	},
 
-	format_currency(value, currency, options = {}, locale = "") {
-		// value
-		if (typeof value === "string") value = Number.parseFloat(value)
-		if (typeof value !== "number" || Number.isNaN(value)) {
-			throw new InvalidFormatterValue(`Received value is not a number.`)
-		}
-		// currency
-		if (typeof currency !== "string") {
-			throw new InvalidFormatterParam(
-				`format_currency currency must be a string, found ${currency}.`,
-			)
-		}
-		// options
-		if (!options || typeof options !== "object") {
-			throw new InvalidFormatterParam(
-				`format_currency options must be an object, found ${options}.`,
-			)
-		}
-		// locale
-		if (typeof locale !== "string") {
-			throw new InvalidFormatterParam(
-				`format_currency locale must be a string, found ${locale}.`,
-			)
-		}
-		return new Intl.NumberFormat(locale || astroI18n.locale, {
-			...options,
-			style: "currency",
-			currency,
-		}).format(value)
-	},
-
-	format_unit(value, unit, options = {}, locale = "") {
-		// value
-		if (typeof value === "string") value = Number.parseFloat(value)
-		if (typeof value !== "number" || Number.isNaN(value)) {
-			throw new InvalidFormatterValue(`Received value is not a number.`)
-		}
-		// unit
-		if (typeof unit !== "string") {
-			throw new InvalidFormatterParam(
-				`format_unit unit must be a string, found ${unit}.`,
-			)
-		}
-		// options
-		if (!options || typeof options !== "object") {
-			throw new InvalidFormatterParam(
-				`format_unit options must be an object, found ${options}.`,
-			)
-		}
-		// locale
-		if (typeof locale !== "string") {
-			throw new InvalidFormatterParam(
-				`format_unit locale must be a string, found ${locale}.`,
-			)
-		}
-		return new Intl.NumberFormat(locale || astroI18n.locale, {
-			...options,
-			style: "unit",
-			unit,
-		}).format(value)
-	},
-
-	format_date(value, options = {}, locale = "") {
+	intl_format_date(value, options = {}, locale = astroI18n.locale) {
 		// value
 		if (
 			typeof value !== "string" &&
@@ -169,6 +105,6 @@ export default {
 			)
 		}
 
-		return new Intl.DateTimeFormat(locale || astroI18n.locale, options)
+		return new Intl.DateTimeFormat(locale, options)
 	},
 } as Formatters
