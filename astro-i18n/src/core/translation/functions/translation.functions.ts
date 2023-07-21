@@ -9,6 +9,7 @@ import NonStringVariant from "@src/core/translation/errors/variant/non-string-va
 import type {
 	ComputedTranslations,
 	DeepStringRecord,
+	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
 
@@ -76,17 +77,14 @@ export function computeDeepStringRecord(
 export function interpolate(
 	translation: string,
 	properties: TranslationProperties,
+	formatters: Formatters,
 ) {
 	const results: { value: string; range: [number, number] }[] = []
 
 	INTERPOLATION_PATTERN.exec(translation, ({ match, range }) => {
 		if (!match[1]) return
 
-		const { value } = new Interpolation(
-			match[1],
-			properties,
-			{} /* TODO: add formaters */,
-		)
+		const { value } = new Interpolation(match[1], properties, formatters)
 
 		results.push({ value: unknowntoString(value), range })
 	})

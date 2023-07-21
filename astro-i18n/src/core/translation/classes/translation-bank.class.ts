@@ -74,7 +74,7 @@ class TranslationBank {
 			}
 		}
 
-		return interpolate(bestVariant.value, properties)
+		return interpolate(bestVariant.value, properties, formatters)
 	}
 
 	/**
