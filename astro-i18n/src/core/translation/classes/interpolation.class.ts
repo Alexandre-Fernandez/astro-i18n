@@ -5,7 +5,7 @@ import {
 	INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN,
 } from "@src/constants/patterns.constants"
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
-import UnknownValue from "@src/core/translation/errors/unknown-value.error"
+import UnknownValue from "@src/core/translation/errors/interpolation/unknown-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
 import { depthAwareforEach } from "@src/core/translation/functions/parsing.functions"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"

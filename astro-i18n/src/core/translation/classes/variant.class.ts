@@ -1,9 +1,9 @@
 import { throwFalsy } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
-import InvalidVariantPriority from "@src/core/translation/errors/invalid-variant-priority.error"
-import InvalidVariantPropertyKey from "@src/core/translation/errors/invalid-variant-property-key.error"
-import InvalidVariantPropertyValue from "@src/core/translation/errors/invalid-variant-property-value.error"
+import InvalidVariantPriority from "@src/core/translation/errors/variant/invalid-variant-priority.error"
+import InvalidVariantPropertyKey from "@src/core/translation/errors/variant/invalid-variant-property-key.error"
+import InvalidVariantPropertyValue from "@src/core/translation/errors/variant/invalid-variant-property-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
 import { depthAwareforEach } from "@src/core/translation/functions/parsing.functions"
 import {

@@ -5,7 +5,7 @@ import {
 } from "@src/constants/patterns.constants"
 import Interpolation from "@src/core/translation/classes/interpolation.class"
 import Variant from "@src/core/translation/classes/variant.class"
-import NonStringVariant from "@src/core/translation/errors/non-string-variant.error"
+import NonStringVariant from "@src/core/translation/errors/variant/non-string-variant.error"
 import type {
 	ComputedTranslations,
 	DeepStringRecord,
@@ -88,57 +88,7 @@ export function interpolate(
 			{} /* TODO: add formaters */,
 		)
 
-		switch (typeof value) {
-			case "undefined": {
-				results.push({ value: "", range })
-				break
-			}
-			case "string": {
-				results.push({ value, range })
-				break
-			}
-			case "bigint": {
-				results.push({ value: value.toString(), range })
-				break
-			}
-			case "number": {
-				results.push({ value: value.toString(), range })
-				break
-			}
-			case "boolean": {
-				results.push({ value: value.toString(), range })
-				break
-			}
-			case "symbol": {
-				results.push({ value: value.description || "", range })
-				break
-			}
-			case "function": {
-				results.push({ value: "", range })
-				break
-			}
-			case "object": {
-				if (!value) {
-					results.push({ value: "", range })
-					break
-				}
-				if (
-					Object.hasOwn(value, "toString") &&
-					typeof value.toString === "function"
-				) {
-					results.push({ value: `${value.toString()}`, range })
-					break
-				}
-				results.push({
-					value: JSON.stringify(value, null, "\t"),
-					range,
-				})
-				break
-			}
-			default: {
-				break
-			}
-		}
+		results.push({ value: unknowntoString(value), range })
 	})
 
 	let interpolated = translation
@@ -152,4 +102,43 @@ export function interpolate(
 	}
 
 	return interpolated
+}
+
+export function unknowntoString(value: unknown) {
+	switch (typeof value) {
+		case "undefined": {
+			return ""
+		}
+		case "string": {
+			return value
+		}
+		case "bigint": {
+			return value.toString()
+		}
+		case "number": {
+			return value.toString()
+		}
+		case "boolean": {
+			return value.toString()
+		}
+		case "symbol": {
+			return `Symbol(${value.description})` || "Symbol"
+		}
+		case "function": {
+			return value.name
+		}
+		case "object": {
+			if (!value) return "" // null
+			if (
+				Object.hasOwn(value, "toString") &&
+				typeof value.toString === "function"
+			) {
+				return value.toString()
+			}
+			return JSON.stringify(value, null, "\t")
+		}
+		default: {
+			return ""
+		}
+	}
 }
