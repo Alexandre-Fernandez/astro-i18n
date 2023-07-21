@@ -1,5 +1,6 @@
 import { RegexBuilder } from "@lib/regex"
 import {
+	EMPTY_PATTERN,
 	NUMBER_PATTERN,
 	VARNAME_PATTERN,
 } from "@src/constants/patterns.constants"
@@ -14,6 +15,17 @@ const variableMatcher: Matcher = RegexBuilder.fromRegex(VARNAME_PATTERN)
 	.assertStarting()
 	.build()
 	.toMatcher()
+
+export function matchEmpty(string: string): ReturnType<Matcher> {
+	if (EMPTY_PATTERN.test(string)) {
+		return {
+			range: [0, 0],
+			match: [""],
+		}
+	}
+
+	return null
+}
 
 export function matchUndefined(string: string): ReturnType<Matcher> {
 	if (string.startsWith("undefined")) {

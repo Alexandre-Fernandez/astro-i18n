@@ -125,6 +125,10 @@ class TranslationBank {
 		}
 		return new TranslationBank(translationMap, loadDirectives)
 	}
+
+	toString() {
+		return JSON.stringify(this.#translations, null, 2)
+	}
 }
 
 export default TranslationBank

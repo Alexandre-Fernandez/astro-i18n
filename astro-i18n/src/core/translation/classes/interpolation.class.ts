@@ -12,6 +12,7 @@ import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import {
 	matchArray,
 	matchBoolean,
+	matchEmpty,
 	matchNull,
 	matchNumber,
 	matchObject,
@@ -314,9 +315,18 @@ class Interpolation {
 	 * @param value for example "`{ prop: varName }(alias)>formatter1...`"
 	 */
 	static #matchValue(value: string) {
-		if (/^\s/.test(value)) throw new UntrimmedString(value)
+		if (/^\s+\S/.test(value)) throw new UntrimmedString(value)
 
-		let matched = matchUndefined(value)
+		let matched = matchEmpty(value)
+		if (matched) {
+			return {
+				value: "undefined",
+				type: ValueType.UNDEFINED,
+				end: matched.range[1],
+			}
+		}
+
+		matched = matchUndefined(value)
 		if (matched) {
 			return {
 				value: matched.match[0] || throwFalsy(),

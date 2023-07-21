@@ -118,6 +118,7 @@ class AstroI18n {
 		options: { route?: string; locale?: string; formatters?: Formatters },
 	) {
 		const { route, locale, formatters } = options
+
 		return this.#translations.get(
 			key,
 			route || this.route,
