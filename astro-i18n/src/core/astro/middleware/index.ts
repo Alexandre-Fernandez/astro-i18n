@@ -9,6 +9,7 @@ export const singleton = {
 }
 
 // TODO: serialize formatters
+// TODO: wait init in middleware, make init sync in browser
 export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
