@@ -31,6 +31,14 @@ export function assert<T>(
 	}
 }
 
+export function isNumber(number: unknown): number is number {
+	return typeof number === "number" && !Number.isNaN(number)
+}
+
+export function isDate(date: unknown): date is Date {
+	return date instanceof Date && !Number.isNaN(date.getTime())
+}
+
 export function isArray(array: unknown): array is unknown[] {
 	return Array.isArray(array)
 }
