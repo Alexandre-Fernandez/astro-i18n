@@ -1,11 +1,11 @@
 import { throwFalsy } from "@lib/error"
-import {
-	INTERPOLATION_PATTERN,
-	VARIANT_PATTERN,
-} from "@src/constants/patterns.constants"
 import Interpolation from "@src/core/translation/classes/interpolation.class"
 import Variant from "@src/core/translation/classes/variant.class"
 import NonStringVariant from "@src/core/translation/errors/variant/non-string-variant.error"
+import {
+	INTERPOLATION_PATTERN,
+	VARIANT_PATTERN,
+} from "@src/core/translation/constants/translation-patterns.constants"
 import type {
 	ComputedTranslations,
 	DeepStringRecord,

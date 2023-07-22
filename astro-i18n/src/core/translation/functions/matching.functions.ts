@@ -3,7 +3,7 @@ import {
 	EMPTY_PATTERN,
 	NUMBER_PATTERN,
 	VARNAME_PATTERN,
-} from "@src/constants/patterns.constants"
+} from "@src/core/translation/constants/translation-patterns.constants"
 import type { Matcher } from "@src/core/translation/types"
 
 export const matchNumber: Matcher = RegexBuilder.fromRegex(NUMBER_PATTERN)

@@ -4,7 +4,7 @@ import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import {
 	INTERPOLATION_ALIAS_PATTERN,
 	INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN,
-} from "@src/constants/patterns.constants"
+} from "@src/core/translation/constants/translation-patterns.constants"
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
 import UnknownValue from "@src/core/translation/errors/interpolation/unknown-value.error"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"

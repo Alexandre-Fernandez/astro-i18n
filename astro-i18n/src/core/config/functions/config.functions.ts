@@ -16,7 +16,7 @@ import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import {
 	ASTRO_CONFIG_PATTERN,
 	ASTRO_I18N_CONFIG_PATTERN,
-} from "@src/constants/patterns.constants"
+} from "@src/core/config/constants/config-patterns.constants"
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
 import { TRANSLATION_DIRECTORIES_KEY } from "@src/core/config/constants/config.constants"
 import {
