@@ -13,12 +13,13 @@ import { ASTRO_COMPONENT_ROUTE_NAME_PATTERN } from "@src/core/page/constants/pag
 import Page from "@src/core/page/classes/page.class"
 import InvalidTranslationFilePattern from "@src/core/page/errors/invalid-translation-file-pattern.error"
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
-import type { PageProps } from "@src/core/page/types"
-import type { AstroI18nConfig } from "@src/core/config/types"
 import {
 	DEFAULT_TRANSLATION_DIRNAME,
 	PAGES_DIRNAME,
 } from "@src/constants/app.constants"
+import { TRANSLATION_DIRECTORIES_KEY } from "@src/core/config/constants/config.constants"
+import type { PageProps } from "@src/core/page/types"
+import type { AstroI18nConfig } from "@src/core/config/types"
 
 /**
  * Fetches all the pages and their translations from the project.
@@ -37,7 +38,7 @@ export async function getProjectPages(
 	const $directory = {
 		main: DEFAULT_TRANSLATION_DIRNAME,
 		pages: DEFAULT_TRANSLATION_DIRNAME,
-		...config.translations?.$directory,
+		...config.translations?.[TRANSLATION_DIRECTORIES_KEY],
 	}
 	const locales = [
 		config.primaryLocale || "en",

@@ -5,6 +5,10 @@ import {
 	computeDeepStringRecord,
 	interpolate,
 } from "@src/core/translation/functions/translation.functions"
+import {
+	LOAD_DIRECTIVES_KEY,
+	TRANSLATION_DIRECTORIES_KEY,
+} from "@src/core/config/constants/config.constants"
 import type { ConfigTranslations } from "@src/core/config/types"
 import type {
 	ComputedTranslations,
@@ -84,9 +88,9 @@ class TranslationBank {
 		const translationMap: TranslationMap = {}
 		const loadDirectives: LoadDirectives = {}
 		const {
-			$load,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			$directory, // we don't need or want $directory
+			[LOAD_DIRECTIVES_KEY]: $loadDirectives,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
+			[TRANSLATION_DIRECTORIES_KEY]: __destructured_out__,
 			...groups
 		} = translations
 
@@ -98,10 +102,10 @@ class TranslationBank {
 			}
 		}
 
-		if ($load) {
+		if ($loadDirectives) {
 			const { routes } = categorizeConfigTranslationsGroups(translations)
 
-			for (const directive of $load) {
+			for (const directive of $loadDirectives) {
 				// find which groups need to be loaded
 				let matchedGroups: string[] = []
 				for (const groupSource of directive.groups) {

@@ -1,3 +1,7 @@
+import type {
+	LOAD_DIRECTIVES_KEY,
+	TRANSLATION_DIRECTORIES_KEY,
+} from "@src/core/config/constants/config.constants"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
 export interface AstroI18nConfig {
@@ -21,13 +25,13 @@ export type ConfigTranslations = {
 		[locale: string]: DeepStringRecord
 	}
 } & {
-	$load?: {
+	[LOAD_DIRECTIVES_KEY]?: {
 		/** Groups to load. */
 		groups: string[]
 		/** Regex patterns where groups will be loaded. */
 		routes: string[]
 	}[]
-	$directory?: {
+	[TRANSLATION_DIRECTORIES_KEY]?: {
 		main?: string
 		pages?: string
 	}

@@ -17,6 +17,8 @@ import {
 	ASTRO_CONFIG_PATTERN,
 	ASTRO_I18N_CONFIG_PATTERN,
 } from "@src/constants/patterns.constants"
+import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
+import { TRANSLATION_DIRECTORIES_KEY } from "@src/core/config/constants/config.constants"
 import {
 	DENO_JSON_PATTERN,
 	DEPS_TS_PATTERN,
@@ -29,7 +31,6 @@ import type {
 	AstroI18nConfig,
 	ConfigTranslations,
 } from "@src/core/config/types"
-import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()
@@ -74,7 +75,8 @@ export async function getProjectTranslationGroups(
 	config: Partial<AstroI18nConfig> = {},
 ) {
 	const i18nDir = `${projectRoot}/src/${
-		config.translations?.$directory || DEFAULT_TRANSLATION_DIRNAME
+		config.translations?.[TRANSLATION_DIRECTORIES_KEY] ||
+		DEFAULT_TRANSLATION_DIRNAME
 	}`
 
 	const groups: ConfigTranslations = {}

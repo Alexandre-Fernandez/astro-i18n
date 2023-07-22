@@ -1,5 +1,9 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
+import {
+	LOAD_DIRECTIVES_KEY,
+	TRANSLATION_DIRECTORIES_KEY,
+} from "@src/core/config/constants/config.constants"
 import type { ConfigTranslations } from "@src/core/config/types"
 
 export function isConfigTranslations(
@@ -9,7 +13,7 @@ export function isConfigTranslations(
 
 	for (const [key, value] of Object.entries(configTranslations)) {
 		// is loader array:
-		if (key === "$load") {
+		if (key === LOAD_DIRECTIVES_KEY) {
 			if (!Array.isArray(value)) return false
 			for (const loader of value) {
 				if (!isObject(loader)) return false
@@ -33,7 +37,7 @@ export function isConfigTranslations(
 			}
 			continue
 		}
-		if (key === "$directory") {
+		if (key === TRANSLATION_DIRECTORIES_KEY) {
 			if (!isObject(value)) return false
 			for (const [location, name] of Object.entries(value)) {
 				if (typeof name !== "string") return false
