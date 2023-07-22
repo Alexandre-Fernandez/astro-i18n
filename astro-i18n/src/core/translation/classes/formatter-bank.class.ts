@@ -11,10 +11,16 @@ import {
 } from "@src/core/translation/formatters/default.formatters"
 import type { Formatters } from "@src/core/translation/types"
 
+/**
+ * This class stores formatters to be able to serialize only the custom
+ * formatters.
+ */
 class FormatterBank {
 	#default: Formatters = {
 		upper,
+		uppercase: upper,
 		lower,
+		lowercase: lower,
 		capitalize,
 		default_nullish,
 		default_falsy,

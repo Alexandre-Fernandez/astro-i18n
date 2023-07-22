@@ -6,6 +6,7 @@ import {
 	INTERPOLATION_PATTERN,
 	VARIANT_PATTERN,
 } from "@src/core/translation/constants/translation-patterns.constants"
+import { TRANSLATION_KEY_SEPARATOR } from "@src/core/translation/constants/translation.constants"
 import type {
 	ComputedTranslations,
 	DeepStringRecord,
@@ -13,18 +14,10 @@ import type {
 	TranslationProperties,
 } from "@src/core/translation/types"
 
-/*
-	{
-		[key: string]: string | DeepStringRecord;
-	}
-		====>
-	{
-		[key: string]: {
-			default?: string
-			variants: Variant[]
-		}
-	}
-*/
+/**
+ * Transforms a DeepStringRecord into ComputedTranslations.
+ * Basically it flattens the DeepStringRecord and groups variants together.
+ */
 export function computeDeepStringRecord(
 	deepStringRecord: DeepStringRecord,
 	path = "",
@@ -35,7 +28,11 @@ export function computeDeepStringRecord(
 			const { match, range } = VARIANT_PATTERN.match(curKey) || {}
 			// no variant => default
 			if (!match?.[1] || !range) {
-				const key = `${path}.${curKey}`.replace(/^\./, "")
+				const key =
+					`${path}${TRANSLATION_KEY_SEPARATOR}${curKey}`.replace(
+						/^\./,
+						"",
+					)
 
 				if (computed[key]) {
 					computed[key]!.default = curValue
@@ -48,7 +45,7 @@ export function computeDeepStringRecord(
 				continue
 			}
 			// variant
-			const key = `${path}.${
+			const key = `${path}${TRANSLATION_KEY_SEPARATOR}${
 				curKey.slice(0, range[0]) + curKey.slice(range[1])
 			}`.replace(/^\./, "")
 
@@ -66,7 +63,7 @@ export function computeDeepStringRecord(
 
 		computeDeepStringRecord(
 			curValue,
-			`${path}.${curKey}`.replace(/^\./, ""),
+			`${path}${TRANSLATION_KEY_SEPARATOR}${curKey}`.replace(/^\./, ""),
 			computed,
 		)
 	}
@@ -74,6 +71,9 @@ export function computeDeepStringRecord(
 	return computed
 }
 
+/**
+ * Resolves every interpolation in the given string.
+ */
 export function interpolate(
 	translation: string,
 	properties: TranslationProperties,
@@ -102,6 +102,9 @@ export function interpolate(
 	return interpolated
 }
 
+/**
+ * Finds the best way to represent the unknown value as a string.
+ */
 export function unknowntoString(value: unknown) {
 	switch (typeof value) {
 		case "undefined": {

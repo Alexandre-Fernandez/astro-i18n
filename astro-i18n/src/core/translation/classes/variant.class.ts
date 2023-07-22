@@ -6,14 +6,13 @@ import { matchVariable } from "@src/core/translation/functions/matching.function
 import { matchVariantValue } from "@src/core/translation/functions/variant/variant-matching.functions"
 import { isPrimitiveArray } from "@src/core/translation/guards/primitive.guard"
 import { parseVariantValue } from "@src/core/translation/functions/variant/variant-parsing.functions"
+import { VARIANT_PRIORITY_KEY } from "@src/core/translation/constants/variant.constants"
 import type {
 	TranslationProperties,
 	VariantProperty,
 } from "@src/core/translation/types"
 
 class Variant {
-	static priorityKey = "$priority"
-
 	raw
 
 	priority = 0
@@ -22,8 +21,15 @@ class Variant {
 
 	value: string
 
+	/**
+	 * @param variant The variant part of the translation, for example for a
+	 * variant string `"{{ prop1: true }}"` only `"prop1: true"` should be
+	 * passed.
+	 * @param value The translation value, this will only be stored for later
+	 * retrieval.
+	 */
 	constructor(variant: string, value: string) {
-		this.value = value // translation value
+		this.value = value
 
 		const trimmed = variant.trim()
 		this.raw = trimmed
@@ -62,7 +68,7 @@ class Variant {
 				)
 
 				// checking for priority key
-				if (matchedKey === Variant.priorityKey) {
+				if (matchedKey === VARIANT_PRIORITY_KEY) {
 					const priority = parseVariantValue(matchedValue, type)
 					if (typeof priority !== "number") {
 						throw new InvalidVariantPriority(matchedValue)

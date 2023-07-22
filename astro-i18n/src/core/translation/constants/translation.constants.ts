@@ -1,0 +1,1 @@
+export const TRANSLATION_KEY_SEPARATOR = "."

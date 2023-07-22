@@ -5,6 +5,16 @@ import type {
 	Formatters,
 } from "@src/core/translation/types"
 
+/**
+ * A translation interpolation.
+ * It has 3 main parts, the value, the alias and the formatters. For example:
+ * `"{# value(alias)>formatter #}"`, here the value would be a variable that
+ * would get its value from the `"alias"` property in the user-provided
+ * properties.
+ * Interpolation can also be used as values, for example every value in an
+ * object can be parsed as an interpolation, this allows for all values to be
+ * variables, have formatters, aliases, etc...
+ */
 class Interpolation {
 	raw: string
 
@@ -12,6 +22,11 @@ class Interpolation {
 
 	alias: string | null = null
 
+	/**
+	 * @param interpolation A translation interpolation, for example for an
+	 * interpolation string such as `"{# prop1(alias)>formatter #}"` only
+	 * `"prop1(alias)>formatter"` should be passed.
+	 */
 	constructor(
 		interpolation: string,
 		properties: TranslationProperties,

@@ -13,7 +13,7 @@ import {
 
 /**
  * Matches a variant's property value.
- * @param value for example `"string_value"`
+ * @param value for example `"a string value"`
  */
 export function matchVariantValue(value: string) {
 	if (/^\s/.test(value)) throw new UntrimmedString(value)
