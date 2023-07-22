@@ -40,8 +40,6 @@ const interpolationArgumentlessFormatterMatcher: Matcher =
 		.build()
 		.toMatcher()
 
-// TODO: make formatters accept parenthesisless names when no arguments are needed for example ">uppercase>lowercase"
-
 class Interpolation {
 	raw: string
 
@@ -281,22 +279,26 @@ class Interpolation {
 		const formatters: FormatterMatch[] = []
 
 		while (interpolation.length > 0) {
-			const argumentlessFormatterMatch =
-				this.#matchArgumentlessFormatter(interpolation)
-			if (!argumentlessFormatterMatch) break
-
-			const { match, range } = argumentlessFormatterMatch
-
-			const name = match[1] || throwFalsy()
+			const { match, range } =
+				this.#matchArgumentlessFormatter(interpolation) || {}
+			if (!match?.[1] || !range) break
 
 			interpolation = interpolation.slice(range[1]).trim()
+
+			if (!match[2]) {
+				formatters.push({
+					name: match[1],
+					args: [],
+				})
+				continue
+			}
 
 			const { args, end } = this.#matchFormatterArguments(interpolation)
 
 			interpolation = interpolation.slice(end).trim()
 
 			formatters.push({
-				name,
+				name: match[1],
 				args,
 			})
 		}

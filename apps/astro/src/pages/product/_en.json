@@ -1,5 +1,5 @@
 {
 	"product-test": "product-test-en (default)",
 	"product-test{{ n: 2 }}": "product-test-en (n: 2)",
-	"product-interpolation": "I have '{# test>upper() #}'"
+	"product-interpolation": "I have '{# test>upper #}'"
 }
