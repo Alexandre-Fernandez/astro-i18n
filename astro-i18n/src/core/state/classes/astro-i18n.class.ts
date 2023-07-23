@@ -2,7 +2,6 @@ import { Regex } from "@lib/regex"
 import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
@@ -10,6 +9,7 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
 
 class AstroI18n {
 	environment: Environment
@@ -24,6 +24,8 @@ class AstroI18n {
 
 	#formatters = new FormatterBank()
 
+	#isServerSideInit = false
+
 	constructor() {
 		if (
 			typeof process === "object" &&
@@ -35,6 +37,9 @@ class AstroI18n {
 			this.environment = Environment.NONE
 		} else {
 			this.environment = Environment.BROWSER
+			/* 
+				INITIALIZE BROWSER STATE HERE
+			*/
 		}
 	}
 
@@ -63,6 +68,14 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
+	get internals() {
+		return {
+			serverInit: this.#serverInit.bind(this),
+			isServerSideInit: () => this.#isServerSideInit,
+			toHtml: this.#toHtml.bind(this),
+		}
+	}
+
 	extractRouteLocale(route: string) {
 		const pattern = Regex.fromString(
 			`\\/?(${this.locales.join("|")})(?:\\/.*)?$`,
@@ -77,7 +90,7 @@ class AstroI18n {
 	 * For example in a node environment it might parse the config from the
 	 * filesystem.
 	 */
-	async init(
+	async #serverInit(
 		config?: Partial<AstroI18nConfig> | string,
 		formatters: Formatters = {},
 	) {
@@ -90,17 +103,6 @@ class AstroI18n {
 				this.#config = new Config(config)
 				break
 			}
-			case Environment.BROWSER: {
-				/* 
-				IF ENV IS BROWER IT'S BETTER TO INIT IN CONSTRUCTOR
-				THIS WAY WE DON'T HAVE TO ADD A SCRIPT IN HTML IT WILL INIT WHEN 
-				USER CALLS THE TRANSLATION FUNCTION 
-
-				THEREFORE THIS FUNCTION WILL EXCLUSIVELY BE USED IN THE 
-				MIDDLEWARE AND MUST RETURN A PROMISE SO THAT IT CAN BE AWAITED
-				*/
-				break
-			}
 			case Environment.NONE: {
 				if (typeof config !== "object") {
 					throw new MissingConfigArgument()
@@ -109,7 +111,9 @@ class AstroI18n {
 				break
 			}
 			default: {
-				throw new UnreachableCode()
+				throw new InvalidEnvironment(
+					"Cannot initialize server in a browser environment.",
+				)
 			}
 		}
 
@@ -118,6 +122,8 @@ class AstroI18n {
 		)
 
 		this.#formatters = new FormatterBank(formatters)
+
+		this.#isServerSideInit = true
 	}
 
 	t(
@@ -141,7 +147,7 @@ class AstroI18n {
 		)
 	}
 
-	toHtml() {
+	#toHtml() {
 		return `<script type="application/json"></script>`
 	}
 }

@@ -9,7 +9,6 @@ export const singleton = {
 }
 
 // TODO: serialize formatters
-// TODO: wait init in middleware, make init sync in browser
 export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
@@ -17,9 +16,13 @@ export function useAstroI18n(
 	if (isObject(config) && Object.keys(config).length === 0) {
 		config = undefined
 	}
-	astroI18n.init(config, formatters)
+	const { internals } = astroI18n
 
-	return ((ctx, next) => {
+	return (async (_ctx, next) => {
+		if (!internals.isServerSideInit()) {
+			await internals.serverInit(config, formatters)
+		}
+
 		console.log(
 			astroI18n.t(
 				"product-interpolation",
