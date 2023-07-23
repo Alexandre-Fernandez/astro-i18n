@@ -126,6 +126,14 @@ class AstroI18n {
 		this.#isServerSideInit = true
 	}
 
+	/**
+	 * Gets the appropriate interpolated translation for the given key,
+	 * properties and options.
+	 * If multiple keys are the same, for example if you have the same key in
+	 * the common translations and in your route translations, then the most
+	 * specific one will be used (the route translations in the previous
+	 * example).
+	 */
 	t(
 		key: string,
 		properties: TranslationProperties,
