@@ -43,6 +43,10 @@ class SegmentBank {
 		this.#restrictDirectives = restrictDirectives
 	}
 
+	get(segment: string, locale: string) {
+		//
+	}
+
 	static fromConfig({ routes, primaryLocale, pages }: Config) {
 		const {
 			[ROUTE_RESTRICT_KEY]: $restrictDirectives,
