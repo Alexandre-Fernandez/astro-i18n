@@ -4,12 +4,12 @@ import Environment from "@src/core/state/enums/environment.enum"
 import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
+import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
 
 class AstroI18n {
 	environment: Environment
