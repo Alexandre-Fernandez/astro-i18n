@@ -9,7 +9,6 @@ import {
 	LOAD_DIRECTIVES_KEY,
 	TRANSLATION_DIRECTORIES_KEY,
 } from "@src/core/config/constants/config.constants"
-import type { ConfigTranslations } from "@src/core/config/types"
 import type {
 	ComputedTranslations,
 	Formatters,
@@ -17,6 +16,7 @@ import type {
 	TranslationMap,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import type Config from "@src/core/config/classes/config.class"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -29,6 +29,55 @@ class TranslationBank {
 	) {
 		this.#translations = translations
 		this.#loadDirectives = loadDirectives
+	}
+
+	/**
+	 * Create a TranslationBank from a config's translations.
+	 */
+	static fromConfig({ translations }: Config) {
+		const translationMap: TranslationMap = {}
+		const loadDirectives: LoadDirectives = {}
+		const {
+			[LOAD_DIRECTIVES_KEY]: $loadDirectives,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
+			[TRANSLATION_DIRECTORIES_KEY]: __destructured_out__,
+			...groups
+		} = translations
+
+		for (const [key, value] of Object.entries(groups)) {
+			if (!translationMap[key]) translationMap[key] = {}
+			for (const [locale, deepStringRecord] of Object.entries(value)) {
+				translationMap[key]![locale] =
+					computeDeepStringRecord(deepStringRecord)
+			}
+		}
+
+		if ($loadDirectives) {
+			const { routes } = categorizeConfigTranslationsGroups(translations)
+
+			for (const directive of $loadDirectives) {
+				// find which groups need to be loaded
+				let matchedGroups: string[] = []
+				for (const groupRegex of directive.groups) {
+					const pattern = Regex.fromString(groupRegex)
+					// matched against every group including routes & common
+					matchedGroups = Object.keys(groups).filter((group) =>
+						pattern.test(group),
+					)
+				}
+				// find the routes where the matched groups will be loaded
+				for (const routeSource of directive.routes) {
+					const pattern = Regex.fromString(routeSource)
+					const matchedRoutes = routes.filter((route) =>
+						pattern.test(route),
+					)
+					for (const route of matchedRoutes) {
+						loadDirectives[route] = matchedGroups
+					}
+				}
+			}
+		}
+		return new TranslationBank(translationMap, loadDirectives)
 	}
 
 	/**
@@ -79,59 +128,6 @@ class TranslationBank {
 		}
 
 		return interpolate(bestVariant.value, properties, formatters)
-	}
-
-	/**
-	 * Create a TranslationBank from a config's translations.
-	 */
-	static fromConfig(translations: ConfigTranslations) {
-		const translationMap: TranslationMap = {}
-		const loadDirectives: LoadDirectives = {}
-		const {
-			[LOAD_DIRECTIVES_KEY]: $loadDirectives,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-			[TRANSLATION_DIRECTORIES_KEY]: __destructured_out__,
-			...groups
-		} = translations
-
-		for (const [key, value] of Object.entries(groups)) {
-			if (!translationMap[key]) translationMap[key] = {}
-			for (const [locale, deepStringRecord] of Object.entries(value)) {
-				translationMap[key]![locale] =
-					computeDeepStringRecord(deepStringRecord)
-			}
-		}
-
-		if ($loadDirectives) {
-			const { routes } = categorizeConfigTranslationsGroups(translations)
-
-			for (const directive of $loadDirectives) {
-				// find which groups need to be loaded
-				let matchedGroups: string[] = []
-				for (const groupSource of directive.groups) {
-					const pattern = Regex.fromString(groupSource)
-					// matched against every group including routes & common
-					matchedGroups = Object.keys(groups).filter((group) =>
-						pattern.test(group),
-					)
-				}
-				// find the routes where the matched groups will be loaded
-				for (const routeSource of directive.routes) {
-					const pattern = Regex.fromString(routeSource)
-					const matchedRoutes = routes.filter((route) =>
-						pattern.test(route),
-					)
-					for (const route of matchedRoutes) {
-						loadDirectives[route] = matchedGroups
-					}
-				}
-			}
-		}
-		return new TranslationBank(translationMap, loadDirectives)
-	}
-
-	toString() {
-		return JSON.stringify(this.#translations, null, 2)
 	}
 }
 

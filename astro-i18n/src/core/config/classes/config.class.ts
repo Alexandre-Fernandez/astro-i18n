@@ -57,6 +57,12 @@ class Config implements AstroI18nConfig {
 		if (routes) this.routes = routes
 	}
 
+	get pages() {
+		return Object.keys(this.translations).filter((group) =>
+			group.startsWith("/"),
+		)
+	}
+
 	static async fromFilesystem(path: string | null = null) {
 		const { fileURLToPath } = await AsyncNode.url
 

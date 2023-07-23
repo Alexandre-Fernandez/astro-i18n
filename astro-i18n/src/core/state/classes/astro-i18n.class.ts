@@ -117,13 +117,15 @@ class AstroI18n {
 			}
 		}
 
-		this.#translations = TranslationBank.fromConfig(
-			this.#config.translations,
-		)
+		this.#translations = TranslationBank.fromConfig(this.#config)
 
 		this.#formatters = new FormatterBank(formatters)
 
 		this.#isServerSideInit = true
+	}
+
+	#browserInit() {
+		//
 	}
 
 	/**

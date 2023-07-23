@@ -2,6 +2,7 @@ import type {
 	LOAD_DIRECTIVES_KEY,
 	TRANSLATION_DIRECTORIES_KEY,
 } from "@src/core/config/constants/config.constants"
+import type { ROUTE_RESTRICT_KEY } from "@src/core/routing/constants/routing.constants"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
 export interface AstroI18nConfig {
@@ -42,7 +43,7 @@ export type ConfigRoutes = {
 		[segment: string]: string
 	}
 } & {
-	$restrict?: {
+	[ROUTE_RESTRICT_KEY]?: {
 		/** Segments to restrict. */
 		segments: string[]
 		/** Regex patterns where segments will be available. */
