@@ -22,13 +22,15 @@ export function useAstroI18n(
 			await internals.serverInit(config, formatters)
 		}
 
-		console.log(
-			astroI18n.t(
-				"product-interpolation",
-				{ test: "my_interpolated_value" },
-				{ route: "/product", locale: "en" },
-			),
-		)
+		astroI18n.test()
+
+		// console.log(
+		// 	astroI18n.t(
+		// 		"product-interpolation",
+		// 		{ test: "my_interpolated_value" },
+		// 		{ route: "/product", locale: "en" },
+		// 	),
+		// )
 		// check what page it is
 		// build translations for that page (common + specific)
 		// build route translations for that page²

@@ -57,12 +57,14 @@ class TranslationBank {
 
 			for (const directive of $loadDirectives) {
 				// find which groups need to be loaded
-				let matchedGroups: string[] = []
+				const matchedGroups: string[] = []
 				for (const groupRegex of directive.groups) {
 					const pattern = Regex.fromString(groupRegex)
 					// matched against every group including routes & common
-					matchedGroups = Object.keys(groups).filter((group) =>
-						pattern.test(group),
+					matchedGroups.push(
+						...Object.keys(groups).filter((group) =>
+							pattern.test(group),
+						),
 					)
 				}
 				// find the routes where the matched groups will be loaded
@@ -72,7 +74,7 @@ class TranslationBank {
 						pattern.test(route),
 					)
 					for (const route of matchedRoutes) {
-						loadDirectives[route] = matchedGroups
+						loadDirectives[route] = [...new Set(matchedGroups)]
 					}
 				}
 			}
@@ -128,6 +130,14 @@ class TranslationBank {
 		}
 
 		return interpolate(bestVariant.value, properties, formatters)
+	}
+
+	toString() {
+		return `#translations:\n${JSON.stringify(
+			this.#translations,
+			null,
+			2,
+		)}\n#loadDirectives:\n${JSON.stringify(this.#loadDirectives, null, 2)}`
 	}
 }
 

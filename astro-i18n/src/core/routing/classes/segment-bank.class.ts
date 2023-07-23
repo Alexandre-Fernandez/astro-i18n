@@ -33,18 +33,14 @@ import type {
 class SegmentBank {
 	#restrictDirectives: RestrictDirectives
 
-	#translations: SegmentTranslations
+	#segments: SegmentTranslations
 
 	constructor(
-		translations: SegmentTranslations,
+		translations: SegmentTranslations = {},
 		restrictDirectives: RestrictDirectives = {},
 	) {
-		this.#translations = translations
+		this.#segments = translations
 		this.#restrictDirectives = restrictDirectives
-	}
-
-	get(segment: string, locale: string) {
-		//
 	}
 
 	static fromConfig({ routes, primaryLocale, pages }: Config) {
@@ -90,7 +86,9 @@ class SegmentBank {
 		}
 
 		if ($restrictDirectives) {
-			const restrictions: { [route: string]: string[] } = {}
+			// WRONG LOGIC
+			// THE SEGMENTS SHOULD BE RESTRICTED TO GIVEN ROUTES
+			// ==> IT SHOULD BE SEGMENT BASED INSTEAD OF ROUTE BASED (VALUE SHOULD BE ROUTES NOT KEY)
 
 			const allSegments: string[] = []
 			for (const [, segments] of entries) {
@@ -119,12 +117,24 @@ class SegmentBank {
 				}
 
 				for (const route of matchedRoutes) {
-					restrictions[route] = [...new Set(restrictedSegments)]
+					restrictDirectives[route] = [...new Set(restrictedSegments)]
 				}
 			}
 		}
 
 		return new SegmentBank(translations, restrictDirectives)
+	}
+
+	toString() {
+		return `#segments:\n${JSON.stringify(
+			this.#segments,
+			null,
+			2,
+		)}\n#restrictDirectives:\n${JSON.stringify(
+			this.#restrictDirectives,
+			null,
+			2,
+		)}`
 	}
 }
 

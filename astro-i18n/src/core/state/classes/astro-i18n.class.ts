@@ -10,6 +10,7 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import SegmentBank from "@src/core/routing/classes/segment-bank.class"
 
 class AstroI18n {
 	environment: Environment
@@ -21,6 +22,8 @@ class AstroI18n {
 	#config = new Config()
 
 	#translations = new TranslationBank()
+
+	#segments = new SegmentBank()
 
 	#formatters = new FormatterBank()
 
@@ -119,6 +122,8 @@ class AstroI18n {
 
 		this.#translations = TranslationBank.fromConfig(this.#config)
 
+		this.#segments = SegmentBank.fromConfig(this.#config)
+
 		this.#formatters = new FormatterBank(formatters)
 
 		this.#isServerSideInit = true
@@ -126,6 +131,11 @@ class AstroI18n {
 
 	#browserInit() {
 		//
+	}
+
+	test() {
+		// console.log(this.#translations.toString())
+		console.log(this.#segments.toString())
 	}
 
 	/**

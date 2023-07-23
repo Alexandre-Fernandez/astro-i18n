@@ -1,5 +1,6 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
 import type { ConfigRoutes } from "@src/core/config/types"
+import { ROUTE_RESTRICT_KEY } from "@src/core/routing/constants/routing.constants"
 
 export function isConfigRoutes(
 	configRoutes: unknown,
@@ -8,7 +9,7 @@ export function isConfigRoutes(
 
 	for (const [key, value] of Object.entries(configRoutes)) {
 		// is restricter array:
-		if (key === "$restrict") {
+		if (key === ROUTE_RESTRICT_KEY) {
 			if (!Array.isArray(value)) return false
 			for (const restricter of value) {
 				if (!isObject(restricter)) return false
