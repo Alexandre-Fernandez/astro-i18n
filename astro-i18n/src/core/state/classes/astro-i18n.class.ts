@@ -142,7 +142,7 @@ class AstroI18n {
 	}
 
 	toHtml() {
-		return `<script type="text/json"></script>`
+		return `<script type="application/json"></script>`
 	}
 }
 
