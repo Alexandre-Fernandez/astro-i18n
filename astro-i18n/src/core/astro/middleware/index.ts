@@ -13,9 +13,8 @@ export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
 ) {
-	if (isObject(config) && Object.keys(config).length === 0) {
-		config = undefined
-	}
+	if (!config) config = undefined // empty string
+	if (isObject(config) && Object.keys(config).length === 0) config = undefined
 	const { internals } = astroI18n
 
 	return (async (_ctx, next) => {
