@@ -85,8 +85,8 @@ class AstroI18n {
 	}
 
 	/**
-	 * Initializes state accordingly to the environment (node, browser, etc)
-	 * where it's runned.
+	 * Initializes state in the server accordingly to the environment (node,
+	 * serverless, etc) where it's runned.
 	 * For example in a node environment it might parse the config from the
 	 * filesystem.
 	 */
