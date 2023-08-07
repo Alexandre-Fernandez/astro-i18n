@@ -84,7 +84,7 @@ export function getPagesMetadata(
 						route,
 						path: "",
 						hasGetStaticPaths: false,
-						hasPrerender: false,
+						originPrerender: undefined,
 					}
 				}
 
@@ -93,7 +93,8 @@ export function getPagesMetadata(
 					routePageInfo[route].path = relativePath
 					routePageInfo[route].hasGetStaticPaths =
 						hasGetStaticPaths(fullPath)
-					routePageInfo[route].hasPrerender = hasPrerender(fullPath)
+					routePageInfo[route].originPrerender =
+						prerenderLine(fullPath)
 					routePageInfo[route].name = name
 				} else {
 					// translation directory
@@ -250,18 +251,23 @@ function hasGetStaticPaths(path: string) {
 	}
 }
 
-function hasPrerender(path: string) {
+function prerenderLine(path: string) {
 	try {
-		const file = readFileSync(path, "utf8")
-		return [
-			"export const prerender",
-			"export let prerender",
-			"export var prerender",
-			"export { prerender }",
-			"export {prerender}",
-		].some((searchString) => file.includes(searchString))
+		const list = readFileSync(path, "utf8")
+			.split("\n")
+			.filter((line) => {
+				return [
+					"export const prerender",
+					"export let prerender",
+					"export var prerender",
+					"export { prerender }",
+					"export {prerender}",
+				].some((searchString) => line.includes(searchString))
+			})
+			.map((line) => line.trim())
+		return list[0]
 	} catch (error) {
-		return false
+		return
 	}
 }
 

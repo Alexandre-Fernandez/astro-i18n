@@ -45,7 +45,7 @@ export async function executeSyncPages(
 				page.path,
 				translatePath(page.path, langCode, astroI18nConfig, sep),
 				page.hasGetStaticPaths,
-				page.hasPrerender,
+				page.originPrerender,
 			)
 		}
 	}

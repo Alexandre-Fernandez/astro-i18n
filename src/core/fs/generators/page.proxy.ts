@@ -11,7 +11,7 @@ export function generatePageProxy(
 	pagePath: string,
 	proxyPath: string,
 	importGetStaticPaths: boolean,
-	exportPrerender: boolean,
+	originPrerender: string | undefined,
 ) {
 	const depth = Math.max(
 		0,
@@ -26,8 +26,8 @@ export function generatePageProxy(
 	if (importGetStaticPaths) {
 		pageProxy += getStaticPaths(importPath)
 	}
-	if (exportPrerender) {
-		pageProxy += "export const prerender = true\n\n"
+	if (originPrerender) {
+		pageProxy += `${originPrerender}\n\n`
 	}
 
 	pageProxy += "const { props } = Astro\n---\n\n<Page {...props} />"
