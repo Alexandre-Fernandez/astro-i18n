@@ -52,7 +52,10 @@ export function setObjectProperty(
 	let prev = obj
 	for (const [i, key] of keys.entries()) {
 		// isLastKey
-		if (i === keys.length - 1) prev[key] = value
+		if (i === keys.length - 1) {
+			prev[key] = value
+			break
+		}
 
 		if (!isRecord(prev[key])) prev[key] = {}
 
