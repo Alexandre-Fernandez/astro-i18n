@@ -38,6 +38,25 @@ export function merge(
 	return mutable ? undefined : merged
 }
 
+export function setObjectProperty(
+	obj: Record<string, unknown>,
+	key: string | string[],
+	value: unknown,
+) {
+	const keys = typeof key === "string" ? [key] : key
+
+	let prev = obj
+	for (const [i, key] of keys.entries()) {
+		// isLastKey
+		if (i === keys.length - 1) prev[key] = value
+
+		if (!isRecord(prev[key])) prev[key] = {}
+
+		prev = prev[key] as Record<string, unknown>
+	}
+}
+
 function isRecord(record: unknown): record is Record<string, unknown> {
+	if (typeof record !== "object") return false
 	return Object.getPrototypeOf(record) === Object.prototype
 }
