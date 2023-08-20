@@ -24,6 +24,7 @@ type FullRouteTranslationMap = {
 
 import { ROUTE_RESTRICT_KEY } from "@src/core/routing/constants/routing.constants"
 import { Regex } from "@lib/regex"
+import { setObjectProperty } from "@lib/object"
 import type Config from "@src/core/config/classes/config.class"
 import type {
 	RestrictDirectives,
@@ -63,23 +64,27 @@ class SegmentBank {
 
 			for (const [primarySeg, localeSeg] of Object.entries(segments)) {
 				// adding segment to the primary locale translations
-				if (!translations[primaryLocale]![primarySeg]) {
-					translations[primaryLocale]![primarySeg] = {}
-				}
-				translations[primaryLocale]![primarySeg]![locale] = localeSeg
+				setObjectProperty(
+					translations,
+					[primaryLocale, primarySeg, locale],
+					localeSeg,
+				)
 
 				// adding segment to the current secondary locale translations
-				if (!translations[locale]) translations[locale] = {}
-				if (!translations[locale]![localeSeg]) {
-					translations[locale]![localeSeg] = {}
-				}
-				translations[locale]![localeSeg]![primaryLocale] = primarySeg
+				setObjectProperty(
+					translations,
+					[locale, localeSeg, primaryLocale],
+					primarySeg,
+				)
 
 				// adding segment to all other locale translations
 				for (const [otherLocale, otherSegments] of otherLocales) {
 					if (otherSegments[primarySeg]) {
-						translations[locale]![localeSeg]![otherLocale] =
-							otherSegments[primarySeg]!
+						setObjectProperty(
+							translations,
+							[locale, localeSeg, otherLocale],
+							otherSegments[primarySeg],
+						)
 					}
 				}
 			}
