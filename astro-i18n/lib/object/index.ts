@@ -38,6 +38,10 @@ export function merge(
 	return mutable ? undefined : merged
 }
 
+/**
+ * Sets a property on an object. The property can be nested, if duplicate keys
+ * are found they will be overriden.
+ */
 export function setObjectProperty(
 	obj: Record<string, unknown>,
 	key: string | string[],
