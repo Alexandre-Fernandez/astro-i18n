@@ -29,5 +29,5 @@ export function removeRouteLangCode(
 }
 
 export function extractRouteLangCode(route: string, langCodes: string[]) {
-	return route.match(new RegExp(`/?(${langCodes.join("|")})(?:/.*)?$`))?.[1]
+	return route.match(new RegExp(`^/(${langCodes.join("|")})(?:/|$)`))?.[1]
 }
