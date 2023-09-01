@@ -5,6 +5,7 @@ import { isFile, writeNestedFile } from "$lib/filesystem"
 import { ASTRO_I18N_DIRECTORY, GENERATED_DTS } from "$src/constants"
 import { getEnvDtsRootRelativePath } from "$src/core/fs"
 import { generateDefaultAmbientType } from "$src/core/fs/generators/ambient.type"
+import type { AstroI18nConfig } from "$src/types/config"
 
 const referencedPath = `..${sep}${ASTRO_I18N_DIRECTORY}${sep}${GENERATED_DTS}`
 const referencePathPattern = new RegExp(
@@ -12,10 +13,14 @@ const referencePathPattern = new RegExp(
 )
 const pathReference = `/// <reference path="${referencedPath}" />\n`
 
-export function generateEnvDeclaration(root: string) {
+export function generateEnvDeclaration(
+	root: string,
+	astroI18nConfig: AstroI18nConfig,
+) {
 	generateDefaultAmbientType(root)
 
-	const envDtsPath = join(root, getEnvDtsRootRelativePath())
+	const envDtsPath = join(root, getEnvDtsRootRelativePath(astroI18nConfig))
+
 	if (!isFile(envDtsPath)) {
 		writeNestedFile(envDtsPath, pathReference)
 		return
@@ -23,6 +28,7 @@ export function generateEnvDeclaration(root: string) {
 
 	const fileData = readFileSync(envDtsPath, "utf8")
 	const newFileData = getReferencedPathContent(fileData)
+
 	if (fileData !== newFileData) writeNestedFile(envDtsPath, newFileData)
 }
 

@@ -9,6 +9,7 @@ import {
 import { merge } from "$lib/object-literal"
 import { astroRootNotFound, noAstroRoot } from "$src/cli/errors"
 import { getPagesDirectoryRootRelativePath } from "$src/core/fs"
+import { loadAstroI18nConfig } from "$src/core/fs/config"
 import { generateDefaultAstroI18nConfig } from "$src/core/fs/generators/astro.i18n.config"
 import { generateEnvDeclaration } from "$src/core/fs/generators/env.declaration"
 import { generateAstroConfig } from "$src/core/fs/generators/astro.config"
@@ -41,12 +42,18 @@ export async function executeInstall(
 ) {
 	const root = args.at(0) ?? process.cwd()
 	if (!root) throw noAstroRoot()
-	const pages = resolve(root, getPagesDirectoryRootRelativePath())
 	const config = options.config?.at(0) && resolve(root, options.config[0])
+	const astroI18nConfig = await loadAstroI18nConfig(root, config)
+
+	const pages = resolve(
+		root,
+		getPagesDirectoryRootRelativePath(astroI18nConfig),
+	)
+
 	if (!isDirectory(pages)) throw astroRootNotFound(pages)
 
 	generateDefaultAstroI18nConfig(root, config)
-	generateEnvDeclaration(root)
+	generateEnvDeclaration(root, astroI18nConfig)
 	generateAstroConfig(root)
 	addAstroI18nCommands(root)
 }

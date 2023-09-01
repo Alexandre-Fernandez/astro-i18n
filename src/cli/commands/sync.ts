@@ -31,11 +31,15 @@ export async function executeSync(
 ) {
 	const root = args.at(0) ?? process.cwd()
 	if (!root) throw noAstroRoot()
-	const pages = resolve(root, getPagesDirectoryRootRelativePath())
 	const config = options.config?.at(0) && resolve(root, options.config[0])
-	if (!isDirectory(pages)) throw astroRootNotFound(pages)
-
 	const astroI18nConfig = await loadAstroI18nConfig(root, config)
+
+	const pages = resolve(
+		root,
+		getPagesDirectoryRootRelativePath(astroI18nConfig),
+	)
+
+	if (!isDirectory(pages)) throw astroRootNotFound(pages)
 
 	const pagesMetadata = getPagesMetadata(root, astroI18nConfig)
 	merge(astroI18nConfig.translations, pagesMetadata.translations)

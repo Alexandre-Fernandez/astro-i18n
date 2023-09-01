@@ -106,6 +106,7 @@ export default defineAstroI18nConfig({
 	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
+	srcDir: "src",
 })
 ```
 
@@ -204,6 +205,12 @@ export default defineAstroI18nConfig({
 	},
 })
 ```
+
+#### `srcDir`
+
+Set the directory that Astro will read your site from. The value can be either an absolute file system path or a path relative to the project root.
+
+It's `src` by default.
 
 ### That's it
 

@@ -45,6 +45,7 @@ const defaultConfig: AstroI18nConfig = {
 	trailingSlash: "never",
 	translations: {},
 	routeTranslations: {},
+	srcDir: "src",
 }
 
 export function getDefaultConfig() {

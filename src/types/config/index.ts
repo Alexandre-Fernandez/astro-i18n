@@ -8,6 +8,7 @@ export type UninitializedAstroI18nConfig = {
 	trailingSlash: "always" | "never"
 	translations: UninitializedTranslationMap
 	routeTranslations: UninitializedRouteTranslationMap
+	srcDir: string
 }
 export type AstroI18nConfig = ReplaceProperties<
 	UninitializedAstroI18nConfig,

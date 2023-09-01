@@ -37,12 +37,12 @@ export function getGeneratedDtsRootRelativePath() {
 	return join(ASTRO_I18N_DIRECTORY, GENERATED_DTS)
 }
 
-export function getPagesDirectoryRootRelativePath() {
-	return join("src", "pages")
+export function getPagesDirectoryRootRelativePath({ srcDir }: AstroI18nConfig) {
+	return join(srcDir, "pages")
 }
 
-export function getEnvDtsRootRelativePath() {
-	return join("src", ASTRO_ENV_DTS)
+export function getEnvDtsRootRelativePath({ srcDir }: AstroI18nConfig) {
+	return join(srcDir, ASTRO_ENV_DTS)
 }
 
 /**
@@ -53,7 +53,10 @@ export function getPagesMetadata(
 	astroI18nConfig: AstroI18nConfig,
 ) {
 	const { defaultLangCode, supportedLangCodes } = astroI18nConfig
-	const pagesDirectory = joinExists(root, getPagesDirectoryRootRelativePath())
+	const pagesDirectory = joinExists(
+		root,
+		getPagesDirectoryRootRelativePath(astroI18nConfig),
+	)
 	const routePageInfo: Record<string, PageInfo> = {}
 	const translations = createBaseTranslationObject<TranslationMap>([
 		defaultLangCode,
@@ -122,7 +125,7 @@ export function getPagesMetadata(
 }
 
 /**
- * Buils a `LoadedTranslationMap` from a directory of translations.
+ * Builds a `LoadedTranslationMap` from a directory of translations.
  */
 function getI18nPageTranslations(
 	directoryPath: string,
