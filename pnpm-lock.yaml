@@ -72,6 +72,9 @@ importers:
       prettier-plugin-astro:
         specifier: ^0.8.1
         version: 0.8.1
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
 
   astro-i18n:
     dependencies:
@@ -1461,7 +1464,7 @@ packages:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
     dependencies:
       eslint: 8.48.0
-      eslint-visitor-keys: 3.4.1
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /@eslint-community/regexpp@4.5.1:
@@ -1781,7 +1784,7 @@ packages:
         optional: true
     dependencies:
       '@eslint-community/regexpp': 4.5.1
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/type-utils': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       '@typescript-eslint/utils': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
@@ -1855,7 +1858,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@5.62.0(eslint@8.40.0)(typescript@4.9.5):
+  /@typescript-eslint/parser@5.62.0(eslint@8.40.0)(typescript@5.2.2):
     resolution: {integrity: sha512-VlJEV0fOQ7BExOsHYAGrgbEiZoi8D+Bl2+f6V2RrXerRSylnp+ZBHmPvaIa8cz0Ajx7WO7Z5RqfgYg7ED1nRhA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1867,10 +1870,10 @@ packages:
     dependencies:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
-      '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
+      '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.2.2)
       debug: 4.3.4
       eslint: 8.40.0
-      typescript: 4.9.5
+      typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2001,27 +2004,6 @@ packages:
   /@typescript-eslint/types@6.5.0:
     resolution: {integrity: sha512-eqLLOEF5/lU8jW3Bw+8auf4lZSbbljHR2saKnYqON12G/WsJrGeeDHWuQePoEf9ro22+JkbPfWQwKEC5WwLQ3w==}
     engines: {node: ^16.0.0 || >=18.0.0}
-    dev: true
-
-  /@typescript-eslint/typescript-estree@5.62.0(typescript@4.9.5):
-    resolution: {integrity: sha512-CmcQ6uY7b9y694lKdRB8FEel7JbU/40iSAPomu++SjLMntB+2Leay2LO6i8VnJk58MtE9/nQSFIH6jpyRWyYzA==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/types': 5.62.0
-      '@typescript-eslint/visitor-keys': 5.62.0
-      debug: 4.3.4
-      globby: 11.1.0
-      is-glob: 4.0.3
-      semver: 7.5.4
-      tsutils: 3.21.0(typescript@4.9.5)
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /@typescript-eslint/typescript-estree@5.62.0(typescript@5.2.2):
@@ -2453,7 +2435,7 @@ packages:
       string-width: 5.1.2
       strip-ansi: 7.1.0
       tsconfig-resolver: 3.0.1
-      typescript: 5.1.3
+      typescript: 5.2.2
       unist-util-visit: 4.1.2
       vfile: 5.3.7
       vite: 4.4.6(@types/node@20.1.4)
@@ -3351,7 +3333,7 @@ packages:
     resolution: {integrity: sha512-GJD7XScUmfA9T9Utqv+26bKMzMDIfOrq5WNRpqvg4mojA2cWOITzNgBlD8BY8Lr4p+tY+IXp3yWavmMGY065fg==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.40.0)(typescript@5.2.2)
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       eslint: 8.40.0
       eslint-config-af-javascript: 1.13.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.5.5)
       eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.62.0)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
@@ -3390,7 +3372,7 @@ packages:
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 8.48.0
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.5.0)(eslint-import-resolver-typescript@3.6.0)(eslint@8.48.0)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.48.0)
       object.assign: 4.1.4
       object.entries: 1.1.7
       semver: 6.3.1
@@ -3493,7 +3475,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       debug: 3.2.7
       eslint: 8.40.0
       eslint-import-resolver-node: 0.3.7
@@ -3523,7 +3505,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       debug: 3.2.7
       eslint: 8.48.0
       eslint-import-resolver-node: 0.3.9
@@ -3752,7 +3734,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       array-includes: 3.1.6
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
@@ -3785,7 +3767,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.40.0)(typescript@5.2.2)
       array-includes: 3.1.6
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.1
@@ -4215,7 +4197,7 @@ packages:
     dependencies:
       acorn: 8.10.0
       acorn-jsx: 5.3.2(acorn@8.10.0)
-      eslint-visitor-keys: 3.4.1
+      eslint-visitor-keys: 3.4.3
     dev: true
 
   /esprima@4.0.1:
@@ -6431,7 +6413,7 @@ packages:
     resolution: {integrity: sha512-Sb+mjNHOULsBv818T40qSPeRiuWLyaGMa5ewydRLFimneixmVy2zdivRl+AF6jaYPC8ERxGDmFSiqui6SfPd+g==}
     hasBin: true
     dependencies:
-      is-core-module: 2.12.1
+      is-core-module: 2.13.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
@@ -7050,16 +7032,6 @@ packages:
 
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
-    dev: true
-
-  /tsutils@3.21.0(typescript@4.9.5):
-    resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
-    engines: {node: '>= 6'}
-    peerDependencies:
-      typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
-    dependencies:
-      tslib: 1.14.1
-      typescript: 4.9.5
     dev: true
 
   /tsutils@3.21.0(typescript@5.2.2):

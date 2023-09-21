@@ -19,7 +19,8 @@
 		"eslint-config-af-typescript": "^1.6.0",
 		"eslint-plugin-astro": "^0.27.0",
 		"prettier": "^2.8.8",
-		"prettier-plugin-astro": "^0.8.1"
+		"prettier-plugin-astro": "^0.8.1",
+		"typescript": "^5.2.2"
 	},
 	"dependencies": {
 		"@astrojs/react": "^2.2.1",

@@ -31,6 +31,7 @@ import type {
 	AstroI18nConfig,
 	ConfigTranslations,
 } from "@src/core/config/types"
+import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()
@@ -57,8 +58,8 @@ export function categorizeConfigTranslationsGroups(
 			groups.routes.push(key)
 			continue
 		}
-		if (key === "common") {
-			groups.common = "common"
+		if (key === COMMON_TRANSLATIONS_GROUP) {
+			groups.common = COMMON_TRANSLATIONS_GROUP
 			continue
 		}
 		groups.extra.push(key)

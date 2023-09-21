@@ -1,14 +1,7 @@
 export default {
 	primaryLocale: "en",
 	secondaryLocales: ["fr"],
-	translations: {
-		$load: [
-			{
-				routes: ["/product", "/"],
-				groups: ["admin", "/about"],
-			},
-		],
-	},
+	translations: {},
 	routes: {
 		fr: {
 			about: "a-propos",

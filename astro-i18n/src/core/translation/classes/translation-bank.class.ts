@@ -17,6 +17,8 @@ import type {
 	TranslationProperties,
 } from "@src/core/translation/types"
 import type Config from "@src/core/config/classes/config.class"
+import { setObjectProperty } from "@lib/object"
+import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -44,14 +46,18 @@ class TranslationBank {
 			...groups
 		} = translations
 
+		// save all groups
 		for (const [key, value] of Object.entries(groups)) {
-			if (!translationMap[key]) translationMap[key] = {}
 			for (const [locale, deepStringRecord] of Object.entries(value)) {
-				translationMap[key]![locale] =
-					computeDeepStringRecord(deepStringRecord)
+				setObjectProperty(
+					translationMap,
+					[key, locale],
+					computeDeepStringRecord(deepStringRecord),
+				)
 			}
 		}
 
+		// save directives
 		if ($loadDirectives) {
 			const { routes } = categorizeConfigTranslationsGroups(translations)
 
@@ -111,9 +117,14 @@ class TranslationBank {
 				this.#translations[route]?.[locale]?.[key] || throwFalsy()
 		}
 		// search key in the common group
-		if (!translation && this.#translations["common"]?.[locale]?.[key]) {
+		if (
+			!translation &&
+			this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[key]
+		) {
 			translation =
-				this.#translations["common"]?.[locale]?.[key] || throwFalsy()
+				this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[
+					key
+				] || throwFalsy()
 		}
 
 		// find the best variant, defaults to the default value or key param if none
