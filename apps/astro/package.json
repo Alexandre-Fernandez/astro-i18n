@@ -4,12 +4,13 @@
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
+		"prepare": "astro telemetry disable",
 		"dev": "astro dev",
 		"start": "astro dev",
 		"preview": "astro preview",
 		"build": "astro build",
 		"astro": "astro",
-		"prepare": "astro telemetry disable"
+		"test": "vitest"
 	},
 	"devDependencies": {
 		"af-prettierrc": "^1.0.0",
@@ -20,7 +21,9 @@
 		"eslint-plugin-astro": "^0.27.0",
 		"prettier": "^2.8.8",
 		"prettier-plugin-astro": "^0.8.1",
-		"typescript": "^5.2.2"
+		"typescript": "^5.2.2",
+		"vite-tsconfig-paths": "^4.2.1",
+		"vitest": "^0.34.5"
 	},
 	"dependencies": {
 		"@astrojs/react": "^2.2.1",
