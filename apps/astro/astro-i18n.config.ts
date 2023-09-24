@@ -25,6 +25,8 @@ export default {
 					"en.commonInterpolation ({# value>json(format>default(false)) #})",
 				commonInterpolationAlias:
 					"en.commonInterpolation ({# value>json(format(alias)) #})",
+				commonInterpolationChained:
+					"en.commonInterpolation ({# value>json(format(alias))>uppercase #})",
 				nested: {
 					commonNested: "en.commonNested",
 				},

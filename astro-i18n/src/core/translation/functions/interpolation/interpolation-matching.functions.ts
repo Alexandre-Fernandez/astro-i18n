@@ -75,6 +75,7 @@ export function matchInterpolation(interpolation: string) {
 	const formatters: FormatterMatch[] = []
 
 	while (interpolation.length > 0) {
+		if (interpolation[0] === ")") interpolation = interpolation.slice(1)
 		const { match, range } = matchArgumentlessFormatter(interpolation) || {}
 		if (!match?.[1] || !range) break
 
@@ -228,7 +229,7 @@ function matchFormatterArguments(args: string) {
 		if (char === ")") {
 			if (hasOpeningParenthesis) current += char
 			result.args.push(current.trim())
-			result.end = i
+			result.end = i + 1
 			current = ""
 			return CALLBACK_BREAK
 		}
