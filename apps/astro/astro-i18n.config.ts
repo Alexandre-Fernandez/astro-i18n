@@ -4,12 +4,12 @@ export default {
 	translations: {
 		$load: [
 			{
-				routes: ["/group"],
-				groups: ["group1", "group2"],
+				routes: ["/group$"],
+				groups: ["^group"],
 			},
 			{
-				routes: ["/group-regex"],
-				groups: ["group"],
+				routes: ["/group"],
+				groups: ["^group2"],
 			},
 		],
 		common: {
@@ -87,6 +87,8 @@ export default {
 		fr: {
 			about: "a-propos",
 			product: "produit",
+			inner: "interieur",
+			group: "groupe",
 		},
 		$restrict: [
 			{

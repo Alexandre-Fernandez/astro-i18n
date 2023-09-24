@@ -101,6 +101,11 @@ test("Translation interpolations.", () => {
 test("Translation load directives.", () => {
 	astroI18n.route = "/"
 	expect(astroI18n.t("groupTranslation1")).not.toBe("en.groupTranslation1")
+	expect(astroI18n.t("groupTranslation2")).not.toBe("en.groupTranslation2")
 	astroI18n.route = "/group"
 	expect(astroI18n.t("groupTranslation1")).toBe("en.groupTranslation1")
+	expect(astroI18n.t("groupTranslation2")).toBe("en.groupTranslation2")
+	astroI18n.route = "/group/inner"
+	expect(astroI18n.t("groupTranslation1")).not.toBe("en.groupTranslation1")
+	expect(astroI18n.t("groupTranslation2")).toBe("en.groupTranslation2")
 })

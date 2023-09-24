@@ -80,11 +80,19 @@ class TranslationBank {
 						pattern.test(route),
 					)
 					for (const route of matchedRoutes) {
-						loadDirectives[route] = [...new Set(matchedGroups)]
+						if (!loadDirectives[route]) {
+							loadDirectives[route] = [...new Set(matchedGroups)]
+							continue
+						}
+						loadDirectives[route] = [
+							...(loadDirectives[route] || []),
+							...new Set(matchedGroups),
+						]
 					}
 				}
 			}
 		}
+
 		return new TranslationBank(translationMap, loadDirectives)
 	}
 
