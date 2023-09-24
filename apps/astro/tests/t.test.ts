@@ -95,4 +95,5 @@ test("Translation interpolations.", () => {
 	expect(
 		astroI18n.t("commonInterpolationChained", { value, alias: false }),
 	).toBe(`en.commonInterpolation (${JSON.stringify(value).toUpperCase()})`)
+	expect(astroI18n.t("nested.commonNested")).toBe("en.commonNested")
 })

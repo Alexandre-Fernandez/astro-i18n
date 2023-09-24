@@ -38,7 +38,17 @@ export default {
 				"commonVariant{{ n: 2 }}": "fr.commonVariant (n === 2)",
 				"commonVariant{{ n: 2, x: 'text' }}":
 					"fr.commonVariant (n === 2 && x === 'text')",
-				commonInterpolation: "fr.commonInterpolation ({# value #})",
+				"commonVariant{{ n: 3 }}": "fr.commonVariant (n === 3)",
+				"commonVariant{{ n: 3, $priority: 100 }}":
+					"fr.commonVariant (n === 3 && $priority === 100)",
+				"commonVariant{{ n: [4, 'text', true] }}":
+					"fr.commonVariant (n === 4 || n === 'text' || 'n === true')",
+				commonInterpolation:
+					"fr.commonInterpolation ({# value>json(format>default(false)) #})",
+				commonInterpolationAlias:
+					"fr.commonInterpolation ({# value>json(format(alias)) #})",
+				commonInterpolationChained:
+					"fr.commonInterpolation ({# value>json(format(alias))>uppercase #})",
 				nested: {
 					commonNested: "fr.commonNested",
 				},
