@@ -8,6 +8,7 @@ import {
 	intl_format_number,
 	lower,
 	upper,
+	json,
 } from "@src/core/translation/formatters/default.formatters"
 import type { Formatters } from "@src/core/translation/types"
 
@@ -22,7 +23,9 @@ class FormatterBank {
 		lower,
 		lowercase: lower,
 		capitalize,
+		json,
 		default_nullish,
+		default: default_falsy,
 		default_falsy,
 		default_non_string,
 		intl_format_number,

@@ -33,30 +33,29 @@ export function capitalize(value: unknown) {
 }
 
 export function default_nullish(value: unknown, defaultValue: unknown) {
-	if (defaultValue == null) {
-		throw new InvalidFormatterParam(
-			`defaultValue must not be undefined or null, found "${defaultValue}".`,
-		)
-	}
 	return value == null ? defaultValue : value
 }
 
 export function default_falsy(value: unknown, defaultValue: unknown) {
-	if (!defaultValue) {
-		throw new InvalidFormatterParam(
-			`defaultValue must not be false, NaN, 0, undefined, null or "", found "${defaultValue}".`,
-		)
-	}
 	return value || defaultValue
 }
 
 export function default_non_string(value: unknown, defaultValue: unknown) {
-	if (typeof defaultValue !== "string") {
-		throw new InvalidFormatterParam(
-			`defaultValue must be a string, found "${defaultValue}".`,
+	return typeof value === "string" ? value : defaultValue
+}
+
+export function json(value: unknown, format: unknown = true) {
+	if (typeof value === "symbol") {
+		throw new InvalidFormatterValue(
+			`Received value cannot be a symbol, found "${value.toString()}".`,
 		)
 	}
-	return typeof value === "string" ? value : defaultValue
+	if (typeof format !== "boolean") {
+		throw new InvalidFormatterParam(
+			`format must be a boolean, found "${format}".`,
+		)
+	}
+	return format ? JSON.stringify(value, null, "\t") : JSON.stringify(value)
 }
 
 export function intl_format_number(

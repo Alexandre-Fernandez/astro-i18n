@@ -78,3 +78,15 @@ test("Translation variants.", () => {
 		"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
 	)
 })
+
+test("Translation interpolations.", () => {
+	astroI18n.route = "/"
+	let value: any = "test"
+	expect(astroI18n.t("commonInterpolation", { value, format: false })).toBe(
+		'en.commonInterpolation ("test")',
+	)
+	value = { type: "object" }
+	expect(astroI18n.t("commonInterpolation", { value })).toBe(
+		`en.commonInterpolation (${JSON.stringify(value)})`,
+	)
+})

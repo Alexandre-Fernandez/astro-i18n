@@ -21,7 +21,8 @@ export default {
 					"en.commonVariant (n === 3 && $priority === 100)",
 				"commonVariant{{ n: [4, 'text', true] }}":
 					"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
-				commonInterpolation: "en.commonInterpolation ({# value #})",
+				commonInterpolation:
+					"en.commonInterpolation ({# value>json(format>default(false)) #})",
 				nested: {
 					commonNested: "en.commonNested",
 				},
