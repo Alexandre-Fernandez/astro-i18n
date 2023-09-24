@@ -5,6 +5,10 @@ export default {
 		$load: [
 			{
 				routes: ["/group"],
+				groups: ["group1", "group2"],
+			},
+			{
+				routes: ["/group-regex"],
 				groups: ["group"],
 			},
 		],
@@ -62,12 +66,20 @@ export default {
 				pageTranslation: "fr.pageTranslation",
 			},
 		},
-		group: {
+		group1: {
 			en: {
-				groupTranslation: "en.groupTranslation",
+				groupTranslation1: "en.groupTranslation1",
 			},
 			fr: {
-				groupTranslation: "fr.groupTranslation",
+				groupTranslation1: "fr.groupTranslation1",
+			},
+		},
+		group2: {
+			en: {
+				groupTranslation2: "en.groupTranslation2",
+			},
+			fr: {
+				groupTranslation2: "fr.groupTranslation2",
 			},
 		},
 	},
