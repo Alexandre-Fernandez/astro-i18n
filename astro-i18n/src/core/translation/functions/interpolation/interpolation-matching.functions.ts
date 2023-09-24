@@ -201,7 +201,6 @@ function matchInterpolationValue(value: string) {
 /**
  * Matches the formatter's arguments until the end of the formatter
  * (closing `")"`).
- * If there's no closing parenthesis it may match until the end of `args`.
  * @param args The formatter's arguments, starts after the first `"("`.
  * For example `"true, "arg2", 1.5)>formatter2..."`.
  */
@@ -228,8 +227,9 @@ function matchFormatterArguments(args: string) {
 		}
 
 		if (char === ")") {
+			current += char
 			result.args.push(current.trim())
-			result.end = i + 1
+			result.end = i
 			current = ""
 			return CALLBACK_BREAK
 		}
@@ -238,12 +238,6 @@ function matchFormatterArguments(args: string) {
 		i += 1
 		return null
 	})
-
-	// no closing parenthesis
-	if (current) {
-		result.args.push(current.trim())
-		result.end = i + 1
-	}
 
 	return result
 }
