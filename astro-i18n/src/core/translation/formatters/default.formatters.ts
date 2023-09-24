@@ -9,6 +9,7 @@ export function upper(value: unknown) {
 	if (typeof value !== "string") {
 		throw new InvalidFormatterValue(
 			`Received value is not a string, found "${value}".`,
+			"upper",
 		)
 	}
 	return value.toUpperCase()
@@ -18,6 +19,7 @@ export function lower(value: unknown) {
 	if (typeof value !== "string") {
 		throw new InvalidFormatterValue(
 			`Received value is not a string, found "${value}".`,
+			"lower",
 		)
 	}
 	return value.toLowerCase()
@@ -27,6 +29,7 @@ export function capitalize(value: unknown) {
 	if (typeof value !== "string") {
 		throw new InvalidFormatterValue(
 			`Received value is not a string, found "${value}".`,
+			"capitalize",
 		)
 	}
 	return `${value.slice(0, 1).toUpperCase()}${value.slice(1).toLowerCase()}`
@@ -48,11 +51,13 @@ export function json(value: unknown, format: unknown = true) {
 	if (typeof value === "symbol") {
 		throw new InvalidFormatterValue(
 			`Received value cannot be a symbol, found "${value.toString()}".`,
+			"json",
 		)
 	}
 	if (typeof format !== "boolean") {
 		throw new InvalidFormatterParam(
 			`format must be a boolean, found "${format}".`,
+			"json",
 		)
 	}
 	return format ? JSON.stringify(value, null, "\t") : JSON.stringify(value)
@@ -68,18 +73,21 @@ export function intl_format_number(
 	if (!isNumber(value)) {
 		throw new InvalidFormatterValue(
 			`Received value is not a number, found "${value}".`,
+			"intl_format_number",
 		)
 	}
 	// options
 	if (!isObject(options)) {
 		throw new InvalidFormatterParam(
 			`options must be an object, found "${options}".`,
+			"intl_format_number",
 		)
 	}
 	// locale
 	if (typeof locale !== "string") {
 		throw new InvalidFormatterParam(
 			`locale must be a string, found "${locale}".`,
+			"intl_format_number",
 		)
 	}
 
@@ -99,6 +107,7 @@ export function intl_format_date(
 	) {
 		throw new InvalidFormatterValue(
 			`Received value is not a string, number or Date, found "${value}".`,
+			"intl_format_date",
 		)
 	}
 	value = value instanceof Date ? value : new Date(value)
@@ -109,12 +118,14 @@ export function intl_format_date(
 	if (!isObject(options)) {
 		throw new InvalidFormatterParam(
 			`options must be an object, found "${options}".`,
+			"intl_format_date",
 		)
 	}
 	// locale
 	if (typeof locale !== "string") {
 		throw new InvalidFormatterParam(
 			`locale must be a string, found "${locale}".`,
+			"intl_format_date",
 		)
 	}
 

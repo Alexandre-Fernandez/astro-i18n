@@ -1,10 +1,18 @@
 class InvalidFormatterParam extends TypeError {
-	constructor(message?: string) {
-		super(
-			message
-				? `Invalid formatter parameter: ${message}`
-				: "Invalid formatter parameter.",
-		)
+	constructor(message?: string, formatter?: string) {
+		if (message) {
+			super(
+				formatter
+					? `Invalid formatter (${formatter}) parameter: ${message}`
+					: `Invalid formatter parameter: ${message}`,
+			)
+		} else {
+			super(
+				formatter
+					? `Invalid formatter (${formatter}) parameter.`
+					: "Invalid formatter parameter.",
+			)
+		}
 	}
 }
 
