@@ -89,7 +89,6 @@ export function matchInterpolation(interpolation: string) {
 		}
 
 		const { args, end } = matchFormatterArguments(interpolation)
-
 		interpolation = interpolation.slice(end).trim()
 
 		formatters.push({
@@ -211,23 +210,23 @@ function matchFormatterArguments(args: string) {
 	}
 
 	let current = ""
-	let i = 0
-	depthAwareforEach(args, (char, _, depth) => {
+	let hasOpeningParenthesis = false
+	depthAwareforEach(args, (char, i, depth) => {
+		if (char === "(") hasOpeningParenthesis = true
+
 		if (depth > 0) {
 			current += char
-			i += 1
 			return null
 		}
 
 		if (char === ",") {
 			result.args.push(current.trim())
 			current = ""
-			i += 1
 			return null
 		}
 
 		if (char === ")") {
-			current += char
+			if (hasOpeningParenthesis) current += char
 			result.args.push(current.trim())
 			result.end = i
 			current = ""
@@ -235,7 +234,6 @@ function matchFormatterArguments(args: string) {
 		}
 
 		current += char
-		i += 1
 		return null
 	})
 
