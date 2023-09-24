@@ -82,7 +82,7 @@ test("Translation variants.", () => {
 test("Translation interpolations.", () => {
 	astroI18n.route = "/"
 	let value: any = "test"
-	expect(astroI18n.t("commonInterpolation", { value, format: false })).toBe(
+	expect(astroI18n.t("commonInterpolation", { value })).toBe(
 		'en.commonInterpolation ("test")',
 	)
 	value = { type: "object" }
