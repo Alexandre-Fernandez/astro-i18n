@@ -2,8 +2,6 @@
 import { expect, test } from "vitest"
 import { astroI18n } from "astro-i18n"
 
-await astroI18n.internals.serverInit()
-
 test("Common translations are accessible on every page.", () => {
 	astroI18n.route = "/"
 	expect(astroI18n.t("commonBasic")).toBe("en.commonBasic")
@@ -109,3 +107,5 @@ test("Translation load directives.", () => {
 	expect(astroI18n.t("groupTranslation1")).not.toBe("en.groupTranslation1")
 	expect(astroI18n.t("groupTranslation2")).toBe("en.groupTranslation2")
 })
+
+// to-do: t.options.formatters
