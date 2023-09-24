@@ -13,16 +13,17 @@ export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
 ) {
-	if (!config) config = undefined // empty string
+	if (!config) config = undefined // if empty string set undefined
 	if (isObject(config) && Object.keys(config).length === 0) config = undefined
-	const { internals } = astroI18n
 
 	return (async (_ctx, next) => {
-		if (!internals.isServerSideInit()) {
-			await internals.serverInit(config, formatters)
+		// init
+		if (!astroI18n.internals.isServerSideInit()) {
+			await astroI18n.internals.serverInit(config, formatters)
 		}
 
-		astroI18n.test()
+		// setting route
+		astroI18n.route = _ctx.url.pathname
 
 		// console.log(
 		// 	astroI18n.t(

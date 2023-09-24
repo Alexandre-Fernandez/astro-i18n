@@ -51,8 +51,10 @@ class AstroI18n {
 	}
 
 	set route(route: string) {
-		this.#route = route
-		this.#locale = this.extractRouteLocale(route)
+		const { locale, route: localelessRoute } =
+			this.#extractRouteLocale(route)
+		this.#route = localelessRoute
+		this.#locale = locale
 	}
 
 	get locale() {
@@ -80,11 +82,7 @@ class AstroI18n {
 	}
 
 	extractRouteLocale(route: string) {
-		const pattern = Regex.fromString(
-			`\\/?(${this.locales.join("|")})(?:\\/.*)?$`,
-		)
-		const { match } = pattern.match(route) || {}
-		return match?.[1] || this.primaryLocale
+		return this.#extractRouteLocale(route).locale
 	}
 
 	/**
@@ -134,8 +132,8 @@ class AstroI18n {
 	}
 
 	test() {
-		// console.log(this.#translations.toString())
-		console.log(this.#segments.toString())
+		console.log(this.#translations.toString())
+		// console.log(this.#segments.toString())
 	}
 
 	/**
@@ -165,6 +163,19 @@ class AstroI18n {
 				  }).toObject()
 				: this.#formatters.toObject(),
 		)
+	}
+
+	#extractRouteLocale(route: string) {
+		if (!route.startsWith("/")) route = `/${route}`
+		const pattern = Regex.fromString(
+			`\\/(${this.locales.join("|")})(?:\\/.*)?$`,
+		)
+		const { match } = pattern.match(route) || {}
+		const locale = match?.[1] || this.primaryLocale
+		return {
+			locale,
+			route: route.replace(`/${locale}`, "") || "/",
+		}
 	}
 
 	#toHtml() {
