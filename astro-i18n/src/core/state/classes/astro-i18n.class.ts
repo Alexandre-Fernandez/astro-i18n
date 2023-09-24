@@ -146,8 +146,12 @@ class AstroI18n {
 	 */
 	t(
 		key: string,
-		properties: TranslationProperties,
-		options: { route?: string; locale?: string; formatters?: Formatters },
+		properties: TranslationProperties = {},
+		options: {
+			route?: string
+			locale?: string
+			formatters?: Formatters
+		} = {},
 	) {
 		const { route, locale, formatters } = options
 

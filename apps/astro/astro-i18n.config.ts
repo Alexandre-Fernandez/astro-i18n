@@ -12,7 +12,7 @@ export default {
 			en: {
 				commonBasic: "en.commonBasic",
 				commonVariant: "en.commonVariant (default value)",
-				"commonVariant{{ n: 0 }}": "en.commonVariant (n === 0)",
+				"commonVariant{{ n: -2 }}": "en.commonVariant (n === -2)",
 				"commonVariant{{ n: 2 }}": "en.commonVariant (n === 2)",
 				commonInterpolation: "en.commonInterpolation ({# value #})",
 				nested: {

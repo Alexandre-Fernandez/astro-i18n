@@ -3,6 +3,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "turbo run dev",
+		"test": "turbo run test",
 		"build": "turbo run build",
 		"publish:patch": "turbo run publish:patch --filter=astro-i18n",
 		"publish:minor": "turbo run publish:minor --filter=astro-i18n",

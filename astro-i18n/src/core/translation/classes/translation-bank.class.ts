@@ -129,7 +129,7 @@ class TranslationBank {
 
 		// find the best variant, defaults to the default value or key param if none
 		const bestVariant = {
-			score: Number.MIN_SAFE_INTEGER,
+			score: 0,
 			value: translation?.default || key,
 		}
 		for (const variant of translation?.variants || []) {

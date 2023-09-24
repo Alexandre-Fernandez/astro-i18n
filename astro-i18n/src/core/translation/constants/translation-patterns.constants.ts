@@ -6,7 +6,7 @@ export const VARNAME_PATTERN = RegexBuilder.fromRegex(FIRST_VARCHAR_PATTERN)
 	.appendPattern("[\\w$]*")
 	.build()
 
-export const NUMBER_PATTERN = new Regex(/\d+(?:\.\d+)?/)
+export const NUMBER_PATTERN = new Regex(/-?\d+(?:\.\d+)?/)
 
 export const EMPTY_PATTERN = new Regex(/^\s*$/)
 

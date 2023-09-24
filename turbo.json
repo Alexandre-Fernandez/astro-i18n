@@ -3,6 +3,7 @@
 	"globalDependencies": ["**/.env.*local"],
 	"pipeline": {
 		"lint": {},
+		"test": {},
 		"dev": {
 			"cache": false,
 			"persistent": true
