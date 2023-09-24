@@ -89,4 +89,7 @@ test("Translation interpolations.", () => {
 	expect(astroI18n.t("commonInterpolation", { value })).toBe(
 		`en.commonInterpolation (${JSON.stringify(value)})`,
 	)
+	expect(
+		astroI18n.t("commonInterpolationAlias", { value, alias: false }),
+	).toBe(`en.commonInterpolation (${JSON.stringify(value)})`)
 })

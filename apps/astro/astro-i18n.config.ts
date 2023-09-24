@@ -23,6 +23,8 @@ export default {
 					"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
 				commonInterpolation:
 					"en.commonInterpolation ({# value>json(format>default(false)) #})",
+				commonInterpolationAlias:
+					"en.commonInterpolation ({# value>json(format(alias)) #})",
 				nested: {
 					commonNested: "en.commonNested",
 				},
