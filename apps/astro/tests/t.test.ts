@@ -53,10 +53,28 @@ test("Translation variants.", () => {
 	expect(astroI18n.t("commonVariant", { n: -1 })).toBe(
 		"en.commonVariant (n === -2)",
 	)
+	expect(astroI18n.t("commonVariant", { n: 0 })).toBe(
+		"en.commonVariant (n === -2)",
+	)
 	expect(astroI18n.t("commonVariant", { n: 1 })).toBe(
 		"en.commonVariant (n === 2)",
 	)
 	expect(astroI18n.t("commonVariant", { n: 2 })).toBe(
 		"en.commonVariant (n === 2)",
+	)
+	expect(astroI18n.t("commonVariant", { n: 2, x: "text" })).toBe(
+		"en.commonVariant (n === 2 && x === 'text')",
+	)
+	expect(astroI18n.t("commonVariant", { n: 3 })).toBe(
+		"en.commonVariant (n === 3 && $priority === 100)",
+	)
+	expect(astroI18n.t("commonVariant", { n: 4 })).toBe(
+		"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
+	)
+	expect(astroI18n.t("commonVariant", { n: "text" })).toBe(
+		"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
+	)
+	expect(astroI18n.t("commonVariant", { n: true })).toBe(
+		"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
 	)
 })

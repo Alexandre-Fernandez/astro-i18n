@@ -14,6 +14,13 @@ export default {
 				commonVariant: "en.commonVariant (default value)",
 				"commonVariant{{ n: -2 }}": "en.commonVariant (n === -2)",
 				"commonVariant{{ n: 2 }}": "en.commonVariant (n === 2)",
+				"commonVariant{{ n: 2, x: 'text' }}":
+					"en.commonVariant (n === 2 && x === 'text')",
+				"commonVariant{{ n: 3 }}": "en.commonVariant (n === 3)",
+				"commonVariant{{ n: 3, $priority: 100 }}":
+					"en.commonVariant (n === 3 && $priority === 100)",
+				"commonVariant{{ n: [4, 'text', true] }}":
+					"en.commonVariant (n === 4 || n === 'text' || 'n === true')",
 				commonInterpolation: "en.commonInterpolation ({# value #})",
 				nested: {
 					commonNested: "en.commonNested",
@@ -22,8 +29,10 @@ export default {
 			fr: {
 				commonBasic: "fr.commonBasic",
 				commonVariant: "fr.commonVariant (default value)",
-				"commonVariant{{ n: 0 }}": "fr.commonVariant (n === 0)",
+				"commonVariant{{ n: -2 }}": "fr.commonVariant (n === -2)",
 				"commonVariant{{ n: 2 }}": "fr.commonVariant (n === 2)",
+				"commonVariant{{ n: 2, x: 'text' }}":
+					"fr.commonVariant (n === 2 && x === 'text')",
 				commonInterpolation: "fr.commonInterpolation ({# value #})",
 				nested: {
 					commonNested: "fr.commonNested",

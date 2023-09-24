@@ -73,7 +73,7 @@ class Variant {
 					if (typeof priority !== "number") {
 						throw new InvalidVariantPriority(matchedValue)
 					}
-					this.priority = priority
+					this.priority = priority * 0.001
 					return null
 				}
 
@@ -134,7 +134,8 @@ class Variant {
 			score += Math.max(...valueScores)
 		}
 
-		return score + this.priority
+		// priority only applies on matches
+		return score > 0 ? score + this.priority : score
 	}
 }
 
