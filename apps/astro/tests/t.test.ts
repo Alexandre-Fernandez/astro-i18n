@@ -5,8 +5,10 @@ import { astroI18n } from "astro-i18n"
 test("Common translations are accessible on every page.", () => {
 	astroI18n.route = "/"
 	expect(astroI18n.t("commonBasic")).toBe("en.commonBasic")
+	expect(astroI18n.t("nested.commonNested")).toBe("en.commonNested")
 	astroI18n.route = "/fr"
 	expect(astroI18n.t("commonBasic")).toBe("fr.commonBasic")
+	expect(astroI18n.t("nested.commonNested")).toBe("fr.commonNested")
 
 	astroI18n.route = "/page"
 	expect(astroI18n.t("commonBasic")).toBe("en.commonBasic")
@@ -93,7 +95,6 @@ test("Translation interpolations.", () => {
 	expect(
 		astroI18n.t("commonInterpolationChained", { value, alias: false }),
 	).toBe(`en.commonInterpolation (${JSON.stringify(value).toUpperCase()})`)
-	expect(astroI18n.t("nested.commonNested")).toBe("en.commonNested")
 	value = 69
 	expect(
 		astroI18n.t("commonInterpolationCurrency", {
