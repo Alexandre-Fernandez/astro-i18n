@@ -83,7 +83,7 @@ test("Translation interpolations.", () => {
 	expect(astroI18n.t("commonInterpolation", { value })).toBe(
 		'en.commonInterpolation ("test")',
 	)
-	value = { type: "object" }
+	value = { object: "value" }
 	expect(astroI18n.t("commonInterpolation", { value })).toBe(
 		`en.commonInterpolation (${JSON.stringify(value)})`,
 	)
@@ -94,6 +94,13 @@ test("Translation interpolations.", () => {
 		astroI18n.t("commonInterpolationChained", { value, alias: false }),
 	).toBe(`en.commonInterpolation (${JSON.stringify(value).toUpperCase()})`)
 	expect(astroI18n.t("nested.commonNested")).toBe("en.commonNested")
+	value = 69
+	expect(
+		astroI18n.t("commonInterpolationCurrency", {
+			value,
+			currencyCode: "EUR",
+		}),
+	).toBe(`en.commonInterpolation (${value},00${String.fromCodePoint(160)}€)`)
 })
 
 test("Translation load directives.", () => {

@@ -31,6 +31,8 @@ export default {
 					"en.commonInterpolation ({# value>json(format(alias)) #})",
 				commonInterpolationChained:
 					"en.commonInterpolation ({# value>json(format(alias))>uppercase #})",
+				commonInterpolationCurrency:
+					"en.commonInterpolation ({# value>intl_format_number({ style: 'currency', currency: currencyCode }, 'fr') #})",
 				nested: {
 					commonNested: "en.commonNested",
 				},
@@ -53,6 +55,8 @@ export default {
 					"fr.commonInterpolation ({# value>json(format(alias)) #})",
 				commonInterpolationChained:
 					"fr.commonInterpolation ({# value>json(format(alias))>uppercase #})",
+				commonInterpolationCurrency:
+					"fr.commonInterpolation ({# value>intl_format_number({ style: 'currency', currency: currencyCode }, 'fr') #})",
 				nested: {
 					commonNested: "fr.commonNested",
 				},
