@@ -52,7 +52,7 @@ class AstroI18n {
 
 	set route(route: string) {
 		const { locale, route: localelessRoute } =
-			this.#extractRouteLocale(route)
+			this.#splitLocaleAndRoute(route)
 		this.#route = localelessRoute
 		this.#locale = locale
 	}
@@ -82,7 +82,7 @@ class AstroI18n {
 	}
 
 	extractRouteLocale(route: string) {
-		return this.#extractRouteLocale(route).locale
+		return this.#splitLocaleAndRoute(route).locale
 	}
 
 	/**
@@ -132,8 +132,8 @@ class AstroI18n {
 	}
 
 	test() {
-		console.log(this.#translations.toString())
-		// console.log(this.#segments.toString())
+		// console.log(this.#translations.toString())
+		console.log(this.#segments.toString())
 	}
 
 	/**
@@ -169,7 +169,37 @@ class AstroI18n {
 		)
 	}
 
-	#extractRouteLocale(route: string) {
+	l(
+		route: string,
+		params: Record<string, string>,
+		targetLocale = this.#locale,
+		routeLocale = "",
+	) {
+		// retrieving segments only
+		const segments = route.replace(/^\//, "").replace(/\/$/, "").split("/")
+
+		// removing lang code (added back later if needed)
+		const extractedLocale = this.locales.includes(segments[0] || "")
+			? segments.shift() || ""
+			: ""
+
+		// detecting route locale
+		routeLocale =
+			routeLocale ||
+			extractedLocale ||
+			"detect with segments" ||
+			this.primaryLocale
+
+		// translating segments
+		const translatedSegments = segments.map((segment) => {
+			// segments.get() needs to take default locale route to apply restrict
+			// problem is route may not be in default locale...
+			// recreate route in english depending on `routeLocale`
+			return this.#segments.get(routeLocale, targetLocale, segment)
+		})
+	}
+
+	#splitLocaleAndRoute(route: string) {
 		if (!route.startsWith("/")) route = `/${route}`
 		const pattern = Regex.fromString(
 			`\\/(${this.locales.join("|")})(?:\\/.*)?$`,

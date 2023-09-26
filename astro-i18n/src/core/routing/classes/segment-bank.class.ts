@@ -29,6 +29,7 @@ import type {
 	RestrictDirectives,
 	SegmentTranslations,
 } from "@src/core/routing/types"
+import { setObjectProperty } from "@lib/object"
 
 class SegmentBank {
 	#restrictDirectives: RestrictDirectives
@@ -63,34 +64,33 @@ class SegmentBank {
 
 			for (const [primarySeg, localeSeg] of Object.entries(segments)) {
 				// adding segment to the primary locale translations
-				if (!translations[primaryLocale]![primarySeg]) {
-					translations[primaryLocale]![primarySeg] = {}
-				}
-				translations[primaryLocale]![primarySeg]![locale] = localeSeg
+				setObjectProperty(
+					translations,
+					[primaryLocale, primarySeg, locale],
+					localeSeg,
+				)
 
 				// adding segment to the current secondary locale translations
-				if (!translations[locale]) translations[locale] = {}
-				if (!translations[locale]![localeSeg]) {
-					translations[locale]![localeSeg] = {}
-				}
-				translations[locale]![localeSeg]![primaryLocale] = primarySeg
+				setObjectProperty(
+					translations,
+					[locale, localeSeg, primaryLocale],
+					primarySeg,
+				)
 
 				// adding segment to all other locale translations
 				for (const [otherLocale, otherSegments] of otherLocales) {
 					if (otherSegments[primarySeg]) {
-						translations[locale]![localeSeg]![otherLocale] =
-							otherSegments[primarySeg]!
+						setObjectProperty(
+							translations,
+							[locale, localeSeg, otherLocale],
+							otherSegments[primarySeg],
+						)
 					}
 				}
 			}
 		}
 
 		if ($restrictDirectives) {
-			// TODO
-			// WRONG LOGIC
-			// THE SEGMENTS SHOULD BE RESTRICTED TO GIVEN ROUTES
-			// ==> IT SHOULD BE SEGMENT BASED INSTEAD OF ROUTE BASED (VALUE SHOULD BE ROUTES NOT KEY)
-
 			const allSegments: string[] = []
 			for (const [, segments] of entries) {
 				for (const [segment, translated] of Object.entries(segments)) {
@@ -111,9 +111,11 @@ class SegmentBank {
 				// find all restricted segments
 				const restrictedSegments: string[] = []
 				for (const segmentRegex of directive.segments) {
-					const segmentPatten = Regex.fromString(segmentRegex)
+					const segmentPattern = Regex.fromString(segmentRegex)
 					restrictedSegments.push(
-						...allSegments.filter((seg) => segmentPatten.test(seg)),
+						...allSegments.filter((seg) =>
+							segmentPattern.test(seg),
+						),
 					)
 				}
 
@@ -124,6 +126,10 @@ class SegmentBank {
 		}
 
 		return new SegmentBank(translations, restrictDirectives)
+	}
+
+	get(locale: string, targetLocale: string, segment: string) {
+		//
 	}
 
 	toString() {
@@ -140,3 +146,43 @@ class SegmentBank {
 }
 
 export default SegmentBank
+
+/*
+#segments:
+	{
+	"en": {
+		"about": {
+			"fr": "a-propos"
+		},
+		"product": {
+			"fr": "produit"
+		},
+		"inner": {
+			"fr": "interieur"
+		},
+		"group": {
+			"fr": "groupe"
+		}
+	},
+	"fr": {
+		"a-propos": {
+			"en": "about"
+		},
+		"produit": {
+			"en": "product"
+		},
+		"interieur": {
+			"en": "inner"
+		},
+		"groupe": {
+			"en": "group"
+		}
+	}
+	}
+#restrictDirectives:
+	{
+		"/about": [
+			"a-propos"
+		]
+	}
+*/
