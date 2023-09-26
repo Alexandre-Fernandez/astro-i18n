@@ -132,6 +132,18 @@ class SegmentBank {
 		//
 	}
 
+	getSegmentLocales(segment: string) {
+		const locales: string[] = []
+
+		for (const [locale, segments] of Object.entries(this.#segments)) {
+			if (segments[segment]) {
+				locales.push(locale)
+			}
+		}
+
+		return locales
+	}
+
 	toString() {
 		return `#segments:\n${JSON.stringify(
 			this.#segments,

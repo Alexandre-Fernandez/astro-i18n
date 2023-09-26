@@ -187,7 +187,7 @@ class AstroI18n {
 		routeLocale =
 			routeLocale ||
 			extractedLocale ||
-			"detect with segments" ||
+			this.#detectSegmentsLocale(segments) ||
 			this.primaryLocale
 
 		// translating segments
@@ -197,6 +197,29 @@ class AstroI18n {
 			// recreate route in english depending on `routeLocale`
 			return this.#segments.get(routeLocale, targetLocale, segment)
 		})
+	}
+
+	#detectSegmentsLocale(segments: string[]) {
+		const scores: { [locale: string]: number } = {}
+
+		for (const segment of segments) {
+			for (const locale of this.#segments.getSegmentLocales(segment)) {
+				if (!scores[locale]) scores[locale] = 0
+				scores[locale] += 1
+			}
+		}
+
+		return (
+			Object.entries(scores).reduce(
+				(prev, [locale, score]) => {
+					if (score > prev.score) {
+						return { locale, score }
+					}
+					return prev
+				},
+				{ locale: "", score: 0 },
+			).locale || null
+		)
 	}
 
 	#splitLocaleAndRoute(route: string) {
