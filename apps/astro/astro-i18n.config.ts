@@ -94,11 +94,5 @@ export default {
 			inner: "interieur",
 			group: "groupe",
 		},
-		$restrict: [
-			{
-				segments: ["a-propos"],
-				routes: ["about"],
-			},
-		],
 	},
 }

@@ -25,8 +25,6 @@ export function useAstroI18n(
 		// setting route
 		astroI18n.route = _ctx.url.pathname
 
-		astroI18n.test()
-
 		// console.log(
 		// 	astroI18n.t(
 		// 		"product-interpolation",

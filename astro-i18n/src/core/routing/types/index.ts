@@ -5,7 +5,3 @@ export type SegmentTranslations = {
 		}
 	}
 }
-
-export type RestrictDirectives = {
-	[route: string]: string[]
-}

@@ -22,41 +22,24 @@ type FullRouteTranslationMap = {
 }
 */
 
-import { ROUTE_RESTRICT_KEY } from "@src/core/routing/constants/routing.constants"
-import { Regex } from "@lib/regex"
-import type Config from "@src/core/config/classes/config.class"
-import type {
-	RestrictDirectives,
-	SegmentTranslations,
-} from "@src/core/routing/types"
 import { setObjectProperty } from "@lib/object"
+import type Config from "@src/core/config/classes/config.class"
+import type { SegmentTranslations } from "@src/core/routing/types"
 
 class SegmentBank {
-	#restrictDirectives: RestrictDirectives
-
 	#segments: SegmentTranslations
 
-	constructor(
-		translations: SegmentTranslations = {},
-		restrictDirectives: RestrictDirectives = {},
-	) {
+	constructor(translations: SegmentTranslations = {}) {
 		this.#segments = translations
-		this.#restrictDirectives = restrictDirectives
 	}
 
-	static fromConfig({ routes, primaryLocale, pages }: Config) {
-		const {
-			[ROUTE_RESTRICT_KEY]: $restrictDirectives,
-			...secondaryLocales
-		} = routes
-
+	static fromConfig({ routes, primaryLocale }: Config) {
 		const translations: SegmentTranslations = {
 			[primaryLocale]: {},
 		}
-		const restrictDirectives: RestrictDirectives = {}
 
 		// filling translations
-		const entries = Object.entries(secondaryLocales)
+		const entries = Object.entries(routes)
 		for (const [locale, segments] of entries) {
 			const otherLocales = entries.filter(
 				([loc]) => loc !== locale && loc !== primaryLocale,
@@ -90,42 +73,7 @@ class SegmentBank {
 			}
 		}
 
-		if ($restrictDirectives) {
-			const allSegments: string[] = []
-			for (const [, segments] of entries) {
-				for (const [segment, translated] of Object.entries(segments)) {
-					// retrieving all segments
-					allSegments.push(segment, translated)
-				}
-			}
-
-			for (const directive of $restrictDirectives) {
-				const matchedRoutes: string[] = []
-				// find all matched routes
-				for (const routeRegex of directive.routes) {
-					const routePattern = Regex.fromString(routeRegex)
-					matchedRoutes.push(
-						...pages.filter((page) => routePattern.test(page)),
-					)
-				}
-				// find all restricted segments
-				const restrictedSegments: string[] = []
-				for (const segmentRegex of directive.segments) {
-					const segmentPattern = Regex.fromString(segmentRegex)
-					restrictedSegments.push(
-						...allSegments.filter((seg) =>
-							segmentPattern.test(seg),
-						),
-					)
-				}
-
-				for (const route of matchedRoutes) {
-					restrictDirectives[route] = [...new Set(restrictedSegments)]
-				}
-			}
-		}
-
-		return new SegmentBank(translations, restrictDirectives)
+		return new SegmentBank(translations)
 	}
 
 	get(locale: string, targetLocale: string, segment: string) {
@@ -145,15 +93,7 @@ class SegmentBank {
 	}
 
 	toString() {
-		return `#segments:\n${JSON.stringify(
-			this.#segments,
-			null,
-			2,
-		)}\n#restrictDirectives:\n${JSON.stringify(
-			this.#restrictDirectives,
-			null,
-			2,
-		)}`
+		return JSON.stringify(this.#segments, null, 2)
 	}
 }
 
@@ -190,11 +130,5 @@ export default SegmentBank
 			"en": "group"
 		}
 	}
-	}
-#restrictDirectives:
-	{
-		"/about": [
-			"a-propos"
-		]
 	}
 */
