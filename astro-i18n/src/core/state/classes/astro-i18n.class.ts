@@ -27,7 +27,7 @@ class AstroI18n {
 
 	#formatters = new FormatterBank()
 
-	#isServerSideInit = false
+	#isServerSideInitialized = false
 
 	constructor() {
 		if (
@@ -82,7 +82,7 @@ class AstroI18n {
 	get internals() {
 		return {
 			serverInit: this.#serverInit.bind(this),
-			isServerSideInitialized: () => this.#isServerSideInit,
+			isServerSideInitialized: () => this.#isServerSideInitialized,
 			toHtml: this.#toHtml.bind(this),
 			config: this.#config,
 		}
@@ -131,7 +131,7 @@ class AstroI18n {
 
 		this.#formatters = new FormatterBank(formatters)
 
-		this.#isServerSideInit = true
+		this.#isServerSideInitialized = true
 	}
 
 	#browserInit() {
