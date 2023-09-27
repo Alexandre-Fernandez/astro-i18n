@@ -54,7 +54,12 @@ class AstroI18n {
 		const { locale, route: localelessRoute } =
 			this.#splitLocaleAndRoute(route)
 		this.#route = localelessRoute
-		this.#locale = locale
+		this.#locale =
+			locale ||
+			this.#detectSegmentsLocale(
+				this.#getRouteSegments(localelessRoute),
+			) ||
+			this.primaryLocale
 	}
 
 	get locale() {
@@ -78,6 +83,7 @@ class AstroI18n {
 			serverInit: this.#serverInit.bind(this),
 			isServerSideInit: () => this.#isServerSideInit,
 			toHtml: this.#toHtml.bind(this),
+			config: this.#config,
 		}
 	}
 
@@ -158,7 +164,7 @@ class AstroI18n {
 		return this.#translations.get(
 			key,
 			route || this.route,
-			locale || this.locale,
+			locale || this.locale || this.primaryLocale,
 			properties,
 			formatters
 				? new FormatterBank({
@@ -171,38 +177,37 @@ class AstroI18n {
 
 	l(
 		route: string,
-		parameters: Record<string, string> = {},
+		parameters: Record<string, unknown> = {},
 		options: {
 			targetLocale?: string
 			routeLocale?: string
 		} = {},
 	) {
-		const { targetLocale, routeLocale } = {
-			targetLocale: this.locale,
-			...options,
-		}
+		const { targetLocale, routeLocale } = options
 
 		// retrieving segments only
-		const segments = route.replace(/^\//, "").replace(/\/$/, "").split("/")
+		const segments = this.#getRouteSegments(route)
 
 		// removing locale
 		const extractedLocale = this.locales.includes(segments[0] || "")
 			? segments.shift() || ""
 			: ""
 
-		// detecting route locale
-		const segmentsLocale =
+		// detecting the locale of the given route variable
+		const locale =
 			routeLocale ||
 			extractedLocale ||
 			this.#detectSegmentsLocale(segments) ||
 			this.primaryLocale
 
+		// detecting the locale of the current page
+		const target = targetLocale || this.locale
+
 		// translating segments
 		let translatedRoute = segments
 			.map(
 				(segment) =>
-					this.#segments.get(segmentsLocale, targetLocale, segment) ||
-					segment,
+					this.#segments.get(segment, locale, target) || segment,
 			)
 			.join("/")
 
@@ -210,16 +215,18 @@ class AstroI18n {
 		const params = Object.entries(parameters)
 		if (params.length > 0) {
 			for (const [param, value] of params) {
-				translatedRoute = translatedRoute.replace(`[${param}]`, value)
+				translatedRoute = translatedRoute.replace(
+					`[${param}]`,
+					String(value).replace("/", ""),
+				)
 			}
 		}
 
 		// adding back locale
-		if (
-			this.#config.showPrimaryLocale ||
-			targetLocale !== this.primaryLocale
-		) {
-			translatedRoute = `${targetLocale}/${translatedRoute}`
+		if (this.#config.showPrimaryLocale || target !== this.primaryLocale) {
+			translatedRoute = translatedRoute
+				? `${target}/${translatedRoute}`
+				: target
 		}
 
 		// adding trailing slash
@@ -227,7 +234,9 @@ class AstroI18n {
 			translatedRoute += "/"
 		}
 
-		return `/${translatedRoute}`
+		return translatedRoute.startsWith("/")
+			? translatedRoute
+			: `/${translatedRoute}`
 	}
 
 	#detectSegmentsLocale(segments: string[]) {
@@ -264,11 +273,17 @@ class AstroI18n {
 			`\\/(${this.locales.join("|")})(?:\\/.*)?$`,
 		)
 		const { match } = pattern.match(route) || {}
-		const locale = match?.[1] || this.primaryLocale
+		const locale = match?.[1] || null
 		return {
 			locale,
-			route: route.replace(`/${locale}`, "") || "/",
+			route: locale
+				? route.replace(`/${locale}`, "") || "/"
+				: route || "/",
 		}
+	}
+
+	#getRouteSegments(route: string) {
+		return route.replace(/^\//, "").replace(/\/$/, "").split("/")
 	}
 
 	#toHtml() {
