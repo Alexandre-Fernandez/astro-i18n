@@ -116,4 +116,7 @@ test("Translation load directives.", () => {
 	expect(astroI18n.t("groupTranslation2")).toBe("en.groupTranslation2")
 })
 
-// to-do: t.options.formatters
+test("to-do: t.options.formatters", () => {
+	astroI18n.route = "/"
+	expect(true).toBe(true)
+})

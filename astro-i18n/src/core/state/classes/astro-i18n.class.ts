@@ -5,12 +5,12 @@ import MissingConfigArgument from "@src/core/state/errors/missing-config-argumen
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
+import SegmentBank from "@src/core/routing/classes/segment-bank.class"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import SegmentBank from "@src/core/routing/classes/segment-bank.class"
 
 class AstroI18n {
 	environment: Environment
