@@ -1,27 +1,3 @@
-/*
- type ConfigRoutes = {
-	[secondaryLocale: string]: {
-		[segment: string]: string
-	}
-} 
-	===========>
-type FullRouteTranslationMap = {
-	[locale: string]: {
-		[untranslated: string]: {
-			[otherLocale: string]: string
-		}
-	}
-}
-
-{
-	en: {
-		about: {
-			fr: "a-propos"
-		}
-	}
-}
-*/
-
 import { setObjectProperty } from "@lib/object"
 import type Config from "@src/core/config/classes/config.class"
 import type { SegmentTranslations } from "@src/core/routing/types"
@@ -76,8 +52,8 @@ class SegmentBank {
 		return new SegmentBank(translations)
 	}
 
-	get(locale: string, targetLocale: string, segment: string) {
-		//
+	get(segment: string, segmentLocale: string, targetLocale: string) {
+		return this.#segments[segmentLocale]?.[segment]?.[targetLocale] || null
 	}
 
 	getSegmentLocales(segment: string) {
@@ -98,37 +74,3 @@ class SegmentBank {
 }
 
 export default SegmentBank
-
-/*
-#segments:
-	{
-	"en": {
-		"about": {
-			"fr": "a-propos"
-		},
-		"product": {
-			"fr": "produit"
-		},
-		"inner": {
-			"fr": "interieur"
-		},
-		"group": {
-			"fr": "groupe"
-		}
-	},
-	"fr": {
-		"a-propos": {
-			"en": "about"
-		},
-		"produit": {
-			"en": "product"
-		},
-		"interieur": {
-			"en": "inner"
-		},
-		"groupe": {
-			"en": "group"
-		}
-	}
-	}
-*/

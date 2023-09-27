@@ -171,32 +171,63 @@ class AstroI18n {
 
 	l(
 		route: string,
-		params: Record<string, string>,
-		targetLocale = this.#locale,
-		routeLocale = "",
+		parameters: Record<string, string> = {},
+		options: {
+			targetLocale?: string
+			routeLocale?: string
+		} = {},
 	) {
+		const { targetLocale, routeLocale } = {
+			targetLocale: this.locale,
+			...options,
+		}
+
 		// retrieving segments only
 		const segments = route.replace(/^\//, "").replace(/\/$/, "").split("/")
 
-		// removing lang code (added back later if needed)
+		// removing locale
 		const extractedLocale = this.locales.includes(segments[0] || "")
 			? segments.shift() || ""
 			: ""
 
 		// detecting route locale
-		routeLocale =
+		const segmentsLocale =
 			routeLocale ||
 			extractedLocale ||
 			this.#detectSegmentsLocale(segments) ||
 			this.primaryLocale
 
 		// translating segments
-		const translatedSegments = segments.map((segment) => {
-			// segments.get() needs to take default locale route to apply restrict
-			// problem is route may not be in default locale...
-			// recreate route in english depending on `routeLocale`
-			return this.#segments.get(routeLocale, targetLocale, segment)
-		})
+		let translatedRoute = segments
+			.map(
+				(segment) =>
+					this.#segments.get(segmentsLocale, targetLocale, segment) ||
+					segment,
+			)
+			.join("/")
+
+		// replacing params
+		const params = Object.entries(parameters)
+		if (params.length > 0) {
+			for (const [param, value] of params) {
+				translatedRoute = translatedRoute.replace(`[${param}]`, value)
+			}
+		}
+
+		// adding back locale
+		if (
+			this.#config.showPrimaryLocale ||
+			targetLocale !== this.primaryLocale
+		) {
+			translatedRoute = `${targetLocale}/${translatedRoute}`
+		}
+
+		// adding trailing slash
+		if (this.#config.trailingSlash === "always") {
+			translatedRoute += "/"
+		}
+
+		return `/${translatedRoute}`
 	}
 
 	#detectSegmentsLocale(segments: string[]) {
