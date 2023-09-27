@@ -51,5 +51,8 @@ test("Locale detection.", () => {
 })
 
 test("Route parameters.", () => {
-	//
+	astroI18n.route = "/"
+	expect(
+		astroI18n.l("/[param1]/[param2]", { param1: "foo", param2: "bar" }),
+	).toBe("/foo/bar")
 })
