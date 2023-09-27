@@ -164,7 +164,7 @@ class AstroI18n {
 		return this.#translations.get(
 			key,
 			route || this.route,
-			locale || this.locale || this.primaryLocale,
+			locale || this.locale,
 			properties,
 			formatters
 				? new FormatterBank({
