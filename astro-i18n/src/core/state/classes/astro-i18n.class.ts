@@ -209,17 +209,22 @@ class AstroI18n {
 			}
 		}
 
-		return (
-			Object.entries(scores).reduce(
-				(prev, [locale, score]) => {
-					if (score > prev.score) {
-						return { locale, score }
-					}
-					return prev
-				},
-				{ locale: "", score: 0 },
-			).locale || null
-		)
+		const current = {
+			locale: "",
+			score: 0,
+			isExAequo: true,
+		}
+		for (const [locale, score] of Object.entries(scores)) {
+			if (score > current.score) {
+				current.locale = locale
+				current.score = score
+				current.isExAequo = false
+				continue
+			}
+			if (score === current.score) current.isExAequo = true
+		}
+
+		return current.isExAequo ? null : current.locale || null
 	}
 
 	#splitLocaleAndRoute(route: string) {
