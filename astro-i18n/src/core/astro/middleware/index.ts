@@ -18,7 +18,7 @@ export function useAstroI18n(
 
 	return (async (_ctx, next) => {
 		// init
-		if (!astroI18n.internals.isServerSideInit()) {
+		if (!astroI18n.internals.isServerSideInitialized()) {
 			await astroI18n.internals.serverInit(config, formatters)
 		}
 

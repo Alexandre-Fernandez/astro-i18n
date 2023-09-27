@@ -35,6 +35,7 @@ class AstroI18n {
 			typeof process.versions === "object" &&
 			typeof process.versions.node !== "undefined"
 		) {
+			// server init done in the middleware
 			this.environment = Environment.NODE
 		} else if (typeof window === "undefined") {
 			this.environment = Environment.NONE
@@ -81,7 +82,7 @@ class AstroI18n {
 	get internals() {
 		return {
 			serverInit: this.#serverInit.bind(this),
-			isServerSideInit: () => this.#isServerSideInit,
+			isServerSideInitialized: () => this.#isServerSideInit,
 			toHtml: this.#toHtml.bind(this),
 			config: this.#config,
 		}
