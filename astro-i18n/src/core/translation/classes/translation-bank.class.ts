@@ -155,10 +155,23 @@ class TranslationBank {
 	}
 
 	toClientSideObject(route: string) {
-		const clientSideObject = {
-			translations: {},
-			loadDirectives: {},
+		const translations: TranslationMap = {}
+		// adding groups for this route
+		if (this.#loadDirectives[route]) {
+			for (const group of this.#loadDirectives[route] || throwFalsy()) {
+				translations[group] = this.#translations[group] || {}
+			}
 		}
+		// adding route translations
+		if (this.#translations[route]) {
+			translations[route] = this.#translations[route] || {}
+		}
+		// adding common translations
+		if (this.#translations[COMMON_TRANSLATIONS_GROUP]) {
+			translations[COMMON_TRANSLATIONS_GROUP] =
+				this.#translations[COMMON_TRANSLATIONS_GROUP] || {}
+		}
+		return translations
 	}
 
 	toString() {

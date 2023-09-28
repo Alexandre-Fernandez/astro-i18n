@@ -139,7 +139,13 @@ class AstroI18n {
 	}
 
 	test() {
-		console.log(this.#translations.toString())
+		console.log(
+			JSON.stringify(
+				this.#translations.toClientSideObject(this.route),
+				null,
+				4,
+			),
+		)
 		// console.log(this.#segments.toString())
 	}
 
