@@ -139,8 +139,8 @@ class AstroI18n {
 	}
 
 	test() {
-		// console.log(this.#translations.toString())
-		console.log(this.#segments.toString())
+		console.log(this.#translations.toString())
+		// console.log(this.#segments.toString())
 	}
 
 	/**

@@ -84,9 +84,12 @@ class TranslationBank {
 							loadDirectives[route] = [...new Set(matchedGroups)]
 							continue
 						}
+
 						loadDirectives[route] = [
-							...(loadDirectives[route] || []),
-							...new Set(matchedGroups),
+							...new Set([
+								...(loadDirectives[route] || throwFalsy()),
+								...matchedGroups,
+							]),
 						]
 					}
 				}
@@ -151,6 +154,13 @@ class TranslationBank {
 		return interpolate(bestVariant.value, properties, formatters)
 	}
 
+	toClientSideObject(route: string) {
+		const clientSideObject = {
+			translations: {},
+			loadDirectives: {},
+		}
+	}
+
 	toString() {
 		return `#translations:\n${JSON.stringify(
 			this.#translations,
@@ -161,3 +171,395 @@ class TranslationBank {
 }
 
 export default TranslationBank
+
+/*
+
+#translations: {
+   "common": {
+     "en": {
+       "commonBasic": {
+         "default": "en.commonBasic",
+         "variants": []
+       },
+       "commonVariant": {
+         "default": "en.commonVariant (default value)",
+         "variants": [
+           {
+             "raw": "n: -2",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   -2
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === -2)"
+           },
+           {
+             "raw": "n: 2",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   2
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === 2)"
+           },
+           {
+             "raw": "n: 2, x: 'text'",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   2
+                 ]
+               },
+               {
+                 "name": "x",
+                 "values": [
+                   "text"
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === 2 && x === 'text')"
+           },
+           {
+             "raw": "n: 3",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   3
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === 3)"
+           },
+           {
+             "raw": "n: 3, $priority: 100",
+             "priority": 0.1,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   3
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === 3 && $priority === 100)"
+           },
+           {
+             "raw": "n: [4, 'text', true]",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   4,
+                   "text",
+                   true
+                 ]
+               }
+             ],
+             "value": "en.commonVariant (n === 4 || n === 'text' || 'n === true')"
+           }
+         ]
+       },
+       "commonInterpolation": {
+         "default": "en.commonInterpolation ({# value>json(format>default(false)) #})",
+         "variants": []
+       },
+       "commonInterpolationAlias": {
+         "default": "en.commonInterpolation ({# value>json(format(alias)) #})",
+         "variants": []
+       },
+       "commonInterpolationChained": {
+         "default": "en.commonInterpolation ({# value>json(format(alias))>uppercase #})",
+         "variants": []
+       },
+       "commonInterpolationCurrency": {
+         "default": "en.commonInterpolation ({# value>intl_format_number({ style: 'currency', currency: currencyCode }, 'fr') #})",
+         "variants": []
+       },
+       "nested.commonNested": {
+         "default": "en.commonNested",
+         "variants": []
+       },
+       "common": {
+         "default": "common-en",
+         "variants": []
+       }
+     },
+     "fr": {
+       "commonBasic": {
+         "default": "fr.commonBasic",
+         "variants": []
+       },
+       "commonVariant": {
+         "default": "fr.commonVariant (default value)",
+         "variants": [
+           {
+             "raw": "n: -2",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   -2
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === -2)"
+           },
+           {
+             "raw": "n: 2",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   2
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === 2)"
+           },
+           {
+             "raw": "n: 2, x: 'text'",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   2
+                 ]
+               },
+               {
+                 "name": "x",
+                 "values": [
+                   "text"
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === 2 && x === 'text')"
+           },
+           {
+             "raw": "n: 3",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   3
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === 3)"
+           },
+           {
+             "raw": "n: 3, $priority: 100",
+             "priority": 0.1,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   3
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === 3 && $priority === 100)"
+           },
+           {
+             "raw": "n: [4, 'text', true]",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   4,
+                   "text",
+                   true
+                 ]
+               }
+             ],
+             "value": "fr.commonVariant (n === 4 || n === 'text' || 'n === true')"
+           }
+         ]
+       },
+       "commonInterpolation": {
+         "default": "fr.commonInterpolation ({# value>json(format>default(false)) #})",
+         "variants": []
+       },
+       "commonInterpolationAlias": {
+         "default": "fr.commonInterpolation ({# value>json(format(alias)) #})",
+         "variants": []
+       },
+       "commonInterpolationChained": {
+         "default": "fr.commonInterpolation ({# value>json(format(alias))>uppercase #})",
+         "variants": []
+       },
+       "commonInterpolationCurrency": {
+         "default": "fr.commonInterpolation ({# value>intl_format_number({ style: 'currency', currency: currencyCode }, 'fr') #})",
+         "variants": []
+       },
+       "nested.commonNested": {
+         "default": "fr.commonNested",
+         "variants": []
+       }
+     }
+   },
+   "/page": {
+     "en": {
+       "pageTranslation": {
+         "default": "en.pageTranslation",
+         "variants": []
+       }
+     },
+     "fr": {
+       "pageTranslation": {
+         "default": "fr.pageTranslation",
+         "variants": []
+       }
+     }
+   },
+   "group1": {
+     "en": {
+       "groupTranslation1": {
+         "default": "en.groupTranslation1",
+         "variants": []
+       }
+     },
+     "fr": {
+       "groupTranslation1": {
+         "default": "fr.groupTranslation1",
+         "variants": []
+       }
+     }
+   },
+   "group2": {
+     "en": {
+       "groupTranslation2": {
+         "default": "en.groupTranslation2",
+         "variants": []
+       }
+     },
+     "fr": {
+       "groupTranslation2": {
+         "default": "fr.groupTranslation2",
+         "variants": []
+       }
+     }
+   },
+   "/": {
+     "en": {
+       "index-test": {
+         "default": "index-test-en",
+         "variants": []
+       }
+     }
+   },
+   "/about": {
+     "en": {
+       "about-test": {
+         "default": "about-test-en",
+         "variants": []
+       },
+       "root-about-test": {
+         "default": "root-about-test-en",
+         "variants": []
+       },
+       "root-about-test-2": {
+         "default": "root-about-test-2-en",
+         "variants": []
+       }
+     },
+     "fr": {
+       "about-test": {
+         "default": "about-test-fr",
+         "variants": []
+       },
+       "root-about-test": {
+         "default": "root-about-test-fr",
+         "variants": []
+       },
+       "root-about-test-2": {
+         "default": "root-about-test-2-fr",
+         "variants": []
+       }
+     }
+   },
+   "/product": {
+     "en": {
+       "product-test": {
+         "default": "product-test-en (default)",
+         "variants": [
+           {
+             "raw": "n: 2",
+             "priority": 0,
+             "properties": [
+               {
+                 "name": "n",
+                 "values": [
+                   2
+                 ]
+               }
+             ],
+             "value": "product-test-en (n: 2)"
+           }
+         ]
+       },
+       "product-interpolation": {
+         "default": "I have '{# test>upper #}'",
+         "variants": []
+       },
+       "root-product-test": {
+         "default": "root-product-test-en",
+         "variants": []
+       }
+     },
+     "fr": {
+       "product-test": {
+         "default": "product-test-fr",
+         "variants": []
+       },
+       "root-product-test": {
+         "default": "root-product-test-fr",
+         "variants": []
+       }
+     }
+   },
+   "/product/[id]": {
+     "en": {
+       "[id]-test": {
+         "default": "[id]-test-en",
+         "variants": []
+       }
+     }
+   },
+   "admin": {
+     "en": {
+       "admin": {
+         "default": "admin-en",
+         "variants": []
+       }
+     }
+   }
+ }
+
+#loadDirectives: {
+   "/group": [
+     "group1",
+     "group2"
+   ],
+   "/group/inner": [
+     "group2"
+   ]
+ }
+*/

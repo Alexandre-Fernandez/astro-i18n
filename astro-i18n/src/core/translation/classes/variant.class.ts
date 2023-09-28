@@ -9,17 +9,25 @@ import { parseVariantValue } from "@src/core/translation/functions/variant/varia
 import { VARIANT_PRIORITY_KEY } from "@src/core/translation/constants/variant.constants"
 import type {
 	TranslationProperties,
+	VariantProperties,
 	VariantProperty,
 } from "@src/core/translation/types"
 
 class Variant {
 	raw
 
-	priority = 0
+	priority
 
-	properties: VariantProperty[] = []
+	properties: VariantProperty[]
 
-	value: string
+	value
+
+	constructor({ raw, priority, properties, value }: VariantProperties = {}) {
+		this.raw = raw || ""
+		this.priority = priority || 0
+		this.properties = properties || []
+		this.value = value || ""
+	}
 
 	/**
 	 * @param variant The variant part of the translation, for example for a
@@ -28,11 +36,13 @@ class Variant {
 	 * @param value The translation value, this will only be stored for later
 	 * retrieval.
 	 */
-	constructor(variant: string, value: string) {
-		this.value = value
+	static fromString(variant: string, value: string) {
+		const translationVariant = new Variant()
+
+		translationVariant.value = value
 
 		const trimmed = variant.trim()
-		this.raw = trimmed
+		translationVariant.raw = trimmed
 
 		// checking properties
 		let propKey = ""
@@ -73,7 +83,7 @@ class Variant {
 					if (typeof priority !== "number") {
 						throw new InvalidVariantPriority(matchedValue)
 					}
-					this.priority = priority * 0.001
+					translationVariant.priority = priority * 0.001
 					return null
 				}
 
@@ -87,7 +97,7 @@ class Variant {
 					throw new InvalidVariantPropertyValue(propValue)
 				}
 
-				this.properties.push({
+				translationVariant.properties.push({
 					name: matchedKey,
 					values,
 				})
@@ -101,6 +111,8 @@ class Variant {
 			propValue += char
 			return null
 		})
+
+		return translationVariant
 	}
 
 	/**

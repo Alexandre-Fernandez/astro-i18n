@@ -50,11 +50,13 @@ export function computeDeepStringRecord(
 			}`.replace(/^\./, "")
 
 			if (computed[key]) {
-				computed[key]!.variants.push(new Variant(match[1], curValue))
+				computed[key]!.variants.push(
+					Variant.fromString(match[1], curValue),
+				)
 				continue
 			}
 			computed[key] = {
-				variants: [new Variant(match[1], curValue)],
+				variants: [Variant.fromString(match[1], curValue)],
 			}
 			continue
 		}

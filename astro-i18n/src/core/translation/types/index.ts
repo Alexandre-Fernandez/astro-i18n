@@ -40,3 +40,10 @@ export type LoadDirectives = {
 }
 
 export type TranslationProperties = Record<string, unknown>
+
+export type VariantProperties = {
+	raw?: string
+	priority?: number
+	properties?: VariantProperty[]
+	value?: string
+}
