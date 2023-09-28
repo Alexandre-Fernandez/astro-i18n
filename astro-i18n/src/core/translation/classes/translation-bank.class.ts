@@ -13,6 +13,7 @@ import type {
 	ComputedTranslations,
 	Formatters,
 	LoadDirectives,
+	SerializedTranslationMap,
 	TranslationMap,
 	TranslationProperties,
 } from "@src/core/translation/types"
@@ -155,7 +156,7 @@ class TranslationBank {
 	}
 
 	toClientSideObject(route: string) {
-		const translations: TranslationMap = {}
+		const translations: SerializedTranslationMap = {}
 		// adding groups for this route
 		if (this.#loadDirectives[route]) {
 			for (const group of this.#loadDirectives[route] || throwFalsy()) {

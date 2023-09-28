@@ -68,6 +68,10 @@ class SegmentBank {
 		return locales
 	}
 
+	toClientSideObject() {
+		return { ...this.#segments }
+	}
+
 	toString() {
 		return JSON.stringify(this.#segments, null, 2)
 	}

@@ -25,7 +25,24 @@ export function useAstroI18n(
 		// setting route
 		astroI18n.route = _ctx.url.pathname
 
-		astroI18n.test()
+		const response = await next()
+		let body = await response.text()
+
+		if (body.startsWith("<!DOCTYPE html>")) {
+			const closingHeadIndex = body.indexOf("</head>")
+			if (closingHeadIndex > 0) {
+				body =
+					body.slice(0, closingHeadIndex) +
+					astroI18n.internals.toHtml() +
+					body.slice(closingHeadIndex)
+			}
+		}
+
+		return new Response(body, {
+			status: response.status,
+			statusText: response.statusText,
+			headers: response.headers,
+		})
 
 		// console.log(
 		// 	astroI18n.t(

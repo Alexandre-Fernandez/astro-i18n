@@ -47,3 +47,16 @@ export type VariantProperties = {
 	properties?: VariantProperty[]
 	value?: string
 }
+
+export type SerializedTranslationMap = {
+	[group: string]: {
+		[locale: string]: SerializedComputedTranslations
+	}
+}
+
+type SerializedComputedTranslations = {
+	[key: string]: {
+		default?: string
+		variants: Required<VariantProperties>[]
+	}
+}

@@ -42,3 +42,10 @@ export type ConfigRoutes = {
 		[segment: string]: string
 	}
 }
+
+export type SerializedConfig = {
+	primaryLocale: string
+	secondaryLocales: string[]
+	showPrimaryLocale: boolean
+	trailingSlash: "always" | "never"
+}

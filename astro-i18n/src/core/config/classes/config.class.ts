@@ -21,6 +21,7 @@ import type {
 	AstroI18nConfig,
 	ConfigRoutes,
 	ConfigTranslations,
+	SerializedConfig,
 } from "@src/core/config/types"
 import UnreachableCode from "@src/errors/unreachable-code.error"
 
@@ -118,6 +119,15 @@ class Config implements AstroI18nConfig {
 		merge(config.translations, groups)
 
 		return config
+	}
+
+	toClientSideObject() {
+		return {
+			primaryLocale: this.primaryLocale,
+			secondaryLocales: this.secondaryLocales,
+			showPrimaryLocale: this.showPrimaryLocale,
+			trailingSlash: this.trailingSlash,
+		} as SerializedConfig
 	}
 }
 

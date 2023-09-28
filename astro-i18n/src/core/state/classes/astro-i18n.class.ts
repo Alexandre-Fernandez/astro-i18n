@@ -11,8 +11,12 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import type { SerializedAstroI18n } from "@src/core/state/types"
+import { PACKAGE_NAME } from "@src/constants/meta.constants"
 
 class AstroI18n {
+	static #scriptId = `__${PACKAGE_NAME}__`
+
 	environment: Environment
 
 	#locale = ""
@@ -294,7 +298,16 @@ class AstroI18n {
 	}
 
 	#toHtml() {
-		return `<script type="application/json"></script>`
+		const serialized: SerializedAstroI18n = {
+			locale: this.#locale,
+			route: this.#route,
+			config: this.#config.toClientSideObject(),
+			translations: this.#translations.toClientSideObject(this.route),
+			segments: this.#segments.toClientSideObject(),
+		}
+		return `<script id="${
+			AstroI18n.#scriptId
+		}" type="application/json">${JSON.stringify(serialized)}</script>`
 	}
 }
 
