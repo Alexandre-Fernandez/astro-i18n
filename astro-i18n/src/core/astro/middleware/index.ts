@@ -27,15 +27,15 @@ export function useAstroI18n(
 
 		const response = await next()
 		let body = await response.text()
+		if (!body.startsWith("<!DOCTYPE html>")) return response
 
-		if (body.startsWith("<!DOCTYPE html>")) {
-			const closingHeadIndex = body.indexOf("</head>")
-			if (closingHeadIndex > 0) {
-				body =
-					body.slice(0, closingHeadIndex) +
-					astroI18n.internals.toHtml() +
-					body.slice(closingHeadIndex)
-			}
+		// serializing astro-i18n into the html
+		const closingHeadIndex = body.indexOf("</head>")
+		if (closingHeadIndex > 0) {
+			body =
+				body.slice(0, closingHeadIndex) +
+				astroI18n.internals.toHtml() +
+				body.slice(closingHeadIndex)
 		}
 
 		return new Response(body, {
