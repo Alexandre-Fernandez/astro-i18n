@@ -5,7 +5,7 @@ import {
 	isConfigTranslationLoadingRules,
 	isConfigTranslations,
 } from "@src/core/config/guards/config-translations.guard"
-import type { AstroI18nConfig } from "@src/core/config/types"
+import type { AstroI18nConfig, SerializedConfig } from "@src/core/config/types"
 
 export function isPartialConfig(
 	config: unknown,
@@ -50,6 +50,38 @@ export function isPartialConfig(
 			}
 			case "routes": {
 				if (!isConfigRoutes(value)) return false
+				break
+			}
+			default: {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
+export function isSerializedConfig(
+	serializedConfig: unknown,
+): serializedConfig is SerializedConfig {
+	if (!isObject(serializedConfig)) return false
+
+	for (const [key, value] of Object.entries(serializedConfig)) {
+		switch (key) {
+			case "primaryLocale": {
+				if (typeof value !== "string") return false
+				break
+			}
+			case "secondaryLocales": {
+				if (!isStringArray(value)) return false
+				break
+			}
+			case "showPrimaryLocale": {
+				if (typeof value !== "boolean") return false
+				break
+			}
+			case "trailingSlash": {
+				if (value !== "always" && value !== "never") return false
 				break
 			}
 			default: {

@@ -14,6 +14,9 @@ import type { SerializedAstroI18n } from "@src/core/state/types"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import AlreadyInitialized from "@src/core/state/errors/already-initialized.error"
 import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
+import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
+import { assert } from "@lib/ts/guards"
+import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -45,9 +48,7 @@ class AstroI18n {
 			this.environment = Environment.NONE
 		} else {
 			this.environment = Environment.BROWSER
-			/* 
-				INITIALIZE BROWSER STATE HERE
-			*/
+			this.#browserInit()
 		}
 	}
 
@@ -148,8 +149,14 @@ class AstroI18n {
 
 	#browserInit() {
 		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
-		if (!script) {
+		if (!script || !script.textContent) {
+			throw new SerializedStateNotFound()
 		}
+		const serialized: unknown = JSON.parse(script.textContent)
+		assert(serialized, isSerializedAstroI18n)
+
+		//
+		console.log(serialized)
 	}
 
 	test() {
