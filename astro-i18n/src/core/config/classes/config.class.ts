@@ -4,7 +4,7 @@ import {
 	importScript,
 } from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
-import { throwError } from "@lib/error"
+import { throwError, throwFalsy } from "@lib/error"
 import { merge } from "@lib/object"
 import { assert } from "@lib/ts/guards"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
@@ -102,11 +102,21 @@ class Config implements AstroI18nConfig {
 			)
 		}
 
-		// find from import.meta.url
+		// find from current module
 		if (!path) {
-			path = await autofindAstroI18nConfig(
-				await toPosixPath(fileURLToPath(import.meta.url)),
-			)
+			let filename = ""
+
+			if (typeof import.meta.url === "string") {
+				filename = fileURLToPath(import.meta.url)
+			} else if (typeof __filename === "string") {
+				filename = __filename
+			}
+
+			if (filename) {
+				path = await autofindAstroI18nConfig(
+					await toPosixPath(filename),
+				)
+			}
 		}
 
 		if (!path) throw new ConfigNotFound()
