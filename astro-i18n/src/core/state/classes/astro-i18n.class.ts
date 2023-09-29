@@ -1,7 +1,6 @@
 import { Regex } from "@lib/regex"
 import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
-import MissingConfigArgument from "@src/core/state/errors/missing-config-argument.error"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
@@ -13,6 +12,8 @@ import type {
 } from "@src/core/translation/types"
 import type { SerializedAstroI18n } from "@src/core/state/types"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
+import AlreadyInitialized from "@src/core/state/errors/already-initialized.error"
+import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -31,7 +32,7 @@ class AstroI18n {
 
 	#formatters = new FormatterBank()
 
-	#isServerSideInitialized = false
+	#isInitialized = false
 
 	constructor() {
 		if (
@@ -39,7 +40,6 @@ class AstroI18n {
 			typeof process.versions === "object" &&
 			typeof process.versions.node !== "undefined"
 		) {
-			// server init done in the middleware
 			this.environment = Environment.NODE
 		} else if (typeof window === "undefined") {
 			this.environment = Environment.NONE
@@ -83,63 +83,73 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
+	get isInitialized() {
+		return this.#isInitialized
+	}
+
 	get internals() {
 		return {
-			serverInit: this.#serverInit.bind(this),
-			isServerSideInitialized: () => this.#isServerSideInitialized,
 			toHtml: this.#toHtml.bind(this),
 			config: this.#config,
 		}
 	}
 
-	extractRouteLocale(route: string) {
-		return this.#splitLocaleAndRoute(route).locale
-	}
-
 	/**
-	 * Initializes state in the server accordingly to the environment (node,
-	 * serverless, etc) where it's runned.
+	 * Initializes state in the server accordingly to the environment where it's
+	 * runned.
 	 * For example in a node environment it might parse the config from the
 	 * filesystem.
+	 * It will throw in the browser.
 	 */
-	async #serverInit(
-		config?: Partial<AstroI18nConfig> | string,
+	async initialize(
+		config: Partial<AstroI18nConfig> | string | undefined = undefined,
 		formatters: Formatters = {},
 	) {
+		if (this.#isInitialized) throw new AlreadyInitialized()
+
 		switch (this.environment) {
 			case Environment.NODE: {
 				if (typeof config !== "object") {
-					this.#config = await Config.fromFilesystem(config)
+					this.#config = await Config.fromFilesystem(config || null)
 					break
 				}
 				this.#config = new Config(config)
 				break
 			}
 			case Environment.NONE: {
-				if (typeof config !== "object") {
-					throw new MissingConfigArgument()
+				if (typeof config === "string") {
+					throw new NoFilesystem(
+						"Cannot load config from filesystem in a non-node environment.",
+					)
 				}
-				this.#config = new Config(config)
+				this.#config = new Config(config || {})
 				break
 			}
-			default: {
+			default: /* Environment.BROWSER */ {
 				throw new InvalidEnvironment(
-					"Cannot initialize server in a browser environment.",
+					"Cannot initialize in a browser environment.",
 				)
 			}
 		}
 
 		this.#translations = TranslationBank.fromConfig(this.#config)
-
 		this.#segments = SegmentBank.fromConfig(this.#config)
-
 		this.#formatters = new FormatterBank(formatters)
+		this.#isInitialized = true
+	}
 
-		this.#isServerSideInitialized = true
+	/**
+	 * @return The `route` locale or `null`. It will also return `null` if the
+	 * locale is not included in `this.locales`
+	 */
+	extractRouteLocale(route: string) {
+		return this.#splitLocaleAndRoute(route).locale
 	}
 
 	#browserInit() {
-		//
+		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
+		if (!script) {
+		}
 	}
 
 	test() {

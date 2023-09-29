@@ -13,13 +13,13 @@ export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
 ) {
-	if (!config) config = undefined // if empty string set undefined
+	if (!config /* empty string */) config = undefined
 	if (isObject(config) && Object.keys(config).length === 0) config = undefined
 
 	return (async (_ctx, next) => {
 		// init
-		if (!astroI18n.internals.isServerSideInitialized()) {
-			await astroI18n.internals.serverInit(config, formatters)
+		if (!astroI18n.isInitialized) {
+			await astroI18n.initialize(config, formatters)
 		}
 
 		// setting route
