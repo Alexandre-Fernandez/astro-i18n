@@ -1,4 +1,6 @@
-export default {
+import { defineAstroI18nConfig } from "astro-i18n"
+
+export default defineAstroI18nConfig({
 	primaryLocale: "en",
 	secondaryLocales: ["fr"],
 	translationLoadingRules: [
@@ -11,18 +13,8 @@ export default {
 			groups: ["^group2"],
 		},
 	],
-	// translationDirectory: {},
+	translationDirectory: {},
 	translations: {
-		$load: [
-			{
-				routes: ["/group$"],
-				groups: ["^group"],
-			},
-			{
-				routes: ["/group"],
-				groups: ["^group2"],
-			},
-		],
 		common: {
 			en: {
 				commonBasic: "en.commonBasic",
@@ -106,4 +98,4 @@ export default {
 			group: "groupe",
 		},
 	},
-}
+})

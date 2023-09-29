@@ -1,6 +1,7 @@
 import "@src/core/state/singletons/astro-i18n.singleton" // init astro-i18n.singleton
 import { singleton } from "@src/core/astro/middleware"
 import type { AstroIntegration } from "astro"
+import type { AstroI18nConfig } from "@src/core/config/types"
 
 export { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 
@@ -24,6 +25,10 @@ export function getSingleton() {
 
 export function setSingleton() {
 	singleton.value += 1
+}
+
+export function defineAstroI18nConfig(config: Partial<AstroI18nConfig>) {
+	return config
 }
 
 // async function configSetup(
