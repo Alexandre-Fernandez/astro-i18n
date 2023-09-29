@@ -17,6 +17,7 @@ import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
 import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
 import { assert } from "@lib/ts/guards"
 import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
+import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -140,37 +141,6 @@ class AstroI18n {
 	}
 
 	/**
-	 * @return The `route` locale or `null`. It will also return `null` if the
-	 * locale is not included in `this.locales`
-	 */
-	extractRouteLocale(route: string) {
-		return this.#splitLocaleAndRoute(route).locale
-	}
-
-	#browserInit() {
-		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
-		if (!script || !script.textContent) {
-			throw new SerializedStateNotFound()
-		}
-		const serialized: unknown = JSON.parse(script.textContent)
-		assert(serialized, isSerializedAstroI18n)
-
-		//
-		console.log(serialized)
-	}
-
-	test() {
-		console.log(
-			JSON.stringify(
-				this.#translations.toClientSideObject(this.route),
-				null,
-				4,
-			),
-		)
-		// console.log(this.#segments.toString())
-	}
-
-	/**
 	 * Gets the appropriate interpolated translation for the given key,
 	 * properties and options.
 	 * If multiple keys are the same, for example if you have the same key in
@@ -267,6 +237,25 @@ class AstroI18n {
 			: `/${translatedRoute}`
 	}
 
+	test() {
+		console.log(
+			JSON.stringify(
+				this.#translations.toClientSideObject(this.route),
+				null,
+				4,
+			),
+		)
+		// console.log(this.#segments.toString())
+	}
+
+	/**
+	 * @return The `route` locale or `null`. It will also return `null` if the
+	 * locale is not included in `this.locales`
+	 */
+	extractRouteLocale(route: string) {
+		return this.#splitLocaleAndRoute(route).locale
+	}
+
 	#detectSegmentsLocale(segments: string[]) {
 		const scores: { [locale: string]: number } = {}
 
@@ -312,6 +301,24 @@ class AstroI18n {
 
 	#getRouteSegments(route: string) {
 		return route.replace(/^\//, "").replace(/\/$/, "").split("/")
+	}
+
+	#browserInit() {
+		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
+		if (!script || !script.textContent) {
+			throw new SerializedStateNotFound()
+		}
+		const serialized: unknown = JSON.parse(script.textContent)
+		assert(serialized, isSerializedAstroI18n)
+
+		this.#translations = new TranslationBank(
+			deserializeTranslationMap(serialized.translations),
+		)
+		this.#segments = new SegmentBank(serialized.segments)
+		this.#formatters = new FormatterBank({})
+		this.#isInitialized = true
+
+		script.remove()
 	}
 
 	#toHtml() {

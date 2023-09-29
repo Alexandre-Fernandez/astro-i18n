@@ -11,6 +11,8 @@ import type {
 	ComputedTranslations,
 	DeepStringRecord,
 	Formatters,
+	SerializedTranslationMap,
+	TranslationMap,
 	TranslationProperties,
 } from "@src/core/translation/types"
 
@@ -144,4 +146,20 @@ export function unknowntoString(value: unknown) {
 			return ""
 		}
 	}
+}
+
+export function deserializeTranslationMap(
+	serialized: SerializedTranslationMap,
+): TranslationMap {
+	for (const groupLocales of Object.values(serialized)) {
+		for (const computedTranslations of Object.values(groupLocales)) {
+			for (const translation of Object.values(computedTranslations)) {
+				translation.variants = translation.variants.map(
+					(variant) => new Variant(variant),
+				)
+			}
+		}
+	}
+
+	return serialized as TranslationMap
 }

@@ -42,13 +42,3 @@ export function isSerializedAstroI18n(
 
 	return true
 }
-
-/*
-{
-	locale: string
-	route: string
-	config: SerializedConfig
-	translations: SerializedTranslationMap
-	segments: SegmentTranslations
-}
-*/
