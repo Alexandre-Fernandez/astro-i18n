@@ -11,5 +11,6 @@
 		},
 		"jsx": "react-jsx",
 		"jsxImportSource": "react"
-	}
+	},
+	"ignore": ["dist"]
 }
