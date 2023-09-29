@@ -1,6 +1,17 @@
 export default {
 	primaryLocale: "en",
 	secondaryLocales: ["fr"],
+	translationLoadingRules: [
+		{
+			routes: ["/group$"],
+			groups: ["^group"],
+		},
+		{
+			routes: ["/group"],
+			groups: ["^group2"],
+		},
+	],
+	// translationDirectory: {},
 	translations: {
 		$load: [
 			{

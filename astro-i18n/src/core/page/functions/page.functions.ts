@@ -17,7 +17,6 @@ import {
 	DEFAULT_TRANSLATION_DIRNAME,
 	PAGES_DIRNAME,
 } from "@src/constants/app.constants"
-import { TRANSLATION_DIRECTORIES_KEY } from "@src/core/config/constants/config.constants"
 import type { PageProps } from "@src/core/page/types"
 import type { AstroI18nConfig } from "@src/core/config/types"
 
@@ -38,7 +37,7 @@ export async function getProjectPages(
 	const $directory = {
 		main: DEFAULT_TRANSLATION_DIRNAME,
 		pages: DEFAULT_TRANSLATION_DIRNAME,
-		...config.translations?.[TRANSLATION_DIRECTORIES_KEY],
+		...config.translationDirectory,
 	}
 	const locales = [
 		config.primaryLocale || "en",

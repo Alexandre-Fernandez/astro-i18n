@@ -5,10 +5,6 @@ import {
 	computeDeepStringRecord,
 	interpolate,
 } from "@src/core/translation/functions/translation.functions"
-import {
-	LOAD_DIRECTIVES_KEY,
-	TRANSLATION_DIRECTORIES_KEY,
-} from "@src/core/config/constants/config.constants"
 import type {
 	ComputedTranslations,
 	Formatters,
@@ -37,18 +33,12 @@ class TranslationBank {
 	/**
 	 * Create a TranslationBank from a config's translations.
 	 */
-	static fromConfig({ translations }: Config) {
+	static fromConfig({ translations, translationLoadingRules }: Config) {
 		const translationMap: TranslationMap = {}
 		const loadDirectives: LoadDirectives = {}
-		const {
-			[LOAD_DIRECTIVES_KEY]: $loadDirectives,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-			[TRANSLATION_DIRECTORIES_KEY]: __destructured_out__,
-			...groups
-		} = translations
 
 		// save all groups
-		for (const [key, value] of Object.entries(groups)) {
+		for (const [key, value] of Object.entries(translations)) {
 			for (const [locale, deepStringRecord] of Object.entries(value)) {
 				setObjectProperty(
 					translationMap,
@@ -59,23 +49,23 @@ class TranslationBank {
 		}
 
 		// save directives
-		if ($loadDirectives) {
+		if (translationLoadingRules.length > 0) {
 			const { routes } = categorizeConfigTranslationsGroups(translations)
 
-			for (const directive of $loadDirectives) {
+			for (const rule of translationLoadingRules) {
 				// find which groups need to be loaded
 				const matchedGroups: string[] = []
-				for (const groupRegex of directive.groups) {
+				for (const groupRegex of rule.groups) {
 					const pattern = Regex.fromString(groupRegex)
 					// matched against every group including routes & common
 					matchedGroups.push(
-						...Object.keys(groups).filter((group) =>
+						...Object.keys(translations).filter((group) =>
 							pattern.test(group),
 						),
 					)
 				}
 				// find the routes where the matched groups will be loaded
-				for (const routeSource of directive.routes) {
+				for (const routeSource of rule.routes) {
 					const pattern = Regex.fromString(routeSource)
 					const matchedRoutes = routes.filter((route) =>
 						pattern.test(route),

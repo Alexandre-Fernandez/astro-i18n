@@ -19,7 +19,9 @@ import {
 import { isPartialConfig } from "@src/core/config/guards/config.guard"
 import type {
 	AstroI18nConfig,
+	ConfigTranslationLoadingRules,
 	ConfigRoutes,
+	ConfigTranslationDirectory,
 	ConfigTranslations,
 	SerializedConfig,
 } from "@src/core/config/types"
@@ -38,6 +40,10 @@ class Config implements AstroI18nConfig {
 
 	translations: ConfigTranslations = {}
 
+	translationLoadingRules: ConfigTranslationLoadingRules = []
+
+	translationDirectory: ConfigTranslationDirectory = {}
+
 	routes: ConfigRoutes = {}
 
 	constructor({
@@ -47,15 +53,37 @@ class Config implements AstroI18nConfig {
 		trailingSlash,
 		run,
 		translations,
+		translationLoadingRules,
+		translationDirectory,
 		routes,
 	}: Partial<AstroI18nConfig> = {}) {
-		if (primaryLocale) this.primaryLocale = primaryLocale
-		if (secondaryLocales) this.secondaryLocales = secondaryLocales
-		if (showPrimaryLocale) this.showPrimaryLocale = showPrimaryLocale
-		if (trailingSlash) this.trailingSlash = trailingSlash
-		if (run) this.run = run
-		if (translations) this.translations = translations
-		if (routes) this.routes = routes
+		if (primaryLocale) {
+			this.primaryLocale = primaryLocale
+		}
+		if (secondaryLocales) {
+			this.secondaryLocales = secondaryLocales
+		}
+		if (showPrimaryLocale) {
+			this.showPrimaryLocale = showPrimaryLocale
+		}
+		if (trailingSlash) {
+			this.trailingSlash = trailingSlash
+		}
+		if (run) {
+			this.run = run
+		}
+		if (translations) {
+			this.translations = translations
+		}
+		if (translationLoadingRules) {
+			this.translationLoadingRules = translationLoadingRules
+		}
+		if (translationDirectory) {
+			this.translationDirectory = translationDirectory
+		}
+		if (routes) {
+			this.routes = routes
+		}
 	}
 
 	get pages() {

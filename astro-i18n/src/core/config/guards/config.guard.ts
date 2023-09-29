@@ -1,6 +1,10 @@
 import { isObject, isStringArray } from "@lib/ts/guards"
 import { isConfigRoutes } from "@src/core/config/guards/config-routes.guard"
-import { isConfigTranslations } from "@src/core/config/guards/config-translations.guard"
+import {
+	isConfigTranslationDirectory,
+	isConfigTranslationLoadingRules,
+	isConfigTranslations,
+} from "@src/core/config/guards/config-translations.guard"
 import type { AstroI18nConfig } from "@src/core/config/types"
 
 export function isPartialConfig(
@@ -34,6 +38,14 @@ export function isPartialConfig(
 			}
 			case "translations": {
 				if (!isConfigTranslations(value)) return false
+				break
+			}
+			case "translationLoadingRules": {
+				if (!isConfigTranslationLoadingRules(value)) return false
+				break
+			}
+			case "translationDirectory": {
+				if (!isConfigTranslationDirectory(value)) return false
 				break
 			}
 			case "routes": {

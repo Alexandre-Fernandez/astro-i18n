@@ -1,7 +1,3 @@
-import type {
-	LOAD_DIRECTIVES_KEY,
-	TRANSLATION_DIRECTORIES_KEY,
-} from "@src/core/config/constants/config.constants"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
 export interface AstroI18nConfig {
@@ -17,23 +13,28 @@ export interface AstroI18nConfig {
 
 	translations: ConfigTranslations
 
+	translationLoadingRules: ConfigTranslationLoadingRules
+
+	translationDirectory: ConfigTranslationDirectory
+
 	routes: ConfigRoutes
+}
+
+export type ConfigTranslationLoadingRules = {
+	/** Regex patterns for matching groups to load. */
+	groups: string[]
+	/** Regex patterns where groups will be loaded. */
+	routes: string[]
+}[]
+
+export type ConfigTranslationDirectory = {
+	main?: string
+	pages?: string
 }
 
 export type ConfigTranslations = {
 	[group: string]: {
 		[locale: string]: DeepStringRecord
-	}
-} & {
-	[LOAD_DIRECTIVES_KEY]?: {
-		/** Groups to load. */
-		groups: string[]
-		/** Regex patterns where groups will be loaded. */
-		routes: string[]
-	}[]
-	[TRANSLATION_DIRECTORIES_KEY]?: {
-		main?: string
-		pages?: string
 	}
 }
 

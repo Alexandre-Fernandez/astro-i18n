@@ -18,7 +18,6 @@ import {
 	ASTRO_I18N_CONFIG_PATTERN,
 } from "@src/core/config/constants/config-patterns.constants"
 import { isDeepStringRecord } from "@src/core/translation/guards/deep-string-record.guard"
-import { TRANSLATION_DIRECTORIES_KEY } from "@src/core/config/constants/config.constants"
 import {
 	DENO_JSON_PATTERN,
 	DEPS_TS_PATTERN,
@@ -76,8 +75,7 @@ export async function getProjectTranslationGroups(
 	config: Partial<AstroI18nConfig> = {},
 ) {
 	const i18nDir = `${projectRoot}/src/${
-		config.translations?.[TRANSLATION_DIRECTORIES_KEY] ||
-		DEFAULT_TRANSLATION_DIRNAME
+		config.translationDirectory || DEFAULT_TRANSLATION_DIRNAME
 	}`
 
 	const groups: ConfigTranslations = {}
