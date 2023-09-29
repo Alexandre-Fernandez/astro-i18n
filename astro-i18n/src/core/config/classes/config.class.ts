@@ -4,7 +4,7 @@ import {
 	importScript,
 } from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
-import { throwError, throwFalsy } from "@lib/error"
+import { throwError } from "@lib/error"
 import { merge } from "@lib/object"
 import { assert } from "@lib/ts/guards"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
@@ -97,9 +97,13 @@ class Config implements AstroI18nConfig {
 
 		// find from PWD
 		if (!path) {
-			path = await autofindAstroI18nConfig(
-				await toPosixPath(process.env["PWD"] || ""),
-			)
+			let pwd = ""
+
+			if (typeof process !== "undefined") {
+				pwd = process.env["PWD"] || ""
+			}
+
+			path = await autofindAstroI18nConfig(await toPosixPath(pwd))
 		}
 
 		// find from current module
