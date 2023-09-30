@@ -1,24 +1,24 @@
 import { Regex } from "@lib/regex"
+import { assert } from "@lib/ts/guards"
 import Config from "@src/core/config/classes/config.class"
 import Environment from "@src/core/state/enums/environment.enum"
 import TranslationBank from "@src/core/translation/classes/translation-bank.class"
 import FormatterBank from "@src/core/translation/classes/formatter-bank.class"
 import InvalidEnvironment from "@src/core/state/errors/invalid-environment.error"
 import SegmentBank from "@src/core/routing/classes/segment-bank.class"
+import { PACKAGE_NAME } from "@src/constants/meta.constants"
+import AlreadyInitialized from "@src/core/state/errors/already-initialized.error"
+import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
+import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
+import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
+import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
+import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
+import type { SerializedAstroI18n } from "@src/core/state/types"
 import type { AstroI18nConfig } from "@src/core/config/types"
 import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import type { SerializedAstroI18n } from "@src/core/state/types"
-import { PACKAGE_NAME } from "@src/constants/meta.constants"
-import AlreadyInitialized from "@src/core/state/errors/already-initialized.error"
-import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
-import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
-import { assert } from "@lib/ts/guards"
-import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
-import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
-import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -233,13 +233,6 @@ class AstroI18n {
 		return translatedRoute.startsWith("/")
 			? translatedRoute
 			: `/${translatedRoute}`
-	}
-
-	test() {
-		console.log(
-			JSON.stringify(this.#formatters.toClientSideObject(), null, 4),
-		)
-		// console.log(this.#segments.toString())
 	}
 
 	/**

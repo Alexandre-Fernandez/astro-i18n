@@ -1,10 +1,13 @@
 import { throwFalsy } from "@lib/error"
 import { Regex } from "@lib/regex"
+import { setObjectProperty } from "@lib/object"
 import { categorizeConfigTranslationsGroups } from "@src/core/config/functions/config.functions"
 import {
 	computeDeepStringRecord,
 	interpolate,
 } from "@src/core/translation/functions/translation.functions"
+import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
+import type Config from "@src/core/config/classes/config.class"
 import type {
 	ComputedTranslations,
 	Formatters,
@@ -13,9 +16,6 @@ import type {
 	TranslationMap,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import type Config from "@src/core/config/classes/config.class"
-import { setObjectProperty } from "@lib/object"
-import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}

@@ -1,9 +1,9 @@
+import AsyncNode from "@lib/async-node/classes/async-node.class"
 import {
 	FRONTMATTER_PATTERN,
 	GET_STATIC_PATHS_EXPORT_PATTERN,
 	PRERENDER_EXPORT_PATTERN,
 } from "@src/core/page/constants/page-patterns.constants"
-import AsyncNode from "@lib/async-node/classes/async-node.class"
 import type { PageProps } from "@src/core/page/types"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
