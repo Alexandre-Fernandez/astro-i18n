@@ -29,7 +29,7 @@ import NotInitialized from "@src/core/state/errors/not-initialized.error"
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
 
-	environment: Environment
+	#environment: Environment
 
 	#locale = ""
 
@@ -51,11 +51,11 @@ class AstroI18n {
 			typeof process.versions === "object" &&
 			typeof process.versions.node !== "undefined"
 		) {
-			this.environment = Environment.NODE
+			this.#environment = Environment.NODE
 		} else if (typeof window === "undefined") {
-			this.environment = Environment.NONE
+			this.#environment = Environment.NONE
 		} else {
-			this.environment = Environment.BROWSER
+			this.#environment = Environment.BROWSER
 			this.#browserInit()
 		}
 	}
@@ -94,6 +94,10 @@ class AstroI18n {
 
 	get isInitialized() {
 		return this.#isInitialized
+	}
+
+	get environment() {
+		return this.#environment
 	}
 
 	get internals() {
@@ -239,7 +243,7 @@ class AstroI18n {
 	) {
 		if (this.#isInitialized) throw new AlreadyInitialized()
 
-		switch (this.environment) {
+		switch (this.#environment) {
 			case Environment.NODE: {
 				if (typeof config !== "object") {
 					this.#config = await Config.fromFilesystem(config || null)
