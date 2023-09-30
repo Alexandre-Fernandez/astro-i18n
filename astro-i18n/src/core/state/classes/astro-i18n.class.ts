@@ -14,11 +14,17 @@ import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i
 import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
 import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
 import type { SerializedAstroI18n } from "@src/core/state/types"
-import type { AstroI18nConfig } from "@src/core/config/types"
+import type {
+	AstroI18nConfig,
+	ConfigRoutes,
+	ConfigTranslationLoadingRules,
+	ConfigTranslations,
+} from "@src/core/config/types"
 import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import NotInitialized from "@src/core/state/errors/not-initialized.error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -98,50 +104,6 @@ class AstroI18n {
 	}
 
 	/**
-	 * Initializes state in the server accordingly to the environment where it's
-	 * runned.
-	 * For example in a node environment it might parse the config from the
-	 * filesystem.
-	 * It will throw in the browser.
-	 */
-	async initialize(
-		config: Partial<AstroI18nConfig> | string | undefined = undefined,
-		formatters: Formatters = {},
-	) {
-		if (this.#isInitialized) throw new AlreadyInitialized()
-
-		switch (this.environment) {
-			case Environment.NODE: {
-				if (typeof config !== "object") {
-					this.#config = await Config.fromFilesystem(config || null)
-					break
-				}
-				this.#config = new Config(config)
-				break
-			}
-			case Environment.NONE: {
-				if (typeof config === "string") {
-					throw new NoFilesystem(
-						"Cannot load config from filesystem in a non-node environment.",
-					)
-				}
-				this.#config = new Config(config || {})
-				break
-			}
-			default: /* Environment.BROWSER */ {
-				throw new InvalidEnvironment(
-					"Cannot initialize in a browser environment.",
-				)
-			}
-		}
-
-		this.#translations = TranslationBank.fromConfig(this.#config)
-		this.#segments = SegmentBank.fromConfig(this.#config)
-		this.#formatters = new FormatterBank(formatters)
-		this.#isInitialized = true
-	}
-
-	/**
 	 * Gets the appropriate interpolated translation for the given key,
 	 * properties and options.
 	 * If multiple keys are the same, for example if you have the same key in
@@ -155,12 +117,10 @@ class AstroI18n {
 		options: {
 			route?: string
 			locale?: string
-			formatters?: Formatters
 		} = {},
 	) {
-		const { route, locale, formatters } = options
-
-		if (formatters) this.#formatters.addFormaters(formatters)
+		if (!this.#isInitialized) throw new NotInitialized()
+		const { route, locale } = options
 
 		return this.#translations.get(
 			key,
@@ -179,6 +139,7 @@ class AstroI18n {
 			routeLocale?: string
 		} = {},
 	) {
+		if (!this.#isInitialized) throw new NotInitialized()
 		const { targetLocale, routeLocale } = options
 
 		// retrieving segments only
@@ -235,12 +196,78 @@ class AstroI18n {
 			: `/${translatedRoute}`
 	}
 
+	addTranslations(translations: ConfigTranslations) {
+		this.#translations.addTranslations(translations)
+		return this
+	}
+
+	addTranslationLoadingRules(
+		translationLoadingRules: ConfigTranslationLoadingRules,
+	) {
+		this.#translations.addTranslationLoadingRules(translationLoadingRules)
+		return this
+	}
+
+	addRoutes(routes: ConfigRoutes) {
+		this.#segments.addSegments(routes)
+		return this
+	}
+
+	addFormatters(formatters: Formatters) {
+		this.#formatters.addFormaters(formatters)
+		return this
+	}
+
 	/**
 	 * @return The `route` locale or `null`. It will also return `null` if the
 	 * locale is not included in `this.locales`
 	 */
 	extractRouteLocale(route: string) {
 		return this.#splitLocaleAndRoute(route).locale
+	}
+
+	/**
+	 * Initializes state in the server accordingly to the environment where it's
+	 * runned.
+	 * For example in a node environment it might parse the config from the
+	 * filesystem.
+	 * It will throw in the browser.
+	 */
+	async initialize(
+		config: Partial<AstroI18nConfig> | string | undefined = undefined,
+		formatters: Formatters = {},
+	) {
+		if (this.#isInitialized) throw new AlreadyInitialized()
+
+		switch (this.environment) {
+			case Environment.NODE: {
+				if (typeof config !== "object") {
+					this.#config = await Config.fromFilesystem(config || null)
+					break
+				}
+				this.#config = new Config(config)
+				break
+			}
+			case Environment.NONE: {
+				if (typeof config === "string") {
+					throw new NoFilesystem(
+						"Cannot load config from filesystem in a non-node environment.",
+					)
+				}
+				this.#config = new Config(config || {})
+				break
+			}
+			default: /* Environment.BROWSER */ {
+				throw new InvalidEnvironment(
+					"Cannot initialize in a browser environment.",
+				)
+			}
+		}
+
+		this.#translations = TranslationBank.fromConfig(this.#config)
+		this.#segments = SegmentBank.fromConfig(this.#config)
+		this.#formatters = new FormatterBank(formatters)
+		this.#isInitialized = true
 	}
 
 	#detectSegmentsLocale(segments: string[]) {
@@ -298,10 +325,16 @@ class AstroI18n {
 		const serialized: unknown = JSON.parse(script.textContent)
 		assert(serialized, isSerializedAstroI18n)
 
+		this.#locale = serialized.locale
+		this.#route = serialized.route
+		this.#config = new Config(serialized.config)
 		this.#translations = new TranslationBank(
 			deserializeTranslationMap(serialized.translations),
 		)
-		this.#segments = new SegmentBank(serialized.segments)
+		this.#segments = new SegmentBank(
+			serialized.segments,
+			serialized.config.primaryLocale,
+		)
 		this.#formatters = new FormatterBank(
 			deserializeFormatters(serialized.formatters),
 		)

@@ -31,6 +31,7 @@ import type {
 	ConfigTranslations,
 } from "@src/core/config/types"
 import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
+import type { TranslationMap } from "@src/core/translation/types"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()
@@ -45,7 +46,7 @@ const astroConfigPattern = RegexBuilder.fromRegex(ASTRO_CONFIG_PATTERN)
  * extra groups.
  */
 export function categorizeConfigTranslationsGroups(
-	configTranslations: ConfigTranslations,
+	configTranslations: ConfigTranslations | TranslationMap,
 ) {
 	const groups = {
 		routes: [] as string[],

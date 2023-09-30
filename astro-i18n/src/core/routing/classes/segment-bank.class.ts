@@ -1,55 +1,20 @@
 import { setObjectProperty } from "@lib/object"
 import type Config from "@src/core/config/classes/config.class"
+import type { ConfigRoutes } from "@src/core/config/types"
 import type { SegmentTranslations } from "@src/core/routing/types"
 
 class SegmentBank {
+	#primaryLocale: string
+
 	#segments: SegmentTranslations
 
-	constructor(translations: SegmentTranslations = {}) {
+	constructor(translations: SegmentTranslations = {}, primaryLocale = "") {
 		this.#segments = translations
+		this.#primaryLocale = primaryLocale
 	}
 
 	static fromConfig({ routes, primaryLocale }: Config) {
-		const translations: SegmentTranslations = {
-			[primaryLocale]: {},
-		}
-
-		// filling translations
-		const entries = Object.entries(routes)
-		for (const [locale, segments] of entries) {
-			const otherLocales = entries.filter(
-				([loc]) => loc !== locale && loc !== primaryLocale,
-			)
-
-			for (const [primarySeg, localeSeg] of Object.entries(segments)) {
-				// adding segment to the primary locale translations
-				setObjectProperty(
-					translations,
-					[primaryLocale, primarySeg, locale],
-					localeSeg,
-				)
-
-				// adding segment to the current secondary locale translations
-				setObjectProperty(
-					translations,
-					[locale, localeSeg, primaryLocale],
-					primarySeg,
-				)
-
-				// adding segment to all other locale translations
-				for (const [otherLocale, otherSegments] of otherLocales) {
-					if (otherSegments[primarySeg]) {
-						setObjectProperty(
-							translations,
-							[locale, localeSeg, otherLocale],
-							otherSegments[primarySeg],
-						)
-					}
-				}
-			}
-		}
-
-		return new SegmentBank(translations)
+		return new SegmentBank({}, primaryLocale).addSegments(routes)
 	}
 
 	get(segment: string, segmentLocale: string, targetLocale: string) {
@@ -68,12 +33,47 @@ class SegmentBank {
 		return locales
 	}
 
-	toClientSideObject() {
-		return { ...this.#segments }
+	addSegments(segments: ConfigRoutes) {
+		const entries = Object.entries(segments)
+
+		for (const [locale, segments] of entries) {
+			const otherLocales = entries.filter(
+				([loc]) => loc !== locale && loc !== this.#primaryLocale,
+			)
+
+			for (const [primarySeg, localeSeg] of Object.entries(segments)) {
+				// adding segment to the primary locale translations
+				setObjectProperty(
+					this.#segments,
+					[this.#primaryLocale, primarySeg, locale],
+					localeSeg,
+				)
+
+				// adding segment to the current secondary locale translations
+				setObjectProperty(
+					this.#segments,
+					[locale, localeSeg, this.#primaryLocale],
+					primarySeg,
+				)
+
+				// adding segment to all other locale translations
+				for (const [otherLocale, otherSegments] of otherLocales) {
+					if (otherSegments[primarySeg]) {
+						setObjectProperty(
+							this.#segments,
+							[locale, localeSeg, otherLocale],
+							otherSegments[primarySeg],
+						)
+					}
+				}
+			}
+		}
+
+		return this
 	}
 
-	toString() {
-		return JSON.stringify(this.#segments, null, 2)
+	toClientSideObject() {
+		return { ...this.#segments }
 	}
 }
 

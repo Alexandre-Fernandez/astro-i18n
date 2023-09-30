@@ -60,6 +60,8 @@ class FormatterBank {
 			this.#merged[name] = formatter
 			this.#custom[name] = formatter
 		}
+
+		return this
 	}
 
 	toClientSideObject() {
