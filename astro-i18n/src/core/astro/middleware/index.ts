@@ -4,10 +4,6 @@ import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
 import type { Formatters } from "@src/core/translation/types"
 
-export const singleton = {
-	value: 0,
-}
-
 export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
