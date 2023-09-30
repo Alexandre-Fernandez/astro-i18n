@@ -21,3 +21,7 @@ export const INTERPOLATION_ALIAS_PATTERN = Regex.fromString(
 export const INTERPOLATION_ARGUMENTLESS_FORMATTER_PATTERN = Regex.fromString(
 	`>\\s*(${VARNAME_PATTERN.source})\\s*(\\()?`,
 )
+
+export const FUNCTION_PATTERN = new Regex(
+	/(?:function)?\s*[\w$]*\s*\(([\S\s]*?)\)\s*(?:=>)?\s*{?([\S\s]*)/,
+)

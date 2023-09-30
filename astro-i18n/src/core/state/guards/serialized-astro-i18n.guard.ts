@@ -1,8 +1,9 @@
 import { isObject } from "@lib/ts/guards"
 import { isSerializedConfig } from "@src/core/config/guards/config.guard"
 import { isSegmentTranslations } from "@src/core/routing/guards/segment-translations.guard"
-import type { SerializedAstroI18n } from "@src/core/state/types"
+import { isSerializedFormatters } from "@src/core/translation/guards/serialized-formatters.guard"
 import { isTranslationMap } from "@src/core/translation/guards/translation-map.guard"
+import type { SerializedAstroI18n } from "@src/core/state/types"
 
 export function isSerializedAstroI18n(
 	serializedAstroI18n: unknown,
@@ -32,6 +33,10 @@ export function isSerializedAstroI18n(
 			}
 			case "segments": {
 				if (!isSegmentTranslations(value)) return false
+				break
+			}
+			case "formatters": {
+				if (!isSerializedFormatters(value)) return false
 				break
 			}
 			default: {

@@ -54,6 +54,15 @@ export type SerializedTranslationMap = {
 	}
 }
 
+export type SerializedFormatters = {
+	[name: string]: SerializedFormatter
+}
+
+export type SerializedFormatter = {
+	args: string[]
+	body: string
+}
+
 type SerializedComputedTranslations = {
 	[key: string]: {
 		default?: string

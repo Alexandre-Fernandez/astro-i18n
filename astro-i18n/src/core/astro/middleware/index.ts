@@ -25,6 +25,8 @@ export function useAstroI18n(
 		// setting route
 		astroI18n.route = _ctx.url.pathname
 
+		astroI18n.test()
+
 		const response = await next()
 		let body = await response.text()
 		if (!body.startsWith("<!DOCTYPE html>")) return response

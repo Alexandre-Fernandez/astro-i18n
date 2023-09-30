@@ -10,7 +10,12 @@ import {
 	upper,
 	json,
 } from "@src/core/translation/formatters/default.formatters"
-import type { Formatters } from "@src/core/translation/types"
+import { serializeFormatter } from "@src/core/translation/functions/formatter.functions"
+import type {
+	Formatters,
+	SerializedFormatter,
+	SerializedFormatters,
+} from "@src/core/translation/types"
 
 /**
  * This class stores formatters to be able to serialize only the custom
@@ -47,6 +52,24 @@ class FormatterBank {
 
 	get custom() {
 		return this.#custom
+	}
+
+	addFormaters(formatters: Formatters) {
+		for (const [name, formatter] of Object.entries(formatters)) {
+			if (this.#merged[name]) continue
+			this.#merged[name] = formatter
+			this.#custom[name] = formatter
+		}
+	}
+
+	toClientSideObject() {
+		const serializable: { [name: string]: SerializedFormatter } = {}
+
+		for (const [name, formatter] of Object.entries(this.#custom)) {
+			serializable[name] = serializeFormatter(formatter)
+		}
+
+		return serializable as SerializedFormatters
 	}
 
 	toObject() {

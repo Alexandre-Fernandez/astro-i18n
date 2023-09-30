@@ -18,6 +18,7 @@ import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not
 import { assert } from "@lib/ts/guards"
 import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
 import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
+import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -159,17 +160,14 @@ class AstroI18n {
 	) {
 		const { route, locale, formatters } = options
 
+		if (formatters) this.#formatters.addFormaters(formatters)
+
 		return this.#translations.get(
 			key,
 			route || this.route,
 			locale || this.locale,
 			properties,
-			formatters
-				? new FormatterBank({
-						...this.#formatters.custom,
-						...formatters,
-				  }).toObject()
-				: this.#formatters.toObject(),
+			this.#formatters.toObject(),
 		)
 	}
 
@@ -239,11 +237,7 @@ class AstroI18n {
 
 	test() {
 		console.log(
-			JSON.stringify(
-				this.#translations.toClientSideObject(this.route),
-				null,
-				4,
-			),
+			JSON.stringify(this.#formatters.toClientSideObject(), null, 4),
 		)
 		// console.log(this.#segments.toString())
 	}
@@ -315,7 +309,9 @@ class AstroI18n {
 			deserializeTranslationMap(serialized.translations),
 		)
 		this.#segments = new SegmentBank(serialized.segments)
-		this.#formatters = new FormatterBank({})
+		this.#formatters = new FormatterBank(
+			deserializeFormatters(serialized.formatters),
+		)
 		this.#isInitialized = true
 
 		script.remove()
@@ -328,6 +324,7 @@ class AstroI18n {
 			config: this.#config.toClientSideObject(),
 			translations: this.#translations.toClientSideObject(this.route),
 			segments: this.#segments.toClientSideObject(),
+			formatters: this.#formatters.toClientSideObject(),
 		}
 		return `<script id="${
 			AstroI18n.#scriptId
