@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"af-prettierrc": "latest",
 		"eslint": "^7.32.0",
-		"eslint-config-af-typescript": "^1.6.1",
+		"eslint-config-af-typescript": "latest",
 		"prettier": "^2.8.8",
 		"turbo": "^1.10.13",
 		"typescript": "^5.2.2"
