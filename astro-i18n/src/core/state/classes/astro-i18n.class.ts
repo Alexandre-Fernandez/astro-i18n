@@ -13,6 +13,7 @@ import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not
 import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
 import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
 import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
+import NotInitialized from "@src/core/state/errors/not-initialized.error"
 import type { SerializedAstroI18n } from "@src/core/state/types"
 import type {
 	AstroI18nConfig,
@@ -24,7 +25,6 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import NotInitialized from "@src/core/state/errors/not-initialized.error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -56,7 +56,7 @@ class AstroI18n {
 			this.#environment = Environment.NONE
 		} else {
 			this.#environment = Environment.BROWSER
-			this.#browserInit()
+			if (this.#config.run === "client+server") this.#browserInit()
 		}
 	}
 
