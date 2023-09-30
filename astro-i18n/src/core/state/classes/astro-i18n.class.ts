@@ -92,6 +92,10 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
+	get fallbackLocale() {
+		return this.#config.fallbackLocale
+	}
+
 	get isInitialized() {
 		return this.#isInitialized
 	}
@@ -121,15 +125,17 @@ class AstroI18n {
 		options: {
 			route?: string
 			locale?: string
+			fallbackLocale?: string
 		} = {},
 	) {
 		if (!this.#isInitialized) throw new NotInitialized()
-		const { route, locale } = options
+		const { route, locale, fallbackLocale } = options
 
 		return this.#translations.get(
 			key,
 			route || this.route,
 			locale || this.locale,
+			fallbackLocale || this.fallbackLocale,
 			properties,
 			this.#formatters.toObject(),
 		)

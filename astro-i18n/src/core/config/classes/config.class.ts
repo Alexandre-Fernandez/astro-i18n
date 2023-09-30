@@ -28,27 +28,30 @@ import type {
 import UnreachableCode from "@src/errors/unreachable-code.error"
 
 class Config implements AstroI18nConfig {
-	primaryLocale = "en"
+	primaryLocale
 
-	secondaryLocales: string[] = []
+	secondaryLocales: string[]
 
-	showPrimaryLocale = false
+	fallbackLocale
 
-	trailingSlash: "always" | "never" = "never"
+	showPrimaryLocale
 
-	run: "server" | "client+server" = "client+server"
+	trailingSlash: "always" | "never"
 
-	translations: ConfigTranslations = {}
+	run: "server" | "client+server"
 
-	translationLoadingRules: ConfigTranslationLoadingRules = []
+	translations: ConfigTranslations
 
-	translationDirectory: ConfigTranslationDirectory = {}
+	translationLoadingRules: ConfigTranslationLoadingRules
 
-	routes: ConfigRoutes = {}
+	translationDirectory: ConfigTranslationDirectory
+
+	routes: ConfigRoutes
 
 	constructor({
 		primaryLocale,
 		secondaryLocales,
+		fallbackLocale,
 		showPrimaryLocale,
 		trailingSlash,
 		run,
@@ -57,33 +60,16 @@ class Config implements AstroI18nConfig {
 		translationDirectory,
 		routes,
 	}: Partial<AstroI18nConfig> = {}) {
-		if (primaryLocale) {
-			this.primaryLocale = primaryLocale
-		}
-		if (secondaryLocales) {
-			this.secondaryLocales = secondaryLocales
-		}
-		if (showPrimaryLocale) {
-			this.showPrimaryLocale = showPrimaryLocale
-		}
-		if (trailingSlash) {
-			this.trailingSlash = trailingSlash
-		}
-		if (run) {
-			this.run = run
-		}
-		if (translations) {
-			this.translations = translations
-		}
-		if (translationLoadingRules) {
-			this.translationLoadingRules = translationLoadingRules
-		}
-		if (translationDirectory) {
-			this.translationDirectory = translationDirectory
-		}
-		if (routes) {
-			this.routes = routes
-		}
+		this.primaryLocale = primaryLocale || "en"
+		this.secondaryLocales = secondaryLocales || []
+		this.fallbackLocale = fallbackLocale ?? (primaryLocale || "")
+		this.showPrimaryLocale = showPrimaryLocale || false
+		this.trailingSlash = trailingSlash || "never"
+		this.run = run || "client+server"
+		this.translations = translations || {}
+		this.translationLoadingRules = translationLoadingRules || []
+		this.translationDirectory = translationDirectory || {}
+		this.routes = routes || {}
 	}
 
 	get pages() {

@@ -52,9 +52,33 @@ class TranslationBank {
 		key: string,
 		route: string,
 		locale: string,
+		fallbackLocale = "",
 		properties: TranslationProperties = {},
 		formatters: Formatters = {},
 	) {
+		let translation = this.#getValue(key, route, locale)
+
+		if (!translation && fallbackLocale && fallbackLocale !== locale) {
+			translation = this.#getValue(key, route, fallbackLocale)
+		}
+
+		// find the best variant, defaults to the default value or key param if none
+		const bestVariant = {
+			score: 0,
+			value: translation?.default || key,
+		}
+		for (const variant of translation?.variants || []) {
+			const score = variant.calculateMatchingScore(properties)
+			if (score > bestVariant.score) {
+				bestVariant.score = score
+				bestVariant.value = variant.value
+			}
+		}
+
+		return interpolate(bestVariant.value, properties, formatters)
+	}
+
+	#getValue(key: string, route: string, locale: string) {
 		let translation: ComputedTranslations[string] | null = null
 
 		// search key in the loaded groups for this route
@@ -82,20 +106,7 @@ class TranslationBank {
 				] || throwFalsy()
 		}
 
-		// find the best variant, defaults to the default value or key param if none
-		const bestVariant = {
-			score: 0,
-			value: translation?.default || key,
-		}
-		for (const variant of translation?.variants || []) {
-			const score = variant.calculateMatchingScore(properties)
-			if (score > bestVariant.score) {
-				bestVariant.score = score
-				bestVariant.value = variant.value
-			}
-		}
-
-		return interpolate(bestVariant.value, properties, formatters)
+		return translation
 	}
 
 	addTranslations(translations: ConfigTranslations) {

@@ -115,3 +115,10 @@ test("Translation load directives.", () => {
 	expect(astroI18n.t("groupTranslation1")).not.toBe("en.groupTranslation1")
 	expect(astroI18n.t("groupTranslation2")).toBe("en.groupTranslation2")
 })
+
+test("Fallback locale.", () => {
+	astroI18n.route = "/"
+	expect(astroI18n.t("commonFallback", undefined, { locale: "fr" })).toBe(
+		"en.commonFallback",
+	)
+})

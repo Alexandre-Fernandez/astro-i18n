@@ -36,6 +36,7 @@ export default defineAstroI18nConfig({
 					"en.commonInterpolation ({# value>json(format(alias))>uppercase #})",
 				commonInterpolationCurrency:
 					"en.commonInterpolation ({# value>intl_format_number({ style: 'currency', currency: currencyCode }, 'fr') #})",
+				commonFallback: "en.commonFallback",
 				nested: {
 					commonNested: "en.commonNested",
 				},

@@ -5,6 +5,8 @@ export interface AstroI18nConfig {
 
 	secondaryLocales: string[]
 
+	fallbackLocale: string
+
 	showPrimaryLocale: boolean
 
 	trailingSlash: "always" | "never"
