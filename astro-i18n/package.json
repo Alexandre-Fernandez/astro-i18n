@@ -27,6 +27,7 @@
 		"dist"
 	],
 	"scripts": {
+		"prepare": "npm run build",
 		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/build.cjs",
 		"patch": "npm version patch",
 		"minor": "npm version minor",
