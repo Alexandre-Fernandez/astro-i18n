@@ -22,11 +22,7 @@ export async function generatePages({ command, args, options }: ParsedArgv) {
 	const { join } = await AsyncNode.path
 
 	const root = await toPosixPath(args[0] || process.cwd())
-	if (!(await isDirectory(root))) {
-		throw new RootNotFound(
-			`Make sure that your root directory has an astro.config file and that ${PACKAGE_NAME} is in the package.json dependencies.`,
-		)
-	}
+	if (!(await isDirectory(root))) throw new RootNotFound()
 	const pagesDirectory = join(root, "src/pages")
 
 	await astroI18n.initialize()
