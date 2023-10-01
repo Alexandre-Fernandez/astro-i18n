@@ -10,7 +10,8 @@
 		"preview": "astro preview",
 		"build": "astro build",
 		"astro": "astro",
-		"test": "vitest"
+		"test": "vitest",
+		"sync:pages": "astro-i18n sync:pages"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",

@@ -21,12 +21,13 @@
 		"url": "https://github.com/alexandre-fernandez/astro-i18n"
 	},
 	"main": "./src/index.ts",
+	"bin": "./dist/src/bin.cjs",
 	"types": "./src/index.ts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs",
+		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/build.cjs",
 		"patch": "npm version patch",
 		"minor": "npm version minor",
 		"major": "npm version major",

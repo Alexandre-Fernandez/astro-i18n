@@ -36,6 +36,9 @@
 		"publish:major": {
 			"dependsOn": ["build", "major", "upload"],
 			"cache": false
+		},
+		"sync:pages": {
+			"cache": false
 		}
 	}
 }

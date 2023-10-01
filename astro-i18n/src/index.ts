@@ -9,13 +9,14 @@ export default function i18n(): AstroIntegration {
 		name: "astro-i18n",
 		hooks: {
 			"astro:server:setup": ({ server }) => {
-				server.middlewares.use((req, res, next) => {
+				server.middlewares.use((_req, _res, next) => {
 					return next()
 				})
 			},
 		},
 	}
 }
+
 export { useAstroI18n } from "@src/core/astro/middleware"
 
 export function defineAstroI18nConfig(config: Partial<AstroI18nConfig>) {
