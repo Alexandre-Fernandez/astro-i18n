@@ -1,5 +1,9 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
-import { toPosixPath } from "@lib/async-node/functions/path.functions"
+import InvalidPath from "@lib/async-node/errors/invalid-path.error"
+import {
+	splitPath,
+	toPosixPath,
+} from "@lib/async-node/functions/path.functions"
 
 export async function isDirectory(path: string) {
 	const { existsSync, lstatSync } = await AsyncNode.fs
@@ -36,4 +40,23 @@ export async function forEachDirectory(
 		if (!(await isDirectory(path))) continue
 		await forEachDirectory(path, callback)
 	}
+}
+
+export async function writeNestedFile(path: string, data: string) {
+	const { sep, join } = await AsyncNode.path
+	const { writeFileSync, mkdirSync } = await AsyncNode.fs
+
+	const segments = await splitPath(path)
+
+	const file = segments.pop()
+	if (!file) throw new InvalidPath()
+	const directory = segments.join(sep)
+
+	mkdirSync(directory, { recursive: true })
+	writeFileSync(join(directory, file), data, { encoding: "utf8" })
+}
+
+export async function removeDirectory(path: string) {
+	const { rmSync } = await AsyncNode.fs
+	rmSync(path, { recursive: true, force: true })
 }

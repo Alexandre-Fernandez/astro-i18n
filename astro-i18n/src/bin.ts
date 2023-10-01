@@ -7,7 +7,7 @@ import generatePagesCommand, {
 
 const argv = parseArgv([generatePagesCommand])
 
-const cli: Record<string, Function> = {
+const cli = {
 	[generatePagesCommand.name]: generatePages,
 }
 

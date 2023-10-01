@@ -1,19 +1,5 @@
 ---
-import Layout from "../../../layouts/Layout.astro"
+import Page from "../../product/index.astro"
+const { props } = Astro
 ---
-
-<Layout>
-	<main>/fr/produit</main>
-</Layout>
-
-<style>
-	main {
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-		text-align: center;
-	}
-</style>
+<Page {...props} />

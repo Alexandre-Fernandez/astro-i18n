@@ -17,6 +17,11 @@ export async function popPath(path: string) {
 	return segments.join(sep)
 }
 
+export async function splitPath(path: string) {
+	const sep = await getPathSeparator(path)
+	return path.split(sep)
+}
+
 export function isRootPath(path: string) {
 	switch (path) {
 		case "": {
