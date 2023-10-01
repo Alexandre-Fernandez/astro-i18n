@@ -37,7 +37,7 @@
 			"dependsOn": ["build", "major", "upload"],
 			"cache": false
 		},
-		"sync:pages": {
+		"generate:pages": {
 			"cache": false
 		}
 	}

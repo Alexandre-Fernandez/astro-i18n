@@ -7,11 +7,11 @@ import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { Command, ParsedArgv } from "@lib/argv/types"
 
 const cmd: Command = {
-	name: "sync:pages",
+	name: "generate:pages",
 	options: ["purge"],
 }
 
-export async function syncPages({ command, args }: ParsedArgv) {
+export async function generatePages({ command, args }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
 	const root = args[0] || process.cwd()
 	if (!(await isDirectory(root))) {

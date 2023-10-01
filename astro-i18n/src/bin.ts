@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 import { parseArgv } from "@lib/argv"
-import syncPagesCommand, {
-	syncPages,
-} from "@src/core/cli/commands/sync-pages.command"
 import InvalidCommand from "@src/core/cli/errors/invalid-command.error"
+import generatePagesCommand, {
+	generatePages,
+} from "@src/core/cli/commands/generate-pages.command"
 
-const argv = parseArgv([syncPagesCommand])
+const argv = parseArgv([generatePagesCommand])
 
 const cli: Record<string, Function> = {
-	[syncPagesCommand.name]: syncPages,
+	[generatePagesCommand.name]: generatePages,
 }
 
 if (!argv.command || !cli[argv.command]) throw new InvalidCommand()

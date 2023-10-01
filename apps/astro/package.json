@@ -11,7 +11,7 @@
 		"build": "astro build",
 		"astro": "astro",
 		"test": "vitest",
-		"sync:pages": "astro-i18n sync:pages"
+		"generate:pages": "astro-i18n generate:pages"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",

@@ -11,7 +11,7 @@
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"build:bin": "turbo run build --filter=astro-i18n && pnpm update astro-i18n",
-		"sync:pages": "npm run build:bin && clear && turbo run sync:pages --filter=astro"
+		"generate:pages": "npm run build:bin && clear && turbo run generate:pages --filter=astro"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",
