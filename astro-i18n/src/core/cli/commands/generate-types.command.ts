@@ -6,10 +6,10 @@ import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { Command, ParsedArgv } from "@lib/argv/types"
 
-const cmd: Command = {
+const cmd = {
 	name: "generate:types",
 	options: [],
-} as const
+} as const satisfies Command
 
 export async function generateTypes({ command, args }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()

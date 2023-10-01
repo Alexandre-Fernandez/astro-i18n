@@ -12,10 +12,10 @@ import { getProjectPages } from "@src/core/page/functions/page.functions"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { Command, ParsedArgv } from "@lib/argv/types"
 
-const cmd: Command = {
+const cmd = {
 	name: "generate:pages",
 	options: ["purge"],
-} as const
+} as const satisfies Command
 
 export async function generatePages({ command, args, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()

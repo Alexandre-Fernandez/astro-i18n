@@ -15,6 +15,8 @@ const cli = {
 	[generateTypesCommand.name]: generateTypes,
 }
 
-if (!argv.command || !cli[argv.command]) throw new InvalidCommand()
+if (!argv.command || !(cli as any)[argv.command]) {
+	throw new InvalidCommand()
+}
 
-cli[argv.command]!(argv)
+;(cli as any)[argv.command](argv)
