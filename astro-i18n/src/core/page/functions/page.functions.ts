@@ -34,7 +34,7 @@ export async function getProjectPages(
 	const secondaryLocalePaths = (config.secondaryLocales || []).map(
 		(locale) => `/src/${PAGES_DIRNAME}/${locale}`,
 	)
-	const $directory = {
+	const $directory: AstroI18nConfig["translationDirectory"] = {
 		main: DEFAULT_TRANSLATION_DIRNAME,
 		pages: DEFAULT_TRANSLATION_DIRNAME,
 		...config.translationDirectory,

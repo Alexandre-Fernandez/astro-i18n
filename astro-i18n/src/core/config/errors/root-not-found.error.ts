@@ -1,6 +1,10 @@
 class RootNotFound extends Error {
-	constructor() {
-		super(`Unable to find project root.`)
+	constructor(instructions?: string) {
+		super(
+			instructions
+				? `Unable to find project root. ${instructions}`
+				: "Unable to find project root.",
+		)
 	}
 }
 

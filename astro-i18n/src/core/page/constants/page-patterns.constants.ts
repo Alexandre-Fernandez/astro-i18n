@@ -7,7 +7,7 @@ export const ASTRO_COMPONENT_ROUTE_NAME_PATTERN = new Regex(
 export const FRONTMATTER_PATTERN = new Regex(/^---\n([\S\s]+)\n---\n/)
 
 export const PRERENDER_EXPORT_PATTERN = new Regex(
-	/export\s*(?:const\s+prerender|var\s+prerender|let\s+prerender)|export\s*?{\s*?prerender\s*?}/,
+	/export\s*(?:const\s+prerender|var\s+prerender|let\s+prerender|prerender)(?:\s*=\s*)?(true|false)?|export\s*?{\s*?prerender\s*?}/,
 )
 
 export const GET_STATIC_PATHS_EXPORT_PATTERN = new Regex(

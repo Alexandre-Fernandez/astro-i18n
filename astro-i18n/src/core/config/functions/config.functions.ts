@@ -132,7 +132,7 @@ export async function autofindAstroI18nConfig(startingPath: string) {
 /**
  * Crawls directories looking for an Astro's config file and returns the
  * directory where its contained.
- * If a package.json is found it also checks if we are in the dependencies.
+ * If a package.json is found it also checks if astro-i18n is in the dependencies.
  */
 export async function autofindProjectRoot(startingPath: string) {
 	const astroConfigPath = await searchProjectRootPattern(

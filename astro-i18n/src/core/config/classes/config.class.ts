@@ -92,6 +92,17 @@ class Config implements AstroI18nConfig {
 			path = await autofindAstroI18nConfig(await toPosixPath(pwd))
 		}
 
+		// find from CWD
+		if (!path) {
+			let cwd = ""
+
+			if (typeof process !== "undefined") {
+				cwd = process.cwd()
+			}
+
+			path = await autofindAstroI18nConfig(await toPosixPath(cwd))
+		}
+
 		// find from current module
 		if (!path) {
 			let filename = ""
