@@ -5,7 +5,6 @@ import {
 	removeDirectory,
 	writeNestedFile,
 } from "@lib/async-node/functions/fs.functions"
-import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import InvalidCommand from "@src/core/cli/errors/invalid-command.error"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
