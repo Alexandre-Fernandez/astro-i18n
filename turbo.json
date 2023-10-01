@@ -39,6 +39,9 @@
 		},
 		"generate:pages": {
 			"cache": false
+		},
+		"generate:types": {
+			"cache": false
 		}
 	}
 }
