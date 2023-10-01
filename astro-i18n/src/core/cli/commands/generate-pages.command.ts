@@ -15,7 +15,7 @@ import type { Command, ParsedArgv } from "@lib/argv/types"
 const cmd: Command = {
 	name: "generate:pages",
 	options: ["purge"],
-}
+} as const
 
 export async function generatePages({ command, args, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
