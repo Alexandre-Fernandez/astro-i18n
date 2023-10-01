@@ -30,7 +30,7 @@ export async function generatePages({ command, args, options }: ParsedArgv) {
 		for (const locale of astroI18n.secondaryLocales) {
 			const secondaryLocaleDir = join(pagesDirectory, locale)
 			if (!isDirectory(secondaryLocaleDir)) continue
-			removeDirectory(secondaryLocaleDir)
+			await removeDirectory(secondaryLocaleDir)
 		}
 	}
 
