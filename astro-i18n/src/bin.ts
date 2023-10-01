@@ -7,9 +7,10 @@ import InvalidCommand from "@src/core/cli/errors/invalid-command.error"
 
 const argv = parseArgv([syncPagesCommand])
 
-const commands: Record<string, Function> = {
+const cli: Record<string, Function> = {
 	[syncPagesCommand.name]: syncPages,
 }
 
-if (!argv.command || !commands[argv.command]) throw new InvalidCommand()
-commands[argv.command]!(argv)
+if (!argv.command || !cli[argv.command]) throw new InvalidCommand()
+
+cli[argv.command]!(argv)
