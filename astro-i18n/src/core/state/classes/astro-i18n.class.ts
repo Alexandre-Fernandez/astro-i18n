@@ -109,6 +109,7 @@ class AstroI18n {
 			toHtml: this.#toHtml.bind(this),
 			config: this.#config,
 			segments: this.#segments,
+			translations: this.#translations,
 		}
 	}
 

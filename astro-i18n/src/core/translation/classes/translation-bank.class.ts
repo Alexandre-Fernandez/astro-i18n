@@ -12,6 +12,7 @@ import type {
 	ComputedTranslations,
 	Formatters,
 	LoadDirectives,
+	Primitive,
 	SerializedTranslationMap,
 	TranslationMap,
 	TranslationProperties,
@@ -78,36 +79,69 @@ class TranslationBank {
 		return interpolate(bestVariant.value, properties, formatters)
 	}
 
-	#getValue(key: string, route: string, locale: string) {
-		let translation: ComputedTranslations[string] | null = null
+	test() {
+		console.log(JSON.stringify(this.#translations, null, 4))
+	}
 
-		// search key in the loaded groups for this route
-		if (this.#loadDirectives[route]) {
-			for (const group of this.#loadDirectives[route] || throwFalsy()) {
-				const value = this.#translations[group]?.[locale]?.[key]
-				if (!value) continue
-				translation = value
-				break
+	getLocaleTranslationProperties(locale: string) {
+		type TranslationProperty = {
+			interpolationVars: string[]
+			variantVars: { name: string; values: Primitive[] }[]
+			isVariantRequired: boolean
+		}
+		const translationProperties: { [key: string]: TranslationProperty } = {}
+
+		for (const group of Object.values(this.#translations)) {
+			if (!group[locale]) continue
+
+			const entries = Object.entries(group[locale] || throwFalsy())
+			for (const [key, { default: defaultValue, variants }] of entries) {
+				const props: TranslationProperty = {
+					interpolationVars: [],
+					variantVars: [],
+					isVariantRequired: false,
+				}
+				const translationValues = [] // all the possible values for this key
+
+				if (defaultValue === undefined) props.isVariantRequired = true
+				else translationValues.push(defaultValue)
+
+				if (variants.length > 0) {
+					for (const { value, properties } of variants) {
+						translationValues.push(value) // add variant value
+						const knownProperties = new Set<string>()
+
+						for (const { name, values } of properties) {
+							if (knownProperties.has(name)) continue
+							knownProperties.add(name)
+							props.variantVars.push({ name, values })
+							// see all the possible values for the same property name instead
+						}
+					}
+				}
 			}
 		}
-		// search key in corresponding route group
-		if (!translation && this.#translations[route]?.[locale]?.[key]) {
-			translation =
-				this.#translations[route]?.[locale]?.[key] || throwFalsy()
-		}
-		// search key in the common group
-		if (
-			!translation &&
-			this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[key]
-		) {
-			translation =
-				this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[
-					key
-				] || throwFalsy()
-		}
-
-		return translation
 	}
+	/*
+	{
+		common: {
+			en: {
+				[KEY]: {
+					default?: string
+					variants: {
+						raw: string
+						priority: number
+						properties: {
+							name: string
+							values: (undefined | null | boolean | string | number)[] // VARIANT VALUES => {{ n: 3 }}
+						}[]
+						value: string
+					}[]
+				}
+			}
+		}
+	}
+	*/
 
 	addTranslations(translations: ConfigTranslations) {
 		for (const [group, locales] of Object.entries(translations)) {
@@ -197,6 +231,37 @@ class TranslationBank {
 				this.#translations[COMMON_TRANSLATIONS_GROUP] || {}
 		}
 		return translations
+	}
+
+	#getValue(key: string, route: string, locale: string) {
+		let translation: ComputedTranslations[string] | null = null
+
+		// search key in the loaded groups for this route
+		if (this.#loadDirectives[route]) {
+			for (const group of this.#loadDirectives[route] || throwFalsy()) {
+				const value = this.#translations[group]?.[locale]?.[key]
+				if (!value) continue
+				translation = value
+				break
+			}
+		}
+		// search key in corresponding route group
+		if (!translation && this.#translations[route]?.[locale]?.[key]) {
+			translation =
+				this.#translations[route]?.[locale]?.[key] || throwFalsy()
+		}
+		// search key in the common group
+		if (
+			!translation &&
+			this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[key]
+		) {
+			translation =
+				this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[
+					key
+				] || throwFalsy()
+		}
+
+		return translation
 	}
 }
 

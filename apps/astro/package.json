@@ -11,7 +11,8 @@
 		"build": "astro build",
 		"astro": "astro",
 		"test": "vitest",
-		"generate:pages": "astro-i18n generate:pages --purge"
+		"generate:pages": "astro-i18n generate:pages --purge",
+		"generate:types": "astro-i18n generate:types"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",
