@@ -18,7 +18,9 @@ export async function generateTypes({ command, args }: ParsedArgv) {
 
 	await astroI18n.initialize()
 
-	astroI18n.internals.translations.getLocaleTranslationProperties("en")
+	astroI18n.internals.translations.getLocaleTranslationProperties(
+		astroI18n.primaryLocale,
+	)
 }
 
 export default cmd
