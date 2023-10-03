@@ -139,7 +139,7 @@ class TranslationBank {
 					})
 				}
 
-				translationProperties[key] = props
+				translationProperties[key] = props // to-do: merge instead of replace
 			}
 		}
 
