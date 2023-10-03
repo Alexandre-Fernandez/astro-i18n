@@ -108,6 +108,7 @@ class TranslationBank {
 				if (defaultValue === undefined) props.isVariantRequired = true
 				else translationValues.push(defaultValue)
 
+				// getting variant values and variables
 				if (variants.length > 0) {
 					const propertyValues: Record<string, Primitive[]> = {}
 
@@ -127,6 +128,7 @@ class TranslationBank {
 					)
 				}
 
+				// getting interpolation variables from values
 				for (const translation of translationValues) {
 					INTERPOLATION_PATTERN.exec(translation, ({ match }) => {
 						if (!match[1]) return
@@ -139,7 +141,51 @@ class TranslationBank {
 					})
 				}
 
-				translationProperties[key] = props // to-do: merge instead of replace
+				// adding new property
+				if (!translationProperties[key]) {
+					translationProperties[key] = props
+					continue
+				}
+
+				// merging properties
+				const { interpolationVars, variantVars, isVariantRequired } =
+					translationProperties[key] || {}
+
+				const mergedInterpolations = [
+					...new Set([
+						...(interpolationVars || []),
+						...props.interpolationVars,
+					]),
+				]
+
+				const mergedVariants: TranslationProperty["variantVars"] = []
+				for (const variantVar of props.variantVars) {
+					const existingVariantVar = variantVars?.find(
+						(item) => item.name === variantVar.name,
+					)
+					mergedVariants.push(
+						existingVariantVar
+							? {
+									name: variantVar.name,
+									values: [
+										...new Set([
+											...(existingVariantVar?.values ||
+												[]),
+											...variantVar.values,
+										]),
+									],
+							  }
+							: variantVar,
+					)
+				}
+
+				// adding merged properties
+				translationProperties[key] = {
+					interpolationVars: mergedInterpolations,
+					variantVars: mergedVariants,
+					isVariantRequired:
+						(isVariantRequired || false) && props.isVariantRequired,
+				}
 			}
 		}
 
