@@ -21,6 +21,8 @@ import type {
 	ConfigTranslationLoadingRules,
 	ConfigTranslations,
 } from "@src/core/config/types"
+import { INTERPOLATION_PATTERN } from "@src/core/translation/constants/translation-patterns.constants"
+import { matchInterpolationVariables } from "@src/core/translation/functions/interpolation/interpolation-matching.functions"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -79,10 +81,10 @@ class TranslationBank {
 		return interpolate(bestVariant.value, properties, formatters)
 	}
 
-	test() {
-		console.log(JSON.stringify(this.#translations, null, 4))
-	}
-
+	/**
+	 * For every translation of the given locale, returns their properties,
+	 * including all the interpolation and variant variables.
+	 */
 	getLocaleTranslationProperties(locale: string) {
 		type TranslationProperty = {
 			interpolationVars: string[]
@@ -107,41 +109,42 @@ class TranslationBank {
 				else translationValues.push(defaultValue)
 
 				if (variants.length > 0) {
+					const propertyValues: Record<string, Primitive[]> = {}
+
 					for (const { value, properties } of variants) {
 						translationValues.push(value) // add variant value
-						const knownProperties = new Set<string>()
-
+						// variant property values
 						for (const { name, values } of properties) {
-							if (knownProperties.has(name)) continue
-							knownProperties.add(name)
-							props.variantVars.push({ name, values })
-							// see all the possible values for the same property name instead
+							propertyValues[name] = [
+								...(propertyValues[name] || []),
+								...values,
+							]
 						}
 					}
+
+					props.variantVars = Object.entries(propertyValues).map(
+						([name, values]) => ({ name, values }),
+					)
 				}
+
+				for (const translation of translationValues) {
+					INTERPOLATION_PATTERN.exec(translation, ({ match }) => {
+						if (!match[1]) return
+						props.interpolationVars = [
+							...new Set([
+								...props.interpolationVars,
+								...matchInterpolationVariables(match[1]),
+							]),
+						]
+					})
+				}
+
+				translationProperties[key] = props
 			}
 		}
+
+		return translationProperties
 	}
-	/*
-	{
-		common: {
-			en: {
-				[KEY]: {
-					default?: string
-					variants: {
-						raw: string
-						priority: number
-						properties: {
-							name: string
-							values: (undefined | null | boolean | string | number)[] // VARIANT VALUES => {{ n: 3 }}
-						}[]
-						value: string
-					}[]
-				}
-			}
-		}
-	}
-	*/
 
 	addTranslations(translations: ConfigTranslations) {
 		for (const [group, locales] of Object.entries(translations)) {

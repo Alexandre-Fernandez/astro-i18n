@@ -107,6 +107,91 @@ export function matchInterpolation(interpolation: string) {
 	}
 }
 
+export function matchInterpolationVariables(interpolation: string) {
+	const variables: string[] = []
+
+	interpolation = interpolation.trim()
+	const { type, value, alias, formatters } = matchInterpolation(interpolation)
+
+	for (const formatter of formatters) {
+		for (const arg of formatter.args) {
+			for (const variable of matchInterpolationVariables(arg)) {
+				variables.push(variable)
+			}
+		}
+	}
+
+	switch (type) {
+		case ValueType.VARIABLE: {
+			variables.push(alias || value)
+			break
+		}
+		// match object vars
+		case ValueType.OBJECT: {
+			let value = ""
+			let isKey = true
+			depthAwareforEach(interpolation, (char, _, depth, isOpening) => {
+				if (depth === 0) {
+					for (const variable of matchInterpolationVariables(value)) {
+						variables.push(variable)
+					}
+					return CALLBACK_BREAK
+				}
+
+				if (isKey) {
+					if (isOpening && char === "{") return null // ignore opening bracket
+					if (/\s/.test(char)) return null
+					if (char === ":") {
+						isKey = false
+						return null
+					}
+				} else if (char === ",") {
+					for (const variable of matchInterpolationVariables(value)) {
+						variables.push(variable)
+					}
+					value = ""
+					isKey = true
+					return null
+				}
+
+				if (!isKey) value += char
+				return null
+			})
+			break
+		}
+		// match array vars
+		case ValueType.ARRAY: {
+			let value = ""
+			depthAwareforEach(interpolation, (char, _, depth, isOpening) => {
+				if (depth === 0) {
+					for (const variable of matchInterpolationVariables(value)) {
+						variables.push(variable)
+					}
+					return CALLBACK_BREAK
+				}
+
+				if (isOpening && char === "[") return null // ignore opening bracket
+				if (char === ",") {
+					for (const variable of matchInterpolationVariables(value)) {
+						variables.push(variable)
+					}
+					value = ""
+					return null
+				}
+
+				value += char
+				return null
+			})
+			break
+		}
+		default: {
+			break
+		}
+	}
+
+	return variables
+}
+
 /**
  * Matches an interpolation's value.
  * @param value for example "`{ prop: varName }(alias)>formatter1...`"
