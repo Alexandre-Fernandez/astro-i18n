@@ -3,11 +3,11 @@ import Layout from "../../../layouts/Layout.astro"
 import { astroI18n } from "astro-i18n"
 
 export const getStaticPaths = (props: any) => {
-	console.log((astroI18n as any).internals.toString())
+	console.log(JSON.stringify(astroI18n.route))
 	return [
 		{
 			params: {
-				id: astroI18n.locale,
+				id: 123,
 			},
 		},
 	]
