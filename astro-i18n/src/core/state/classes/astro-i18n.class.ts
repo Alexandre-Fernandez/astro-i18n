@@ -60,10 +60,12 @@ class AstroI18n {
 		}
 	}
 
+	/** The current page route. */
 	get route() {
 		return this.#route
 	}
 
+	/** The current page route. */
 	set route(route: string) {
 		const { locale, route: localelessRoute } =
 			this.#splitLocaleAndRoute(route)
@@ -76,34 +78,42 @@ class AstroI18n {
 			this.primaryLocale
 	}
 
+	/** The current page locale. */
 	get locale() {
 		return this.#locale
 	}
 
+	/** All configured locales. */
 	get locales() {
 		return [this.#config.primaryLocale, ...this.#config.secondaryLocales]
 	}
 
+	/** The default/primary locale. */
 	get primaryLocale() {
 		return this.#config.primaryLocale
 	}
 
+	/** Locales other than the default/primary one. */
 	get secondaryLocales() {
 		return this.#config.secondaryLocales
 	}
 
+	/** The fallback locale, when a translation is missing in a locale the fallback locale will be used to find a replacement. */
 	get fallbackLocale() {
 		return this.#config.fallbackLocale
 	}
 
+	/** True when astro-i18n is initialized. */
 	get isInitialized() {
 		return this.#isInitialized
 	}
 
+	/** The detected runtime environment. */
 	get environment() {
-		return this.#environment
+		return this.#environment.toString()
 	}
 
+	/** If you touch this, you're on you're own. */
 	get internals() {
 		return {
 			toHtml: this.#toHtml.bind(this),
@@ -114,12 +124,14 @@ class AstroI18n {
 	}
 
 	/**
-	 * Gets the appropriate interpolated translation for the given key,
-	 * properties and options.
-	 * If multiple keys are the same, for example if you have the same key in
-	 * the common translations and in your route translations, then the most
-	 * specific one will be used (the route translations in the previous
-	 * example).
+	 * @param key The translation key, for example
+	 * `"my.nested.translation.key"`.
+	 * @param properties An object containing your interpolation variables
+	 * and/or your variants, for example `{ variant: 3, interpolation: "text" }`.
+	 * @param options `route`: Overrides the current route, you will be able
+	 * to access that route's translations. `locale`: Overrides the current
+	 * locale, this allows you to control which language you want to translate
+	 * to. `fallbackLocale`: Overrides the fallback locale.
 	 */
 	t(
 		key: string,
@@ -143,6 +155,15 @@ class AstroI18n {
 		)
 	}
 
+	/**
+	 * @param route A route in any of the configured languages, for example
+	 * `"/en/my/english/route/[param]"`.
+	 * @param parameters An object containing your route parameters, for example
+	 * `{ slug: "my-blog-post-slug" }`.
+	 * @param options `targetLocale`: Overrides the target locale. `routeLocale`:
+	 * Overrides the given route locale, this is useful if astro-i18n cannot
+	 * figure out the route's locale.
+	 */
 	l(
 		route: string,
 		parameters: Record<string, unknown> = {},
@@ -208,11 +229,19 @@ class AstroI18n {
 			: `/${translatedRoute}`
 	}
 
+	/** Adds new translations at runtime. */
 	addTranslations(translations: ConfigTranslations) {
 		this.#translations.addTranslations(translations)
 		return this
 	}
 
+	/** Adds new translation formatters at runtime. */
+	addFormatters(formatters: Formatters) {
+		this.#formatters.addFormaters(formatters)
+		return this
+	}
+
+	/** Adds new translation loading rules at runtime. */
 	addTranslationLoadingRules(
 		translationLoadingRules: ConfigTranslationLoadingRules,
 	) {
@@ -220,31 +249,20 @@ class AstroI18n {
 		return this
 	}
 
+	/** Adds new route segment translations at runtime. */
 	addRoutes(routes: ConfigRoutes) {
 		this.#segments.addSegments(routes)
 		return this
 	}
 
-	addFormatters(formatters: Formatters) {
-		this.#formatters.addFormaters(formatters)
-		return this
-	}
-
-	/**
-	 * @return The `route` locale or `null`. It will also return `null` if the
-	 * locale is not included in `this.locales`
+	/** Tries to parse one of the configured locales out of the given route.
+	 * If no configured locale is found it will return \`null\`.
 	 */
 	extractRouteLocale(route: string) {
 		return this.#splitLocaleAndRoute(route).locale
 	}
 
-	/**
-	 * Initializes state in the server accordingly to the environment where it's
-	 * runned.
-	 * For example in a node environment it might parse the config from the
-	 * filesystem.
-	 * It will throw in the browser.
-	 */
+	/** Initializes astro-i18n on the server-side. */
 	async initialize(
 		config: Partial<AstroI18nConfig> | string | undefined = undefined,
 		formatters: Formatters = {},

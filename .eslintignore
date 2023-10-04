@@ -4,3 +4,4 @@ dist
 *.js
 *.cjs
 *.mjs
+*.d.ts

@@ -1,7 +1,7 @@
 enum Environment {
-	NONE,
-	NODE,
-	BROWSER,
+	NONE = "none",
+	NODE = "node",
+	BROWSER = "browser",
 }
 
 export default Environment
