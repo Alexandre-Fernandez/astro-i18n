@@ -113,7 +113,7 @@ class AstroI18n {
 		return this.#environment.toString()
 	}
 
-	/** If you touch this, you're on you're own. */
+	/** If you touch this, you're on your own. */
 	get internals() {
 		return {
 			toHtml: this.#toHtml.bind(this),
