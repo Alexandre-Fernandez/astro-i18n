@@ -339,15 +339,15 @@ class AstroI18n {
 	#splitLocaleAndRoute(route: string) {
 		if (!route.startsWith("/")) route = `/${route}`
 		const pattern = Regex.fromString(
-			`\\/(${this.locales.join("|")})(?:\\/.*)?$`,
+			`^\\/(${this.locales.join("|")})(?:\\/.*)?$`,
 		)
 		const { match } = pattern.match(route) || {}
 		const locale = match?.[1] || null
 		return {
 			locale,
 			route: locale
-				? route.replace(`/${locale}`, "") || "/"
-				: route || "/",
+				? route.replace(`/${locale}`, "").replace(/\/$/, "") || "/"
+				: route.replace(/\/$/, "") || "/",
 		}
 	}
 

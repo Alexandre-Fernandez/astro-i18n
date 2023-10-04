@@ -1,9 +1,8 @@
 ---
 import Layout from "../../../layouts/Layout.astro"
-import { astroI18n } from "astro-i18n"
+import { createGetStaticPaths } from "astro-i18n"
 
-export const getStaticPaths = (props: any) => {
-	console.log(JSON.stringify(astroI18n.route))
+export const getStaticPaths = createGetStaticPaths((props) => {
 	return [
 		{
 			params: {
@@ -11,7 +10,7 @@ export const getStaticPaths = (props: any) => {
 			},
 		},
 	]
-}
+})
 ---
 
 <Layout>

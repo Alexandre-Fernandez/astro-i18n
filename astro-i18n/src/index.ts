@@ -13,9 +13,13 @@ export { useAstroI18n } from "@src/core/astro/middleware"
 
 export { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 
+export { createGetStaticPaths } from "@src/core/page/functions/frontmatter.functions"
+
 export const t = astroI18n.t.bind(astroI18n)
 
 export const l = astroI18n.l.bind(astroI18n)
+
+export const q = astroI18n.q.bind(astroI18n)
 /* ###< astro-i18n/exports ###
 
 
