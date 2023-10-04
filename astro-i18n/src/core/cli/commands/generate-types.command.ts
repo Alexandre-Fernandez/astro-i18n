@@ -8,9 +8,9 @@ import { VARIANT_PRIORITY_KEY } from "@src/core/translation/constants/variant.co
 import { extractRouteParameters } from "@src/core/routing/functions"
 import Environment from "@src/core/state/enums/environment.enum"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
+import { GENERATED_TYPES_PATTERN } from "@src/core/cli/constants/cli-patterns.constants"
 import type { Command, ParsedArgv } from "@lib/argv/types"
 import type { TranslationVariables } from "@src/core/translation/types"
-import { GENERATED_TYPES_PATTERN } from "@src/core/cli/constants/cli-patterns.constants"
 
 const cmd = {
 	name: "generate:types",
