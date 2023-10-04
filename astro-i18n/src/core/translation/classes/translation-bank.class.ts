@@ -1,4 +1,4 @@
-import { throwFalsy } from "@lib/error"
+import { never } from "@lib/error"
 import { Regex } from "@lib/regex"
 import { setObjectProperty } from "@lib/object"
 import { categorizeConfigTranslationsGroups } from "@src/core/config/functions/config.functions"
@@ -98,7 +98,7 @@ class TranslationBank {
 		for (const group of Object.values(this.#translations)) {
 			if (!group[locale]) continue
 
-			const entries = Object.entries(group[locale] || throwFalsy())
+			const entries = Object.entries(group[locale] || never())
 			for (const [key, { default: defaultValue, variants }] of entries) {
 				const props: TranslationVariables = {
 					interpolationVars: [],
@@ -253,7 +253,7 @@ class TranslationBank {
 
 					this.#loadDirectives[route] = [
 						...new Set([
-							...(this.#loadDirectives[route] || throwFalsy()),
+							...(this.#loadDirectives[route] || never()),
 							...matchedGroups,
 						]),
 					]
@@ -268,7 +268,7 @@ class TranslationBank {
 		const translations: SerializedTranslationMap = {}
 		// adding groups for this route
 		if (this.#loadDirectives[route]) {
-			for (const group of this.#loadDirectives[route] || throwFalsy()) {
+			for (const group of this.#loadDirectives[route] || never()) {
 				translations[group] = this.#translations[group] || {}
 			}
 		}
@@ -289,7 +289,7 @@ class TranslationBank {
 
 		// search key in the loaded groups for this route
 		if (this.#loadDirectives[route]) {
-			for (const group of this.#loadDirectives[route] || throwFalsy()) {
+			for (const group of this.#loadDirectives[route] || never()) {
 				const value = this.#translations[group]?.[locale]?.[key]
 				if (!value) continue
 				translation = value
@@ -298,8 +298,7 @@ class TranslationBank {
 		}
 		// search key in corresponding route group
 		if (!translation && this.#translations[route]?.[locale]?.[key]) {
-			translation =
-				this.#translations[route]?.[locale]?.[key] || throwFalsy()
+			translation = this.#translations[route]?.[locale]?.[key] || never()
 		}
 		// search key in the common group
 		if (
@@ -309,7 +308,7 @@ class TranslationBank {
 			translation =
 				this.#translations[COMMON_TRANSLATIONS_GROUP]?.[locale]?.[
 					key
-				] || throwFalsy()
+				] || never()
 		}
 
 		return translation

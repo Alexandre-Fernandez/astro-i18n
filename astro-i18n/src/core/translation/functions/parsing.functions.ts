@@ -1,4 +1,4 @@
-import { throwFalsy } from "@lib/error"
+import { never } from "@lib/error"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 
 /**
@@ -22,7 +22,7 @@ export function depthAwareforEach(
 	let quoteType = null as string | null
 	// eslint-disable-next-line unicorn/no-for-loop
 	for (let i = 0; i < string.length; i += 1) {
-		const char = string[i] || throwFalsy()
+		const char = string[i] || never()
 		const isQuote = char === '"' || char === "'" || char === "`"
 
 		let isOpening = false

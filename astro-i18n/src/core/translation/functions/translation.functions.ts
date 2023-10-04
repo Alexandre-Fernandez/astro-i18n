@@ -1,4 +1,4 @@
-import { throwFalsy } from "@lib/error"
+import { never } from "@lib/error"
 import Interpolation from "@src/core/translation/classes/interpolation.class"
 import Variant from "@src/core/translation/classes/variant.class"
 import NonStringVariant from "@src/core/translation/errors/variant/non-string-variant.error"
@@ -96,7 +96,7 @@ export function interpolate(
 	let interpolated = translation
 
 	for (let i = results.length - 1; i >= 0; i -= 1) {
-		const { value, range } = results[i] || throwFalsy()
+		const { value, range } = results[i] || never()
 		interpolated =
 			interpolated.slice(0, range[0]) +
 			value +

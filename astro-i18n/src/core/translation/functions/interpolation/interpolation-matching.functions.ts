@@ -1,4 +1,4 @@
-import { throwFalsy } from "@lib/error"
+import { never } from "@lib/error"
 import { RegexBuilder } from "@lib/regex"
 import { CALLBACK_BREAK } from "@src/constants/app.constants"
 import {
@@ -67,7 +67,7 @@ export function matchInterpolation(interpolation: string) {
 	if (aliasMatch) {
 		const { match, range } = aliasMatch
 
-		alias = match[1] || throwFalsy()
+		alias = match[1] || never()
 
 		interpolation = interpolation.slice(range[1]).trim()
 	}
@@ -211,7 +211,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchUndefined(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.UNDEFINED,
 			end: matched.range[1],
 		}
@@ -220,7 +220,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchNull(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.NULL,
 			end: matched.range[1],
 		}
@@ -229,7 +229,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchBoolean(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.BOOLEAN,
 			end: matched.range[1],
 		}
@@ -238,7 +238,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchNumber(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.NUMBER,
 			end: matched.range[1],
 		}
@@ -247,7 +247,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchVariable(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.VARIABLE,
 			end: matched.range[1],
 		}
@@ -256,7 +256,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchString(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.STRING,
 			end: matched.range[1],
 		}
@@ -265,7 +265,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchObject(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.OBJECT,
 			end: matched.range[1],
 		}
@@ -274,7 +274,7 @@ function matchInterpolationValue(value: string) {
 	matched = matchArray(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.ARRAY,
 			end: matched.range[1],
 		}

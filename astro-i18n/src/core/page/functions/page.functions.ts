@@ -1,6 +1,6 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import { importJson } from "@lib/async-node/functions/import.functions"
-import { throwError, throwFalsy } from "@lib/error"
+import { throwError, never } from "@lib/error"
 import { merge } from "@lib/object"
 import { assert } from "@lib/ts/guards"
 import { Regex } from "@lib/regex"
@@ -69,7 +69,7 @@ export async function getProjectPages(
 				const name =
 					match[1] && match[2] === "/index"
 						? match[1].replace("/", "")
-						: match[2]?.replace("/", "") || throwFalsy()
+						: match[2]?.replace("/", "") || never()
 				if (name.startsWith("_")) continue // ignore if private
 				const route =
 					name === "index"
@@ -87,7 +87,7 @@ export async function getProjectPages(
 			if (!match || !range) continue
 
 			const route = `${relative.slice(0, range[0])}${match[1] || "/"}`
-			const locale = match[2] || throwFalsy()
+			const locale = match[2] || never()
 			const name = route.split("/").slice(-1).join("") || "index"
 			const translatedName = match[3] ? match[3].replace(".", "") : null
 

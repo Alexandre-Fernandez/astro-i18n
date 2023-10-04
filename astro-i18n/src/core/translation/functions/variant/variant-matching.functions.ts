@@ -1,4 +1,4 @@
-import { throwFalsy } from "@lib/error"
+import { never } from "@lib/error"
 import { ValueType } from "@src/core/translation/enums/value-type.enum"
 import UntrimmedString from "@src/core/translation/errors/untrimmed-string.error"
 import InvalidVariantPropertyValue from "@src/core/translation/errors/variant/invalid-variant-property-value.error"
@@ -21,7 +21,7 @@ export function matchVariantValue(value: string) {
 	let matched = matchUndefined(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.UNDEFINED,
 			end: matched.range[1],
 		}
@@ -30,7 +30,7 @@ export function matchVariantValue(value: string) {
 	matched = matchNull(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.NULL,
 			end: matched.range[1],
 		}
@@ -39,7 +39,7 @@ export function matchVariantValue(value: string) {
 	matched = matchBoolean(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.BOOLEAN,
 			end: matched.range[1],
 		}
@@ -48,7 +48,7 @@ export function matchVariantValue(value: string) {
 	matched = matchNumber(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.NUMBER,
 			end: matched.range[1],
 		}
@@ -57,7 +57,7 @@ export function matchVariantValue(value: string) {
 	matched = matchString(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.STRING,
 			end: matched.range[1],
 		}
@@ -66,7 +66,7 @@ export function matchVariantValue(value: string) {
 	matched = matchArray(value)
 	if (matched) {
 		return {
-			value: matched.match[0] || throwFalsy(),
+			value: matched.match[0] || never(),
 			type: ValueType.ARRAY,
 			end: matched.range[1],
 		}
