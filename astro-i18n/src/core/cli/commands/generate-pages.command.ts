@@ -42,7 +42,7 @@ export async function generatePages({ command, args, options }: ParsedArgv) {
 				targetLocale: locale,
 			})
 
-			const proxy = await page.getProxy(proxyRoute)
+			const proxy = await page.getProxy(proxyRoute, astroI18n)
 			if (!proxy) continue
 
 			await writeNestedFile(

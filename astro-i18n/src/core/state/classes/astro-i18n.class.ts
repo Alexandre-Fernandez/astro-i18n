@@ -120,6 +120,7 @@ class AstroI18n {
 			config: this.#config,
 			segments: this.#segments,
 			translations: this.#translations,
+			splitLocaleAndRoute: this.#splitLocaleAndRoute.bind(this),
 		}
 	}
 

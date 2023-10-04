@@ -5,6 +5,7 @@ import {
 	PRERENDER_EXPORT_PATTERN,
 } from "@src/core/page/constants/page-patterns.constants"
 import type { PageProps } from "@src/core/page/types"
+import type AstroI18n from "@src/core/state/classes/astro-i18n.class"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
 class Page implements PageProps {
@@ -83,7 +84,10 @@ class Page implements PageProps {
 		return this.#prerender
 	}
 
-	async getProxy(route: string) {
+	/**
+	 * @param route The translated route for which we are making the proxy.
+	 */
+	async getProxy(route: string, astroI18n: AstroI18n) {
 		let srcPagesEndIndex: number | null = this.path.lastIndexOf("src/pages")
 		srcPagesEndIndex =
 			srcPagesEndIndex < 0 ? null : srcPagesEndIndex + "src/pages".length
@@ -98,11 +102,14 @@ class Page implements PageProps {
 
 		// export getStaticPaths
 		if (await this.hasGetStaticPaths()) {
-			const locale = route.split("/").slice(1).shift()
-			proxy += `import { getStaticPaths as proxyGetStaticPaths } from "${importPath}"\n/* @ts-ignore */\nexport const getStaticPaths = `
-			proxy += locale
-				? `(props) => proxyGetStaticPaths({ ...props, locale: "${locale}" })\n`
-				: `proxyGetStaticPaths\n`
+			const { locale, route: localessRoute } =
+				astroI18n.internals.splitLocaleAndRoute(route)
+			proxy += `import { getStaticPaths as proxyGetStaticPaths } from "${importPath}"\n/* @ts-ignore */\nexport const getStaticPaths = (props) => proxyGetStaticPaths({ ...props, astroI18n: `
+			proxy += `{ locale: "${locale}", route: "${localessRoute}", primaryLocale: "${
+				astroI18n.primaryLocale
+			}", secondaryLocales: ["${astroI18n.secondaryLocales.join(
+				'", "',
+			)}"] } })\n`
 		}
 
 		// export prerender
