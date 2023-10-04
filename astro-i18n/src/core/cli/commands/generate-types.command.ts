@@ -4,6 +4,9 @@ import InvalidCommand from "@src/core/cli/errors/invalid-command.error"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { Command, ParsedArgv } from "@lib/argv/types"
+import type { TranslationVariables } from "@src/core/translation/types"
+import { VARIANT_PRIORITY_KEY } from "@src/core/translation/constants/variant.constants"
+import { extractRouteParameters } from "@src/core/routing/functions"
 
 const cmd = {
 	name: "generate:types",
@@ -18,37 +21,89 @@ export async function generateTypes({ command, args }: ParsedArgv) {
 
 	await astroI18n.initialize()
 
-	const translationProperties =
-		astroI18n.internals.translations.getLocaleTranslationProperties(
+	const translationVariables =
+		astroI18n.internals.translations.getLocaleTranslationVariables(
 			astroI18n.primaryLocale,
 		)
+	const routes = astroI18n.internals.translations.getRouteGroups()
 
-	console.log(JSON.stringify(translationProperties, null, 4))
+	let types = `type PrimaryLocale = ${astroI18n.primaryLocale}\n`
+	types += `type SecondaryLocales = ${astroI18n.secondaryLocales}\n`
+	types += `type Locale = ${astroI18n.locales.join("|")}\n`
+	types += `${createRouteParametersType("RouteParameters", routes)}\n`
+	types += `type Route = keyof RouteParameters\n`
+	types += `${createTranslationVariablesType(
+		"TranslationVariables",
+		translationVariables,
+	)}\n`
+	types += `type Translation = keyof TranslationVariables\n`
+
+	console.log(types)
+}
+
+function createRouteParametersType(typeName: string, routes: string[]) {
+	let type = `type ${typeName} = {`
+
+	for (const route of routes) {
+		const parameters = extractRouteParameters(route)
+		if (parameters.length === 0) {
+			type += `"${route}":undefined;`
+			continue
+		}
+		let object = "{"
+		for (const param of parameters) {
+			object += `"${param}":unknown;`
+		}
+		object += "}"
+		type += `"${route}":${object};`
+	}
+
+	return `${type}}`
+}
+
+function createTranslationVariablesType(
+	typeName: string,
+	translationProperties: Record<string, TranslationVariables>,
+) {
+	let type = `type ${typeName} = {`
+
+	for (const [key, props] of Object.entries(translationProperties)) {
+		const { interpolationVars, variantVars, isVariantRequired } = props
+		let object = "{"
+
+		for (const interpolationVar of interpolationVars) {
+			object += `"${interpolationVar}"?:unknown;`
+		}
+
+		if (variantVars.length > 0) {
+			object += `"${VARIANT_PRIORITY_KEY}"?:number;`
+		}
+
+		for (const { name, values } of variantVars) {
+			const variantTypes = new Set<string>()
+
+			for (const value of values) {
+				if (!value && typeof value === "object") {
+					variantTypes.add("null")
+					continue
+				}
+				variantTypes.add(typeof value)
+			}
+
+			object += `"${name}"?:${[...variantTypes].join("|")};`
+		}
+
+		object += !isVariantRequired || object === "{" ? `}|undefined` : `}`
+
+		type += `"${key}":${object};`
+	}
+
+	return `${type}}`.replaceAll("{}", "object")
 }
 
 export default cmd
 
 /*
-type PrimaryLocale = "en"
-type SecondaryLocales = "fr" | "es"
-types Locale = PrimaryLocale | SecondaryLocales
-type Route = "/" | "/about" | "/product" | "/product/[id]"
-type RouteParameters = {
-	"/": undefined
-	"/about": undefined
-	"/product": undefined
-	"/product/[id]": { "slug": string }
-} 
-type TranslationKey = "commonBasic" | "commonInterpolation" | "nested.commonNested" 
-type TranslationInterpolations = {
-	"commonBasic": {} | undefined
-	"commonInterpolation": {} | undefined
-	"nested.commonNested": { value: unknown }
-}
-
-___________________________
-OLD TYPES :
-
 type DefaultLangCode = "fr"
 type SupportedLangCode = "en"
 type LangCode = DefaultLangCode | SupportedLangCode

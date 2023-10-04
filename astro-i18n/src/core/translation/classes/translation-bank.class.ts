@@ -16,6 +16,7 @@ import type {
 	SerializedTranslationMap,
 	TranslationMap,
 	TranslationProperties,
+	TranslationVariables,
 } from "@src/core/translation/types"
 import type {
 	ConfigTranslationLoadingRules,
@@ -81,24 +82,25 @@ class TranslationBank {
 		return interpolate(bestVariant.value, properties, formatters)
 	}
 
+	getRouteGroups() {
+		return Object.keys(this.#translations).filter((group) =>
+			group.startsWith("/"),
+		)
+	}
+
 	/**
-	 * For every translation of the given locale, returns their properties,
-	 * including all the interpolation and variant variables.
+	 * For every translation of the given locale, returns all the interpolation
+	 * and variant variables.
 	 */
-	getLocaleTranslationProperties(locale: string) {
-		type TranslationProperty = {
-			interpolationVars: string[]
-			variantVars: { name: string; values: Primitive[] }[]
-			isVariantRequired: boolean
-		}
-		const translationProperties: { [key: string]: TranslationProperty } = {}
+	getLocaleTranslationVariables(locale: string) {
+		const translationProperties: Record<string, TranslationVariables> = {}
 
 		for (const group of Object.values(this.#translations)) {
 			if (!group[locale]) continue
 
 			const entries = Object.entries(group[locale] || throwFalsy())
 			for (const [key, { default: defaultValue, variants }] of entries) {
-				const props: TranslationProperty = {
+				const props: TranslationVariables = {
 					interpolationVars: [],
 					variantVars: [],
 					isVariantRequired: false,
@@ -158,7 +160,7 @@ class TranslationBank {
 					]),
 				]
 
-				const mergedVariants: TranslationProperty["variantVars"] = []
+				const mergedVariants: TranslationVariables["variantVars"] = []
 				for (const variantVar of props.variantVars) {
 					const existingVariantVar = variantVars?.find(
 						(item) => item.name === variantVar.name,

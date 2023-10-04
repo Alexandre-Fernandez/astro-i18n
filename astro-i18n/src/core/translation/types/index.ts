@@ -63,6 +63,12 @@ export type SerializedFormatter = {
 	body: string
 }
 
+export type TranslationVariables = {
+	interpolationVars: string[]
+	variantVars: { name: string; values: Primitive[] }[]
+	isVariantRequired: boolean
+}
+
 type SerializedComputedTranslations = {
 	[key: string]: {
 		default?: string
