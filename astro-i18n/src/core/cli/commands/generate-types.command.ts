@@ -1,14 +1,16 @@
 import { toPosixPath } from "@lib/async-node/functions/path.functions"
-import { isDirectory } from "@lib/async-node/functions/fs.functions"
+import { isDirectory, isFile } from "@lib/async-node/functions/fs.functions"
 import InvalidCommand from "@src/core/cli/errors/invalid-command.error"
+import AsyncNode from "@lib/async-node/classes/async-node.class"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import { VARIANT_PRIORITY_KEY } from "@src/core/translation/constants/variant.constants"
 import { extractRouteParameters } from "@src/core/routing/functions"
+import Environment from "@src/core/state/enums/environment.enum"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import type { Command, ParsedArgv } from "@lib/argv/types"
 import type { TranslationVariables } from "@src/core/translation/types"
-import Environment from "@src/core/state/enums/environment.enum"
+import { GENERATED_TYPES_PATTERN } from "@src/core/cli/constants/cli-patterns.constants"
 
 const cmd = {
 	name: "generate:types",
@@ -17,6 +19,8 @@ const cmd = {
 
 export async function generateTypes({ command, args }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
+	const { join } = await AsyncNode.path
+	const { readFileSync, appendFileSync, writeFileSync } = await AsyncNode.fs
 
 	const root = await toPosixPath(args[0] || process.cwd())
 	if (!(await isDirectory(root))) throw new RootNotFound()
@@ -106,42 +110,13 @@ declare module "${PACKAGE_NAME}" {
 				}
 			]
 	): string
-	type DeepStringRecord = {
-		[key: string]: string | DeepStringRecord
-	}
-	type TranslationDirectory = {
-		main?: string
-		pages?: string
-	}
-	export type Translations = {
-		[group: string]: {
-			[locale: string]: DeepStringRecord
-		}
-	}
-	export type TranslationFormatters = {
-		[formatterName: string]: (value: unknown, ...args: unknown[]) => unknown
-	}
-	export type TranslationLoadingRules = {
-		groups: string[]
-		routes: string[]
-	}[]
-	export type SegmentTranslations = {
-		[secondaryLocale: string]: {
-			[segment: string]: string
-		}
-	}
-	export interface AstroI18nConfig {
-		primaryLocale: string
-		secondaryLocales: string[]
-		fallbackLocale: string
-		showPrimaryLocale: boolean
-		trailingSlash: "always" | "never"
-		run: "server" | "client+server"
-		translations: Translations
-		translationLoadingRules: TranslationLoadingRules
-		translationDirectory: TranslationDirectory
-		routes: SegmentTranslations
-	}
+	type DeepStringRecord = {[key: string]:string|DeepStringRecord}
+	type TranslationDirectory = {main?:string;pages?: string}
+	export type Translations = {[group: string]:{[locale: string]: DeepStringRecord}}
+	export type TranslationFormatters = {[formatterName: string]:(value:unknown,...args:unknown[])=>unknown}
+	export type TranslationLoadingRules = {groups:string[];routes: string[]}[]
+	export type SegmentTranslations = {[secondaryLocale: string]:{[segment: string]:string}}
+	export interface AstroI18nConfig {primaryLocale:string;secondaryLocales:string[];fallbackLocale:string;showPrimaryLocale:boolean;trailingSlash:"always"|"never";run:"server"|"client+server";translations:Translations;translationLoadingRules:TranslationLoadingRules;translationDirectory:TranslationDirectory;routes:SegmentTranslations;}
 	class AstroI18n {
 		/** The current page route. */
 		route: string
@@ -233,7 +208,34 @@ declare module "${PACKAGE_NAME}" {
 	export const astroI18n: AstroI18n
 }`
 
-	console.log(types)
+	const envDtsPath = join(root, "src", "env.d.ts")
+
+	if (await isFile(envDtsPath)) {
+		const data = readFileSync(envDtsPath, { encoding: "utf8" })
+		const { match, range } = GENERATED_TYPES_PATTERN.match(data) || {}
+		if (match && range) {
+			writeFileSync(
+				envDtsPath,
+				data.slice(0, range[0]) +
+					createTypeWrapper(types) +
+					data.slice(range[1]),
+			)
+		} else {
+			appendFileSync(envDtsPath, `\n\n${createTypeWrapper(types)}\n`)
+		}
+		return
+	}
+
+	writeFileSync(
+		envDtsPath,
+		`/// <reference types="astro/client" />\n\n${createTypeWrapper(
+			types,
+		)}\n`,
+	)
+}
+
+function createTypeWrapper(types: string) {
+	return `// ###> astro-i18n/type-generation ###\n${types}\n// ###< astro-i18n/type-generation ###`
 }
 
 function createRouteParametersType(typeName: string, routes: string[]) {
