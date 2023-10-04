@@ -60,6 +60,11 @@ class AstroI18n {
 		}
 	}
 
+	/** The detected runtime environment. */
+	get environment() {
+		return this.#environment.toString()
+	}
+
 	/** The current page route. */
 	get route() {
 		return this.#route
@@ -108,11 +113,6 @@ class AstroI18n {
 		return this.#isInitialized
 	}
 
-	/** The detected runtime environment. */
-	get environment() {
-		return this.#environment.toString()
-	}
-
 	/** If you touch this, you're on your own. */
 	get internals() {
 		return {
@@ -121,6 +121,7 @@ class AstroI18n {
 			segments: this.#segments,
 			translations: this.#translations,
 			splitLocaleAndRoute: this.#splitLocaleAndRoute.bind(this),
+			toString: this.#toString.bind(this),
 		}
 	}
 
@@ -228,6 +229,12 @@ class AstroI18n {
 		return translatedRoute.startsWith("/")
 			? translatedRoute
 			: `/${translatedRoute}`
+	}
+
+	/** Appends the query parameters to the given `url` */
+	q(url: string, query: Record<string, string>) {
+		const searchParams = new URLSearchParams(query).toString()
+		return searchParams ? `${url}?${searchParams}` : url
 	}
 
 	/** Adds new translations at runtime. */
@@ -386,6 +393,31 @@ class AstroI18n {
 		return `<script id="${
 			AstroI18n.#scriptId
 		}" type="application/json">${JSON.stringify(serialized)}</script>`
+	}
+
+	#toString() {
+		const formatters: Record<string, string> = {}
+		for (const [key, fn] of Object.entries(this.#formatters.toObject())) {
+			formatters[key] = fn.name
+		}
+		return JSON.stringify(
+			{
+				environment: this.environment,
+				route: this.route,
+				locale: this.locale,
+				locales: this.locales,
+				primaryLocale: this.primaryLocale,
+				secondaryLocales: this.secondaryLocales,
+				fallbackLocale: this.fallbackLocale,
+				isInitialized: this.isInitialized,
+				"#config": this.#config.toObject(),
+				"#translations": this.#translations.toObject(),
+				"#segments": this.#segments.toObject(),
+				"#formatters": formatters,
+			},
+			null,
+			"\t",
+		)
 	}
 }
 

@@ -75,6 +75,17 @@ class SegmentBank {
 	toClientSideObject() {
 		return { ...this.#segments }
 	}
+
+	toObject() {
+		return {
+			primaryLocale: this.#primaryLocale,
+			segments: this.#segments,
+		}
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject(), null, "\t")
+	}
 }
 
 export default SegmentBank

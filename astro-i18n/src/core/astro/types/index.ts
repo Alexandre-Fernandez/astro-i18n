@@ -1,6 +1,11 @@
 import type { AstroIntegration } from "astro"
 import type { defineMiddleware } from "astro/middleware"
 
+export type GetStaticPathsItem = {
+	params: Record<string, number | string | undefined>
+	props?: Record<string, unknown>
+}
+
 export type AstroMiddleware = Parameters<typeof defineMiddleware>[0]
 
 export type AstroHooks = {

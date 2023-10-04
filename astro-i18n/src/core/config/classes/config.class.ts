@@ -168,6 +168,25 @@ class Config implements AstroI18nConfig {
 			trailingSlash: this.trailingSlash,
 		} as SerializedConfig
 	}
+
+	toObject() {
+		return {
+			primaryLocale: this.primaryLocale,
+			secondaryLocales: this.secondaryLocales,
+			fallbackLocale: this.fallbackLocale,
+			showPrimaryLocale: this.showPrimaryLocale,
+			trailingSlash: this.trailingSlash,
+			run: this.run,
+			translations: this.translations,
+			translationLoadingRules: this.translationLoadingRules,
+			translationDirectory: this.translationDirectory,
+			routes: this.routes,
+		}
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject(), null, "\t")
+	}
 }
 
 export default Config

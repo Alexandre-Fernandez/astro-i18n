@@ -1,5 +1,17 @@
 ---
 import Layout from "../../../layouts/Layout.astro"
+import { astroI18n } from "astro-i18n"
+
+export const getStaticPaths = (props: any) => {
+	console.log((astroI18n as any).internals.toString())
+	return [
+		{
+			params: {
+				id: astroI18n.locale,
+			},
+		},
+	]
+}
 ---
 
 <Layout>

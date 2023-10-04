@@ -77,6 +77,10 @@ class FormatterBank {
 	toObject() {
 		return this.#merged
 	}
+
+	toString() {
+		return JSON.stringify(this.toObject(), null, "\t")
+	}
 }
 
 export default FormatterBank

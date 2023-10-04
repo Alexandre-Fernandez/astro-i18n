@@ -284,6 +284,17 @@ class TranslationBank {
 		return translations
 	}
 
+	toObject() {
+		return {
+			loadDirectives: this.#loadDirectives,
+			translations: this.#translations,
+		}
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject(), null, "\t")
+	}
+
 	#getValue(key: string, route: string, locale: string) {
 		let translation: ComputedTranslations[string] | null = null
 
