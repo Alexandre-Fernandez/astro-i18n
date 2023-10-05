@@ -27,6 +27,7 @@ export async function getProjectPages(
 	projectRoot: string,
 	config: Partial<AstroI18nConfig> = {},
 ) {
+	const { join } = await AsyncNode.path
 	const pagesDir = `${projectRoot}/src/${PAGES_DIRNAME}`
 	if (!(await isDirectory(pagesDir))) throw new PagesNotFound()
 
@@ -49,8 +50,12 @@ export async function getProjectPages(
 		)})(\\.[^\\.\\s]+)?\\.json$`,
 	)
 
+	const primaryLocaleDir = config.showPrimaryLocale
+		? join(pagesDir, config.primaryLocale || "en")
+		: pagesDir
+
 	// get all pages and their translations in the pages directory
-	await forEachDirectory(pagesDir, async (dir, contents) => {
+	await forEachDirectory(primaryLocaleDir, async (dir, contents) => {
 		if (secondaryLocalePaths.some((path) => dir.includes(path))) {
 			return
 		}

@@ -26,7 +26,8 @@ import type {
 	TranslationProperties,
 } from "@src/core/translation/types"
 import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
-import { isUrl } from "@src/core/routing/functions"
+import { isUrl, pageRouteToRegex } from "@src/core/routing/functions"
+import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -46,6 +47,12 @@ class AstroI18n {
 	#formatters = new FormatterBank()
 
 	#isInitialized = false
+
+	/**
+	 * Cache mapping a route such as `"/posts/my-post-slug"` to `"/posts/[id]"`.
+	 * Routes in other locales also get mapped to the primary one.
+	 */
+	#routePageCache: Record<string, string> = {}
 
 	constructor() {
 		if (
@@ -89,6 +96,19 @@ class AstroI18n {
 			this.primaryLocale
 	}
 
+	/** All page routes. For example: `["/", "/about", "/posts/[slug]"]` */
+	get pages() {
+		return this.#translations.getRouteGroups()
+	}
+
+	/**
+	 * The equivalent page for the current route. For example if route is equal
+	 * to `"/posts/my-cool-cat"` this could return `"/posts/[slug]"`.
+	 */
+	get page() {
+		return this.#findRoutePage(this.#route)
+	}
+
 	/** The current page locale. */
 	get locale() {
 		return this.#locale
@@ -109,7 +129,10 @@ class AstroI18n {
 		return this.#config.secondaryLocales
 	}
 
-	/** The fallback locale, when a translation is missing in a locale the fallback locale will be used to find a replacement. */
+	/**
+	 * The fallback locale, when a translation is missing in a locale the
+	 * fallback locale will be used to find a replacement.
+	 */
 	get fallbackLocale() {
 		return this.#config.fallbackLocale
 	}
@@ -152,13 +175,16 @@ class AstroI18n {
 			fallbackLocale?: string
 		} = {},
 	) {
-		// to-do test if route with param are loaded
 		if (!this.#isInitialized) throw new NotInitialized()
 		const { route, locale, fallbackLocale } = options
 
+		const page = route
+			? this.#findRoutePage(route)
+			: this.#findRoutePage(this.route)
+
 		return this.#translations.get(
 			key,
-			route || this.route,
+			page || "",
 			locale || this.locale,
 			fallbackLocale || this.fallbackLocale,
 			properties,
@@ -173,7 +199,8 @@ class AstroI18n {
 	 * `{ slug: "my-blog-post-slug" }`.
 	 * @param options `targetLocale`: Overrides the target locale. `routeLocale`:
 	 * Overrides the given route locale, this is useful if astro-i18n cannot
-	 * figure out the route's locale.
+	 * figure out the route's locale. `showPrimaryLocale`: Overrides the
+	 * showPrimaryLocale parameter.
 	 */
 	l(
 		route: string,
@@ -181,10 +208,11 @@ class AstroI18n {
 		options: {
 			targetLocale?: string
 			routeLocale?: string
+			showPrimaryLocale?: boolean
 		} = {},
 	) {
 		if (!this.#isInitialized) throw new NotInitialized()
-		const { targetLocale, routeLocale } = options
+		const { targetLocale, routeLocale, showPrimaryLocale } = options
 
 		// retrieving segments only
 		const segments = this.#getRouteSegments(route)
@@ -223,8 +251,14 @@ class AstroI18n {
 			}
 		}
 
+		const showLocale =
+			showPrimaryLocale === undefined
+				? this.#config.showPrimaryLocale ||
+				  target !== this.primaryLocale
+				: showPrimaryLocale
+
 		// adding back locale
-		if (this.#config.showPrimaryLocale || target !== this.primaryLocale) {
+		if (showLocale) {
 			translatedRoute = translatedRoute
 				? `${target}/${translatedRoute}`
 				: target
@@ -249,6 +283,7 @@ class AstroI18n {
 	/** Adds new translations at runtime. */
 	addTranslations(translations: ConfigTranslations) {
 		this.#translations.addTranslations(translations)
+		this.#clearRoutePageCache()
 		return this
 	}
 
@@ -269,6 +304,7 @@ class AstroI18n {
 	/** Adds new route segment translations at runtime. */
 	addRoutes(routes: ConfigRoutes) {
 		this.#segments.addSegments(routes)
+		this.#clearRoutePageCache()
 		return this
 	}
 
@@ -288,11 +324,10 @@ class AstroI18n {
 
 		switch (this.#environment) {
 			case Environment.NODE: {
-				if (typeof config !== "object") {
-					this.#config = await Config.fromFilesystem(config || null)
-					break
-				}
-				this.#config = new Config(config)
+				this.#config =
+					typeof config === "object"
+						? await new Config(config).loadFilesystemTranslations()
+						: await Config.fromFilesystem(config)
 				break
 			}
 			case Environment.NONE: {
@@ -361,6 +396,29 @@ class AstroI18n {
 		}
 		this.#route = route
 		this.#locale = locale
+	}
+
+	#clearRoutePageCache() {
+		this.#routePageCache = {}
+	}
+
+	#findRoutePage(route: string) {
+		if (this.#routePageCache[route]) return this.#routePageCache[route]
+		const primaryLocaleRoute = this.l(route, undefined, {
+			targetLocale: this.primaryLocale,
+		})
+		if (this.pages.includes(primaryLocaleRoute)) return primaryLocaleRoute
+		let paramPage: string | null = null
+		for (const page of this.pages) {
+			if (!ROUTE_PARAM_PATTERN.test(page)) continue
+			if (pageRouteToRegex(page).test(route)) {
+				paramPage = page
+				break
+			}
+		}
+		if (!paramPage || !this.pages.includes(paramPage)) return null
+		this.#routePageCache[route] = paramPage
+		return paramPage
 	}
 
 	#detectSegmentsLocale(segments: string[]) {

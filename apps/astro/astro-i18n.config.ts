@@ -3,6 +3,7 @@ import { defineAstroI18nConfig } from "astro-i18n"
 export default defineAstroI18nConfig({
 	primaryLocale: "en",
 	secondaryLocales: ["fr"],
+	showPrimaryLocale: false,
 	translationLoadingRules: [
 		{
 			routes: ["/group$"],
@@ -72,6 +73,14 @@ export default defineAstroI18nConfig({
 			},
 			fr: {
 				pageTranslation: "fr.pageTranslation",
+			},
+		},
+		"/page/[id]": {
+			en: {
+				paramTranslation: "en.paramTranslation",
+			},
+			fr: {
+				paramTranslation: "fr.paramTranslation",
 			},
 		},
 		group1: {

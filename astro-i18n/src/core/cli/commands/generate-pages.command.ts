@@ -35,6 +35,7 @@ export async function generatePages({ command, args, options }: ParsedArgv) {
 	}
 
 	const pages = await getProjectPages(root, astroI18n.internals.config)
+
 	for (const page of pages) {
 		if (page.route === "/404") continue
 		for (const locale of astroI18n.secondaryLocales) {

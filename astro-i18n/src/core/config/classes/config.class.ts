@@ -1,14 +1,7 @@
-import AsyncNode from "@lib/async-node/classes/async-node.class"
-import {
-	importJson,
-	importScript,
-} from "@lib/async-node/functions/import.functions"
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { throwError } from "@lib/error"
 import { merge } from "@lib/object"
-import { assert } from "@lib/ts/guards"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
-import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import {
 	autofindAstroI18nConfig,
@@ -16,7 +9,6 @@ import {
 	getProjectTranslationGroups,
 	hasAstroConfig,
 } from "@src/core/config/functions/config.functions"
-import { isPartialConfig } from "@src/core/config/guards/config.guard"
 import type {
 	AstroI18nConfig,
 	ConfigTranslationLoadingRules,
@@ -26,6 +18,14 @@ import type {
 	SerializedConfig,
 } from "@src/core/config/types"
 import UnreachableCode from "@src/errors/unreachable-code.error"
+import AsyncNode from "@lib/async-node/classes/async-node.class"
+import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
+import {
+	importJson,
+	importScript,
+} from "@lib/async-node/functions/import.functions"
+import { isPartialConfig } from "@src/core/config/guards/config.guard"
+import { assert } from "@lib/ts/guards"
 
 class Config implements AstroI18nConfig {
 	primaryLocale
@@ -48,18 +48,23 @@ class Config implements AstroI18nConfig {
 
 	routes: ConfigRoutes
 
-	constructor({
-		primaryLocale,
-		secondaryLocales,
-		fallbackLocale,
-		showPrimaryLocale,
-		trailingSlash,
-		run,
-		translations,
-		translationLoadingRules,
-		translationDirectory,
-		routes,
-	}: Partial<AstroI18nConfig> = {}) {
+	path: string
+
+	constructor(
+		{
+			primaryLocale,
+			secondaryLocales,
+			fallbackLocale,
+			showPrimaryLocale,
+			trailingSlash,
+			run,
+			translations,
+			translationLoadingRules,
+			translationDirectory,
+			routes,
+		}: Partial<AstroI18nConfig> = {},
+		path = "",
+	) {
 		this.primaryLocale = primaryLocale || "en"
 		this.secondaryLocales = secondaryLocales || []
 		this.fallbackLocale = fallbackLocale ?? (primaryLocale || "")
@@ -70,6 +75,7 @@ class Config implements AstroI18nConfig {
 		this.translationLoadingRules = translationLoadingRules || []
 		this.translationDirectory = translationDirectory || {}
 		this.routes = routes || {}
+		this.path = path || ""
 	}
 
 	get pages() {
@@ -78,33 +84,33 @@ class Config implements AstroI18nConfig {
 		)
 	}
 
-	static async fromFilesystem(path: string | null = null) {
+	static async fromFilesystem(configPath: string | null = null) {
 		const { fileURLToPath } = await AsyncNode.url
 
 		// find from PWD
-		if (!path) {
+		if (!configPath) {
 			let pwd = ""
 
 			if (typeof process !== "undefined") {
 				pwd = process.env["PWD"] || ""
 			}
 
-			path = await autofindAstroI18nConfig(await toPosixPath(pwd))
+			configPath = await autofindAstroI18nConfig(await toPosixPath(pwd))
 		}
 
 		// find from CWD
-		if (!path) {
+		if (!configPath) {
 			let cwd = ""
 
 			if (typeof process !== "undefined") {
 				cwd = process.cwd()
 			}
 
-			path = await autofindAstroI18nConfig(await toPosixPath(cwd))
+			configPath = await autofindAstroI18nConfig(await toPosixPath(cwd))
 		}
 
 		// find from current module
-		if (!path) {
+		if (!configPath) {
 			let filename = ""
 
 			if (typeof import.meta.url === "string") {
@@ -114,50 +120,59 @@ class Config implements AstroI18nConfig {
 			}
 
 			if (filename) {
-				path = await autofindAstroI18nConfig(
+				configPath = await autofindAstroI18nConfig(
 					await toPosixPath(filename),
 				)
 			}
 		}
 
-		if (!path) throw new ConfigNotFound()
+		if (!configPath) throw new ConfigNotFound()
 
-		const partialConfig = path.endsWith(".json")
-			? await importJson(path)
-			: (await importScript(path))["default"]
+		const partialConfig = configPath.endsWith(".json")
+			? await importJson(configPath)
+			: (await importScript(configPath))["default"]
 
 		assert(partialConfig, isPartialConfig, "AstroI18nConfig")
 
-		const config = new Config(partialConfig)
+		return new Config(
+			partialConfig,
+			configPath,
+		).loadFilesystemTranslations()
+	}
 
+	/**
+	 * Loads all translations & routes from the filesystem and merges them into
+	 * the config
+	 */
+	async loadFilesystemTranslations() {
 		// find project root
-		let root = await popPath(path)
+		let root = await popPath(this.path)
 		if (!(await hasAstroConfig(root))) {
-			const found = await autofindProjectRoot(path)
+			const found = await autofindProjectRoot(this.path)
 			if (!found) throw new RootNotFound()
 			root = found
 		}
 
-		const pages = await getProjectPages(root, config)
+		const pages = await getProjectPages(root, this)
 		// merging page translations & routes to the config
 		for (const page of pages) {
-			if (!config.translations[page.route]) {
-				config.translations[page.route] = {}
+			if (!this.translations[page.route]) {
+				this.translations[page.route] = {}
 			}
 			merge(
-				config.translations[page.route] ||
+				this.translations[page.route] ||
 					throwError(new UnreachableCode()),
 				page.translations,
 			)
-			if (!config.routes) config.routes = {}
-			merge(config.routes, page.routes)
+			if (!this.routes) this.routes = {}
+			merge(this.routes, page.routes)
 		}
 
-		const groups = await getProjectTranslationGroups(root, config)
+		const groups = await getProjectTranslationGroups(root, this)
 		// merging translation groups to the config
-		merge(config.translations, groups)
+		merge(this.translations, groups)
 
-		return config
+		return this
 	}
 
 	toClientSideObject() {

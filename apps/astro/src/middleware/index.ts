@@ -4,7 +4,6 @@ export const onRequest = useAstroI18n(
 	{},
 	{
 		test: (value) => {
-			console.log(value)
 			return value
 		},
 	},

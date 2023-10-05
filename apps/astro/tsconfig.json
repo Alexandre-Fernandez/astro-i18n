@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"module": "es2022",
+		"target": "es2022",
 		"paths": {
 			"@lib": ["../../astro-i18n/lib"],
 			"@lib/*": ["../../astro-i18n/lib/*"],

@@ -26,6 +26,11 @@ test("Page translations are only accessible on their page.", () => {
 	expect(astroI18n.t("pageTranslation")).toBe("en.pageTranslation")
 	astroI18n.route = "/fr/page"
 	expect(astroI18n.t("pageTranslation")).toBe("fr.pageTranslation")
+
+	astroI18n.route = "/page/param_1"
+	expect(astroI18n.t("paramTranslation")).toBe("en.paramTranslation")
+	astroI18n.route = "/fr/page/param_1"
+	expect(astroI18n.t("paramTranslation")).toBe("fr.paramTranslation")
 })
 
 test("`t`'s locale override.", () => {

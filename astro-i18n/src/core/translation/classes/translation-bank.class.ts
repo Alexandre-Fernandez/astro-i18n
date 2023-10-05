@@ -24,6 +24,7 @@ import type {
 } from "@src/core/config/types"
 import { INTERPOLATION_PATTERN } from "@src/core/translation/constants/translation-patterns.constants"
 import { matchInterpolationVariables } from "@src/core/translation/functions/interpolation/interpolation-matching.functions"
+import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -85,6 +86,12 @@ class TranslationBank {
 	getRouteGroups() {
 		return Object.keys(this.#translations).filter((group) =>
 			group.startsWith("/"),
+		)
+	}
+
+	getParamRouteGroups() {
+		return Object.keys(this.#translations).filter(
+			(group) => group.startsWith("/") && ROUTE_PARAM_PATTERN.test(group),
 		)
 	}
 
@@ -298,6 +305,15 @@ class TranslationBank {
 	#getValue(key: string, route: string, locale: string) {
 		let translation: ComputedTranslations[string] | null = null
 
+		// route unknown match it against param routes
+		if (!this.#loadDirectives[route]) {
+		}
+
+		// if route unknown check if it matches param route
+		if (route === "/page/param_1") {
+			console.log(route, this.#loadDirectives[route])
+			console.log(this.getParamRouteGroups())
+		}
 		// search key in the loaded groups for this route
 		if (this.#loadDirectives[route]) {
 			for (const group of this.#loadDirectives[route] || never()) {

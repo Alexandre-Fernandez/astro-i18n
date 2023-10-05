@@ -82,7 +82,7 @@ declare module "${PACKAGE_NAME}" {
 	/**
 	 * @param route A route in any of the configured languages, for example \`"/en/my/english/route/[param]"\`.
 	 * @param parameters An object containing your route parameters, for example \`{ slug: "my-blog-post-slug" }\`.
-	 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale.
+	 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter.
 	 */
 	export function l<T extends Route>(
 		route: T | string & {},
@@ -92,21 +92,24 @@ declare module "${PACKAGE_NAME}" {
 					parameters?: Record<string, string>, 
 					options?: { 
 						targetLocale?: string, 
-						routeLocale?: string 
+						routeLocale?: string,
+						showPrimaryLocale?: string
 					}
 				]
 				: [
 					parameters: RouteParameters[T], 
 					options?: { 
 						targetLocale?: string, 
-						routeLocale?: string 
+						routeLocale?: string,
+						showPrimaryLocale?: string
 					}
 				]
 			: [
 				parameters?: Record<string, string>, 
 				options?: { 
 					targetLocale?: string, 
-					routeLocale?: string 
+					routeLocale?: string,
+					showPrimaryLocale?: string
 				}
 			]
 	): string
@@ -120,8 +123,14 @@ declare module "${PACKAGE_NAME}" {
 	export type SegmentTranslations = {[secondaryLocale: string]:{[segment: string]:string}}
 	export interface AstroI18nConfig {primaryLocale:string;secondaryLocales:string[];fallbackLocale:string;showPrimaryLocale:boolean;trailingSlash:"always"|"never";run:"server"|"client+server";translations:Translations;translationLoadingRules:TranslationLoadingRules;translationDirectory:TranslationDirectory;routes:SegmentTranslations;}
 	class AstroI18n {
+		/** The detected runtime environment. */
+		environment: Environment
 		/** The current page route. */
 		route: string
+		/** All page routes. For example: \`["/", "/about", "/posts/[slug]"]\` */
+		pages: string[]
+		/** The equivalent page for the current route. For example if route is equal to \`"/posts/my-cool-cat"\` this could return \`"/posts/[slug]"\`. */
+		page: string
 		/** The current page locale. */
 		locale: Locale
 		/** All configured locales. */
@@ -134,8 +143,6 @@ declare module "${PACKAGE_NAME}" {
 		fallbackLocale: Locale
 		/** True when ${PACKAGE_NAME} is initialized. */
 		isInitialized: boolean
-		/** The detected runtime environment. */
-		environment: Environment
 		/**
 		 * @param key The translation key, for example \`"my.nested.translation.key"\`.
 		 * @param properties An object containing your interpolation variables and/or your variants, for example \`{ variant: 3, interpolation: "text" }\`.
@@ -166,7 +173,7 @@ declare module "${PACKAGE_NAME}" {
 		/**
 		 * @param route A route in any of the configured languages, for example \`"/en/my/english/route/[param]"\`.
 		 * @param parameters An object containing your route parameters, for example \`{ slug: "my-blog-post-slug" }\`.
-		 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale.
+		 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter.
 		 */
 		l<T extends Route>(
 			route: T | string & {},
@@ -176,21 +183,24 @@ declare module "${PACKAGE_NAME}" {
 						parameters?: Record<string, string>, 
 						options?: { 
 							targetLocale?: string, 
-							routeLocale?: string 
+							routeLocale?: string,
+							showPrimaryLocale?: string
 						}
 					]
 					: [
 						parameters: RouteParameters[T], 
 						options?: { 
 							targetLocale?: string, 
-							routeLocale?: string 
+							routeLocale?: string,
+							showPrimaryLocale?: string
 						}
 					]
 				: [
 					parameters?: Record<string, string>, 
 					options?: { 
 						targetLocale?: string, 
-						routeLocale?: string 
+						routeLocale?: string,
+						showPrimaryLocale?: string
 					}
 				]
 		): string
