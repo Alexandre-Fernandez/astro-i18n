@@ -28,6 +28,7 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import { never } from "@lib/error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -403,7 +404,9 @@ class AstroI18n {
 	}
 
 	#findRoutePage(route: string) {
-		if (this.#routePageCache[route]) return this.#routePageCache[route]
+		if (this.#routePageCache[route]) {
+			return this.#routePageCache[route] || never()
+		}
 		const primaryLocaleRoute = this.l(route, undefined, {
 			targetLocale: this.primaryLocale,
 		})
