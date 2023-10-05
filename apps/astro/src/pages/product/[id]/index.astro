@@ -2,7 +2,7 @@
 import Layout from "../../../layouts/Layout.astro"
 import { createGetStaticPaths } from "astro-i18n"
 
-export const getStaticPaths = createGetStaticPaths((props) => {
+export const getStaticPaths = createGetStaticPaths(() => {
 	return [
 		{
 			params: {
