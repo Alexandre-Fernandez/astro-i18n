@@ -12,6 +12,9 @@ import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
 import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
 import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
 import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
+import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
+import { isUrl, pageRouteToRegex } from "@src/core/routing/functions"
+import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
 import NotInitialized from "@src/core/state/errors/not-initialized.error"
 import type { SerializedAstroI18n } from "@src/core/state/types"
@@ -25,9 +28,6 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
-import { isUrl, pageRouteToRegex } from "@src/core/routing/functions"
-import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
