@@ -1,32 +1,39 @@
+import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type {
 	GetStaticPathsItem,
 	GetStaticPathsProps,
 } from "@src/core/astro/types"
+import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
 
+/**
+ * Workaround function to make astroI18n work inside getStaticPaths.
+ * This is because Astro's getStaticPaths runs before everything which doesn't
+ * allows astroI18n to update its state automatically.
+ */
 export function createGetStaticPaths(
 	callback: (
-		props: GetStaticPathsProps & {
-			astroI18n: {
-				locale: string
-				route: string
-				primaryLocale: string
-				secondaryLocales: string
-				fallbackLocale: string
-			}
-		},
+		props: GetStaticPathsProps,
 	) => GetStaticPathsItem[] | Promise<GetStaticPathsItem[]>,
 ) {
 	return async (
-		props: GetStaticPathsProps & { langCode: string | undefined },
+		props: GetStaticPathsProps & {
+			astroI18n?: {
+				locale: string
+			}
+		},
 	) => {
-		if (props.langCode) return callback(props)
-		return callback({
-			...props,
-			langCode: extractRouteLangCode(importMetaUrl),
+		if (!astroI18n.isInitialized) {
+			await astroI18n.internals.waitInitialization()
+		}
+		astroI18n.internals.setPrivateProperties({
+			locale: props.astroI18n
+				? props.astroI18n.locale
+				: astroI18n.primaryLocale,
+			route: ALL_ROUTES_TOKEN,
+			// because getStaticPaths runs before the middleware and because the
+			// runned code is bundled in a js chunk (import.meta.url won't work)
+			// we cannot know the route
 		})
-
-		// to-do: if nothing in props then it's default locale
-		// atleast we can give current locale
-		// also we can modify singleton instead of using props
+		return callback(props)
 	}
 }

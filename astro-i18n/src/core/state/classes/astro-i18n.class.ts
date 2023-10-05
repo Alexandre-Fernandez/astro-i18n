@@ -25,6 +25,8 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
+import { isUrl } from "@src/core/routing/functions"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -67,11 +69,15 @@ class AstroI18n {
 
 	/** The current page route. */
 	get route() {
+		if (this.#route === ALL_ROUTES_TOKEN) {
+			return ""
+		}
 		return this.#route
 	}
 
 	/** The current page route. */
 	set route(route: string) {
+		if (isUrl(route)) route = new URL(route).pathname
 		const { locale, route: localelessRoute } =
 			this.#splitLocaleAndRoute(route)
 		this.#route = localelessRoute
@@ -122,6 +128,8 @@ class AstroI18n {
 			translations: this.#translations,
 			splitLocaleAndRoute: this.#splitLocaleAndRoute.bind(this),
 			toString: this.#toString.bind(this),
+			waitInitialization: this.#waitInitialization.bind(this),
+			setPrivateProperties: this.#setPrivateProperties.bind(this),
 		}
 	}
 
@@ -144,6 +152,7 @@ class AstroI18n {
 			fallbackLocale?: string
 		} = {},
 	) {
+		// to-do test if route with param are loaded
 		if (!this.#isInitialized) throw new NotInitialized()
 		const { route, locale, fallbackLocale } = options
 
@@ -308,6 +317,52 @@ class AstroI18n {
 		this.#isInitialized = true
 	}
 
+	#browserInit() {
+		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
+		if (!script || !script.textContent) {
+			throw new SerializedStateNotFound()
+		}
+		const serialized: unknown = JSON.parse(script.textContent)
+		assert(serialized, isSerializedAstroI18n)
+
+		this.#locale = serialized.locale
+		this.#route = serialized.route
+		this.#config = new Config(serialized.config)
+		this.#translations = new TranslationBank(
+			deserializeTranslationMap(serialized.translations),
+		)
+		this.#segments = new SegmentBank(
+			serialized.segments,
+			serialized.config.primaryLocale,
+		)
+		this.#formatters = new FormatterBank(
+			deserializeFormatters(serialized.formatters),
+		)
+		this.#isInitialized = true
+
+		script.remove()
+	}
+
+	async #waitInitialization() {
+		const poll = (resolve: Function) => {
+			if (this.#isInitialized) resolve()
+			else setTimeout(() => poll(resolve), 25)
+		}
+		return new Promise(poll)
+	}
+
+	#setPrivateProperties(
+		properties: { locale?: string; route?: string } = {},
+	) {
+		const { route, locale } = {
+			route: this.#route,
+			locale: this.#locale,
+			...properties,
+		}
+		this.#route = route
+		this.#locale = locale
+	}
+
 	#detectSegmentsLocale(segments: string[]) {
 		const scores: { [locale: string]: number } = {}
 
@@ -339,7 +394,7 @@ class AstroI18n {
 	#splitLocaleAndRoute(route: string) {
 		if (!route.startsWith("/")) route = `/${route}`
 		const pattern = Regex.fromString(
-			`^\\/(${this.locales.join("|")})(?:\\/.*)?$`,
+			`\\/(${this.locales.join("|")})(?:\\/.*)?$`,
 		)
 		const { match } = pattern.match(route) || {}
 		const locale = match?.[1] || null
@@ -353,32 +408,6 @@ class AstroI18n {
 
 	#getRouteSegments(route: string) {
 		return route.replace(/^\//, "").replace(/\/$/, "").split("/")
-	}
-
-	#browserInit() {
-		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
-		if (!script || !script.textContent) {
-			throw new SerializedStateNotFound()
-		}
-		const serialized: unknown = JSON.parse(script.textContent)
-		assert(serialized, isSerializedAstroI18n)
-
-		this.#locale = serialized.locale
-		this.#route = serialized.route
-		this.#config = new Config(serialized.config)
-		this.#translations = new TranslationBank(
-			deserializeTranslationMap(serialized.translations),
-		)
-		this.#segments = new SegmentBank(
-			serialized.segments,
-			serialized.config.primaryLocale,
-		)
-		this.#formatters = new FormatterBank(
-			deserializeFormatters(serialized.formatters),
-		)
-		this.#isInitialized = true
-
-		script.remove()
 	}
 
 	#toHtml() {

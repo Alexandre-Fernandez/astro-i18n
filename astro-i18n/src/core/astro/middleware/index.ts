@@ -10,11 +10,12 @@ export function useAstroI18n(
 ) {
 	if (!config /* empty string */) config = undefined
 	if (isObject(config) && Object.keys(config).length === 0) config = undefined
+	astroI18n.initialize(config, formatters)
 
 	return (async (_ctx, next) => {
 		// init
 		if (!astroI18n.isInitialized) {
-			await astroI18n.initialize(config, formatters)
+			await astroI18n.internals.waitInitialization()
 		}
 
 		// setting route
