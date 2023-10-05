@@ -399,10 +399,6 @@ class AstroI18n {
 		this.#locale = locale
 	}
 
-	#clearRoutePageCache() {
-		this.#routePageCache = {}
-	}
-
 	#findRoutePage(route: string) {
 		if (this.#routePageCache[route]) {
 			return this.#routePageCache[route] || never()
@@ -422,6 +418,10 @@ class AstroI18n {
 		if (!paramPage || !this.pages.includes(paramPage)) return null
 		this.#routePageCache[route] = paramPage
 		return paramPage
+	}
+
+	#clearRoutePageCache() {
+		this.#routePageCache = {}
 	}
 
 	#detectSegmentsLocale(segments: string[]) {
