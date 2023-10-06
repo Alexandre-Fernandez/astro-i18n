@@ -86,10 +86,6 @@ importers:
         version: 0.34.6
 
   astro-i18n:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.18
-        version: 0.17.19
     devDependencies:
       '@types/node':
         specifier: ^20.1.4
@@ -103,6 +99,9 @@ importers:
       astro:
         specifier: ^2.7.2
         version: 2.10.15(@types/node@20.8.2)
+      esbuild:
+        specifier: ^0.17.19
+        version: 0.17.19
       eslint:
         specifier: ^8.40.0
         version: 8.50.0

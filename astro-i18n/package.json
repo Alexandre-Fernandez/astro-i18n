@@ -40,6 +40,7 @@
 		"af-prettierrc": "latest",
 		"af-tsconfig": "latest",
 		"astro": "^2.7.2",
+		"esbuild": "^0.17.19",
 		"eslint": "^8.40.0",
 		"eslint-config-af-typescript": "latest",
 		"tsc-alias": "^1.8.6",
