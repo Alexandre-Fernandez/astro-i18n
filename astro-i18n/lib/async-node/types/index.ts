@@ -1,3 +1,5 @@
+import type esbuild from "esbuild"
+
 export type AsyncNodeJsCache = {
 	path: typeof import("node:path")
 	fs: typeof import("node:fs")
@@ -9,3 +11,5 @@ export type AsyncNodeJsCache = {
 		}
 	}
 }
+
+export type Esbuild = typeof esbuild

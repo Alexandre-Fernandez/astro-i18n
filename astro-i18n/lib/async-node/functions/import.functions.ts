@@ -1,13 +1,19 @@
 import AsyncNode from "@lib/async-node/classes/async-node.class"
+import DependencyNotFound from "@lib/async-node/errors/dependency-not-found.error"
 import FileNotFound from "@lib/async-node/errors/file-not-found.error"
 import InvalidFileType from "@lib/async-node/errors/invalid-file-type.error"
 import InvalidJson from "@lib/async-node/errors/invalid-json.error"
 import { isFile } from "@lib/async-node/functions/fs.functions"
+import type { Esbuild } from "@lib/async-node/types"
 
 export async function importScript(
 	filename: string,
 ): Promise<Record<string, unknown>> {
-	const esbuild = await import("esbuild")
+	let esbuild: Esbuild | null = null
+	try {
+		esbuild = await import("esbuild")
+	} catch {}
+	if (!esbuild) throw new DependencyNotFound("esbuild")
 
 	const supportedExtensions = /\.(js|cjs|mjs|ts)$/
 	if (!isFile(filename)) throw new FileNotFound(filename)
