@@ -35,9 +35,6 @@
 		"upload": "node bin/pre-publish.cjs && npm publish ; node bin/post-publish.cjs",
 		"lint": "eslint --ignore-path .eslintignore ."
 	},
-	"dependencies": {
-		"esbuild": "^0.17.18"
-	},
 	"devDependencies": {
 		"@types/node": "^20.1.4",
 		"af-prettierrc": "latest",
@@ -47,6 +44,9 @@
 		"eslint-config-af-typescript": "latest",
 		"tsc-alias": "^1.8.6",
 		"typescript": "^5.0.4"
+	},
+	"peerDependencies": {
+		"esbuild": "^0.17.18"
 	},
 	"contributors": [
 		{

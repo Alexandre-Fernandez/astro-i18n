@@ -7,7 +7,9 @@ import {
 	interpolate,
 } from "@src/core/translation/functions/translation.functions"
 import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
-import type Config from "@src/core/config/classes/config.class"
+import { INTERPOLATION_PATTERN } from "@src/core/translation/constants/translation-patterns.constants"
+import { matchInterpolationVariables } from "@src/core/translation/functions/interpolation/interpolation-matching.functions"
+import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 import type {
 	ComputedTranslations,
 	Formatters,
@@ -22,9 +24,7 @@ import type {
 	ConfigTranslationLoadingRules,
 	ConfigTranslations,
 } from "@src/core/config/types"
-import { INTERPOLATION_PATTERN } from "@src/core/translation/constants/translation-patterns.constants"
-import { matchInterpolationVariables } from "@src/core/translation/functions/interpolation/interpolation-matching.functions"
-import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
+import type Config from "@src/core/config/classes/config.class"
 
 class TranslationBank {
 	#loadDirectives: LoadDirectives = {}
@@ -55,16 +55,16 @@ class TranslationBank {
 	 */
 	get(
 		key: string,
-		route: string,
+		page: string,
 		locale: string,
 		fallbackLocale = "",
 		properties: TranslationProperties = {},
 		formatters: Formatters = {},
 	) {
-		let translation = this.#getValue(key, route, locale)
+		let translation = this.#getValue(key, page, locale)
 
 		if (!translation && fallbackLocale && fallbackLocale !== locale) {
-			translation = this.#getValue(key, route, fallbackLocale)
+			translation = this.#getValue(key, page, fallbackLocale)
 		}
 
 		// find the best variant, defaults to the default value or key param if none
@@ -302,21 +302,12 @@ class TranslationBank {
 		return JSON.stringify(this.toObject(), null, "\t")
 	}
 
-	#getValue(key: string, route: string, locale: string) {
+	#getValue(key: string, page: string, locale: string) {
 		let translation: ComputedTranslations[string] | null = null
 
-		// route unknown match it against param routes
-		if (!this.#loadDirectives[route]) {
-		}
-
-		// if route unknown check if it matches param route
-		if (route === "/page/param_1") {
-			console.log(route, this.#loadDirectives[route])
-			console.log(this.getParamRouteGroups())
-		}
 		// search key in the loaded groups for this route
-		if (this.#loadDirectives[route]) {
-			for (const group of this.#loadDirectives[route] || never()) {
+		if (this.#loadDirectives[page]) {
+			for (const group of this.#loadDirectives[page] || never()) {
 				const value = this.#translations[group]?.[locale]?.[key]
 				if (!value) continue
 				translation = value
@@ -324,8 +315,8 @@ class TranslationBank {
 			}
 		}
 		// search key in corresponding route group
-		if (!translation && this.#translations[route]?.[locale]?.[key]) {
-			translation = this.#translations[route]?.[locale]?.[key] || never()
+		if (!translation && this.#translations[page]?.[locale]?.[key]) {
+			translation = this.#translations[page]?.[locale]?.[key] || never()
 		}
 		// search key in the common group
 		if (

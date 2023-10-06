@@ -182,7 +182,6 @@ class AstroI18n {
 		const page = route
 			? this.#findRoutePage(route)
 			: this.#findRoutePage(this.route)
-		// todo: serialize aliases from the cache for client side where value of cache is equal to current page
 
 		return this.#translations.get(
 			key,
