@@ -115,8 +115,6 @@ declare module "${PACKAGE_NAME}" {
 				}
 			]
 	): string
-	/** Appends the query parameters to the given \`url\` */
-	export function q(url: string, query: Record<string, string>): string
 	type DeepStringRecord = {[key: string]:string|DeepStringRecord}
 	type TranslationDirectory = {i18n?:string;pages?: string}
 	export type Translations = {[group: string]:{[locale: string]: DeepStringRecord}}
@@ -206,8 +204,6 @@ declare module "${PACKAGE_NAME}" {
 					}
 				]
 		): string
-		/** Appends the query parameters to the given \`url\` */
-		q(url: string, query: Record<string, string>): string
 		/** Adds new translations at runtime. */
 		addTranslations(translations: Translations): this
 		/** Adds new translation formatters at runtime. */

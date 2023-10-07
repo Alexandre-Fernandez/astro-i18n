@@ -18,8 +18,6 @@ export { createGetStaticPaths } from "@src/core/page/functions/frontmatter.funct
 export const t = astroI18n.t.bind(astroI18n)
 
 export const l = astroI18n.l.bind(astroI18n)
-
-export const q = astroI18n.q.bind(astroI18n)
 /* ###< astro-i18n/exports ###
 
 

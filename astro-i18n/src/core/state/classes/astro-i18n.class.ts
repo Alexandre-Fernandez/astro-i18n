@@ -228,10 +228,11 @@ class AstroI18n {
 			targetLocale?: string
 			routeLocale?: string
 			showPrimaryLocale?: boolean
+			query?: Record<string, unknown>
 		} = {},
 	) {
 		if (!this.#isInitialized) throw new NotInitialized()
-		const { targetLocale, routeLocale, showPrimaryLocale } = options
+		const { targetLocale, routeLocale, showPrimaryLocale, query } = options
 
 		// retrieving segments only
 		const segments = this.#getRouteSegments(route)
@@ -288,15 +289,21 @@ class AstroI18n {
 			translatedRoute += "/"
 		}
 
-		return translatedRoute.startsWith("/")
+		// adding leading slash
+		translatedRoute = translatedRoute.startsWith("/")
 			? translatedRoute
 			: `/${translatedRoute}`
-	}
+		if (!query) return translatedRoute
 
-	/** Appends the query parameters to the given `url` */
-	q(route: string, query: Record<string, string>) {
-		const searchParams = new URLSearchParams(query).toString()
-		return searchParams ? `${route}?${searchParams}` : route
+		// adding query parameters
+		const q: Record<string, string> = {}
+		for (const [key, value] of Object.entries(query)) {
+			q[key] = String(value)
+		}
+		const searchParams = new URLSearchParams(q).toString()
+		return searchParams
+			? `${translatedRoute}?${searchParams}`
+			: translatedRoute
 	}
 
 	/** Adds new translations at runtime. */
