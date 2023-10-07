@@ -1,3 +1,3 @@
 // @ts-nocheck
 export { default as HrefLangs } from "./HrefLangs.astro"
-export { default as LocaleSwitch } from "./LocaleSwitch.astro"
+export { default as LocaleSwitcher } from "./LocaleSwitcher.astro"
