@@ -133,6 +133,7 @@ export function categorizeConfigTranslationsGroups(
 /**
  * Extracts all the non-page translation groups from the main astro-i18n
  * directory.
+ * Looks for `"/i18n/group/locale.json"` files.
  */
 export async function getProjectTranslationGroups(
 	projectRoot: string,

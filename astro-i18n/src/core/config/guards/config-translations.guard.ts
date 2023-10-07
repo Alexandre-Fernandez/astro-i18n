@@ -55,7 +55,7 @@ export function isConfigTranslationDirectory(
 ): translationDirectory is ConfigTranslationDirectory {
 	if (!isObject(translationDirectory)) return false
 	for (const [key, name] of Object.entries(translationDirectory)) {
-		if (key !== "main" && key !== "pages") return false
+		if (key !== "i18n" && key !== "pages") return false
 		if (typeof name !== "string") return false
 	}
 

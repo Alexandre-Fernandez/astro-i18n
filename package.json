@@ -11,7 +11,8 @@
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"generate:pages": "turbo run build --filter=astro-i18n && turbo run generate:pages --filter=astro",
-		"generate:types": "turbo run build --filter=astro-i18n && turbo run generate:types --filter=astro"
+		"generate:types": "turbo run build --filter=astro-i18n && turbo run generate:types --filter=astro",
+		"extract:keys": "turbo run build --filter=astro-i18n && turbo run extract:keys --filter=astro"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",

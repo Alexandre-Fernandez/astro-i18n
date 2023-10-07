@@ -6,5 +6,5 @@ export const GENERATED_TYPES_PATTERN = Regex.fromString(
 )
 
 export const TRANSLATION_FUNCTION_PATTERN = new Regex(
-	/t\s*\(\s*["'`]([\S\s]*?)["'`]\s*[),]/g,
+	/t\s*\(\s*["'`](#[^#]+#)?([\S\s]*?)["'`]\s*[),]/g,
 )

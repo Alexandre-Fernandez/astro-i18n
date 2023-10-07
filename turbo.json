@@ -42,6 +42,9 @@
 		},
 		"generate:types": {
 			"cache": false
+		},
+		"extract:keys": {
+			"cache": false
 		}
 	}
 }

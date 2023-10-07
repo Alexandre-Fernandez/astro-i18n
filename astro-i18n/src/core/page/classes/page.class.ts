@@ -25,6 +25,10 @@ class Page implements PageProps {
 
 	#prerender: boolean | null | undefined = undefined
 
+	#content: string | null = null
+
+	#frontmatter: string | null = null
+
 	constructor({ name, route, path, translations, routes }: PageProps) {
 		this.#name = name
 		this.#route = route
@@ -51,6 +55,21 @@ class Page implements PageProps {
 
 	get routes() {
 		return this.#routes
+	}
+
+	async getContent() {
+		if (this.#content) return this.#content
+		const { readFileSync } = await AsyncNode.fs
+		this.#content = readFileSync(this.#path, { encoding: "utf8" })
+		this.#frontmatter =
+			FRONTMATTER_PATTERN.match(this.#content)?.match[0] || null
+		return this.#content
+	}
+
+	async getFrontmatter() {
+		if (this.#frontmatter) return this.#frontmatter
+		this.getContent()
+		return this.#frontmatter
 	}
 
 	async hasGetStaticPaths() {

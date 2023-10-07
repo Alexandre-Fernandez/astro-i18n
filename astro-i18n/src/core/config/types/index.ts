@@ -30,7 +30,7 @@ export type ConfigTranslationLoadingRules = {
 }[]
 
 export type ConfigTranslationDirectory = {
-	main?: string
+	i18n?: string
 	pages?: string
 }
 

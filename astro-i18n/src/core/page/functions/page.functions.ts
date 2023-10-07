@@ -22,6 +22,8 @@ import type { AstroI18nConfig } from "@src/core/config/types"
 
 /**
  * Fetches all the pages and their translations from the project.
+ * Looks in `"src/pages/locale.json"` or `"src/pages/i18n/locale.json"` or
+ * `"src/i18n/pages/locale.json"` or `"src/i18n/pages/i18n/locale.json"`.
  */
 export async function getProjectPages(
 	projectRoot: string,
@@ -36,7 +38,7 @@ export async function getProjectPages(
 		(locale) => `/src/${PAGES_DIRNAME}/${locale}`,
 	)
 	const $directory: AstroI18nConfig["translationDirectory"] = {
-		main: DEFAULT_TRANSLATION_DIRNAME,
+		i18n: DEFAULT_TRANSLATION_DIRNAME,
 		pages: DEFAULT_TRANSLATION_DIRNAME,
 		...config.translationDirectory,
 	}
@@ -139,7 +141,7 @@ export async function getProjectPages(
 		pages.push({ translations: {}, routes: {}, ...page } as any)
 	}
 
-	const i18nPagesDir = `${projectRoot}/src/${$directory.main}/${PAGES_DIRNAME}`
+	const i18nPagesDir = `${projectRoot}/src/${$directory.i18n}/${PAGES_DIRNAME}`
 
 	if (!(await isDirectory(i18nPagesDir))) {
 		return pages.map((page) => new Page(page))
@@ -161,7 +163,7 @@ export async function getProjectPages(
 		}
 
 		// also checking nested translation folder
-		dir = `${dir}/${$directory.main}`
+		dir = `${dir}/${$directory.pages}`
 		if (!(await isDirectory(dir))) continue
 
 		pageTranslations = await getSrcPageTranslations(

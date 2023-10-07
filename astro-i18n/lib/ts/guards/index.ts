@@ -23,6 +23,10 @@ export function assert<T>(
 			valueAsString = `${value}`
 		}
 
+		if (!expectedType && guard.name.startsWith("is")) {
+			expectedType = guard.name.slice(2)
+		}
+
 		throw new TypeError(
 			expectedType
 				? `Unexpected type (expecting \`${expectedType}\`), found: ${valueAsString}`
