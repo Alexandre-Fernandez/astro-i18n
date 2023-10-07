@@ -64,6 +64,11 @@ class FormatterBank {
 		return this
 	}
 
+	clear() {
+		this.#custom = {}
+		this.#merged = {}
+	}
+
 	toClientSideObject() {
 		const serializable: { [name: string]: SerializedFormatter } = {}
 

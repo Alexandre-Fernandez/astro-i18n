@@ -80,7 +80,10 @@ export async function loadConfig(configPath: string | null = null) {
 	if (!configPath) {
 		let filename = ""
 
-		if (typeof import.meta.url === "string") {
+		if (
+			typeof import.meta === "object" &&
+			typeof import.meta.url === "string"
+		) {
 			filename = fileURLToPath(import.meta.url)
 		} else if (typeof __filename === "string") {
 			filename = __filename

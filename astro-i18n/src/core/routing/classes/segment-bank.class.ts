@@ -72,6 +72,11 @@ class SegmentBank {
 		return this
 	}
 
+	clear() {
+		this.#primaryLocale = ""
+		this.#segments = {}
+	}
+
 	toClientSideObject() {
 		return { ...this.#segments }
 	}

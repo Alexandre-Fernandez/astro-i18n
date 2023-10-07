@@ -277,6 +277,11 @@ class TranslationBank {
 		return this
 	}
 
+	clear() {
+		this.#loadDirectives = {}
+		this.#translations = {}
+	}
+
 	toClientSideObject(route: string) {
 		const translations: SerializedTranslationMap = {}
 		// adding groups for this route

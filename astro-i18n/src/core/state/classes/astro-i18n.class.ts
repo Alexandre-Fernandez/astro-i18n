@@ -73,7 +73,7 @@ class AstroI18n {
 			this.#environment = Environment.NONE
 		} else {
 			this.#environment = Environment.BROWSER
-			if (this.#config.run === "client+server") this.#browserInit()
+			if (this.#config.run === "client+server") this.#initializeBrowser()
 		}
 	}
 
@@ -159,6 +159,7 @@ class AstroI18n {
 			toString: this.#toString.bind(this),
 			waitInitialization: this.#waitInitialization.bind(this),
 			setPrivateProperties: this.#setPrivateProperties.bind(this),
+			reinitalize: this.#reinitalize.bind(this),
 		}
 	}
 
@@ -370,7 +371,7 @@ class AstroI18n {
 		this.#isInitialized = true
 	}
 
-	#browserInit() {
+	#initializeBrowser() {
 		const script = document.querySelector(`#${AstroI18n.#scriptId}`)
 		if (!script || !script.textContent) {
 			throw new SerializedStateNotFound()
@@ -402,6 +403,17 @@ class AstroI18n {
 			else setTimeout(() => poll(resolve), 25)
 		}
 		return new Promise(poll)
+	}
+
+	async #reinitalize(
+		config: Partial<AstroI18nConfig> | string | undefined = undefined,
+		formatters: Formatters = {},
+	) {
+		this.#isInitialized = false
+		this.#translations.clear()
+		this.#segments.clear()
+		this.#formatters.clear()
+		await this.initialize(config, formatters)
 	}
 
 	#setPrivateProperties(

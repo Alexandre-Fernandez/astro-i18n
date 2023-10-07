@@ -17,6 +17,9 @@ export function useAstroI18n(
 		if (!astroI18n.isInitialized) {
 			await astroI18n.internals.waitInitialization()
 		}
+		if (import.meta.env.DEV) {
+			await astroI18n.internals.reinitalize(config, formatters)
+		}
 
 		// removing isGetStaticPaths
 		astroI18n.internals.setPrivateProperties({ isGetStaticPaths: false })
