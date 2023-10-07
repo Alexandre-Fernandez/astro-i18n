@@ -60,11 +60,17 @@ class TranslationBank {
 		fallbackLocale = "",
 		properties: TranslationProperties = {},
 		formatters: Formatters = {},
+		ignorePageIsolation = false,
 	) {
-		let translation = this.#getValue(key, page, locale)
+		let translation = this.#getValue(key, page, locale, ignorePageIsolation)
 
 		if (!translation && fallbackLocale && fallbackLocale !== locale) {
-			translation = this.#getValue(key, page, fallbackLocale)
+			translation = this.#getValue(
+				key,
+				page,
+				fallbackLocale,
+				ignorePageIsolation,
+			)
 		}
 
 		// find the best variant, defaults to the default value or key param if none
@@ -302,22 +308,55 @@ class TranslationBank {
 		return JSON.stringify(this.toObject(), null, "\t")
 	}
 
-	#getValue(key: string, page: string, locale: string) {
+	/**
+	 * @param ignorePageIsolation If true it will ignore local page rules and
+	 * search in every page and every group loaded in any page.
+	 */
+	#getValue(
+		key: string,
+		page: string,
+		locale: string,
+		ignorePageIsolation = false,
+	) {
 		let translation: ComputedTranslations[string] | null = null
 
-		// search key in the loaded groups for this route
-		if (this.#loadDirectives[page]) {
-			for (const group of this.#loadDirectives[page] || never()) {
+		if (ignorePageIsolation) {
+			const pages = this.getRouteGroups()
+			// search key in all the groups to load for each page
+			for (const page of pages) {
+				for (const group of this.#loadDirectives[page] || []) {
+					const value = this.#translations[group]?.[locale]?.[key]
+					if (!value) continue
+					translation = value
+					break
+				}
+			}
+
+			// search key in every page group
+			if (!translation) {
+				for (const page of pages) {
+					if (this.#translations[page]?.[locale]?.[key]) {
+						translation =
+							this.#translations[page]?.[locale]?.[key] || never()
+					}
+				}
+			}
+		} else {
+			//  search key inthe groups to load for the given page
+			for (const group of this.#loadDirectives[page] || []) {
 				const value = this.#translations[group]?.[locale]?.[key]
 				if (!value) continue
 				translation = value
 				break
 			}
+
+			// search key in corresponding page group
+			if (!translation && this.#translations[page]?.[locale]?.[key]) {
+				translation =
+					this.#translations[page]?.[locale]?.[key] || never()
+			}
 		}
-		// search key in corresponding route group
-		if (!translation && this.#translations[page]?.[locale]?.[key]) {
-			translation = this.#translations[page]?.[locale]?.[key] || never()
-		}
+
 		// search key in the common group
 		if (
 			!translation &&

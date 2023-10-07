@@ -3,7 +3,6 @@ import type {
 	GetStaticPathsItem,
 	GetStaticPathsProps,
 } from "@src/core/astro/types"
-import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
 
 /**
  * Workaround function to make astroI18n work inside getStaticPaths.
@@ -26,10 +25,11 @@ export function createGetStaticPaths(
 			await astroI18n.internals.waitInitialization()
 		}
 		astroI18n.internals.setPrivateProperties({
+			isGetStaticPaths: true,
 			locale: props.astroI18n
 				? props.astroI18n.locale
 				: astroI18n.primaryLocale,
-			route: ALL_ROUTES_TOKEN,
+			route: "",
 			// because getStaticPaths runs before the middleware and because the
 			// runned code is bundled in a js chunk (import.meta.url won't work)
 			// we cannot know the route

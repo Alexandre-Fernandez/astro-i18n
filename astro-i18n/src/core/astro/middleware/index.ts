@@ -18,6 +18,9 @@ export function useAstroI18n(
 			await astroI18n.internals.waitInitialization()
 		}
 
+		// removing isGetStaticPaths
+		astroI18n.internals.setPrivateProperties({ isGetStaticPaths: false })
+
 		// setting route
 		astroI18n.route = _ctx.url.pathname
 

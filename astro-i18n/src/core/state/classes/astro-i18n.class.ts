@@ -1,3 +1,4 @@
+import { never } from "@lib/error"
 import { Regex } from "@lib/regex"
 import { assert } from "@lib/ts/guards"
 import Config from "@src/core/config/classes/config.class"
@@ -12,7 +13,6 @@ import NoFilesystem from "@src/core/state/errors/no-filesystem.error"
 import SerializedStateNotFound from "@src/core/state/errors/serialized-state-not-found.error"
 import { isSerializedAstroI18n } from "@src/core/state/guards/serialized-astro-i18n.guard"
 import { deserializeTranslationMap } from "@src/core/translation/functions/translation.functions"
-import { ALL_ROUTES_TOKEN } from "@src/core/translation/constants/translation.constants"
 import { isUrl, pageRouteToRegex } from "@src/core/routing/functions"
 import { ROUTE_PARAM_PATTERN } from "@src/core/routing/constants/routing-patterns.constants"
 import { deserializeFormatters } from "@src/core/translation/functions/formatter.functions"
@@ -28,7 +28,6 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
-import { never } from "@lib/error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -48,6 +47,14 @@ class AstroI18n {
 	#formatters = new FormatterBank()
 
 	#isInitialized = false
+
+	/**
+	 * `getStaticPaths` runs before the middleware the route cannot be
+	 * initialized. Because of this we don't know the route and cannot apply the
+	 * route isolation rules. Setting this property to true allows us to ignore
+	 * page isolation rules inside getStaticPaths.
+	 */
+	#isGetStaticPaths = false
 
 	/**
 	 * Cache mapping a route such as `"/posts/my-post-slug"` to `"/posts/[id]"`.
@@ -77,9 +84,7 @@ class AstroI18n {
 
 	/** The current page route. */
 	get route() {
-		if (this.#route === ALL_ROUTES_TOKEN) {
-			return ""
-		}
+		if (this.#isGetStaticPaths) return ""
 		return this.#route
 	}
 
@@ -107,7 +112,7 @@ class AstroI18n {
 	 * to `"/posts/my-cool-cat"` this could return `"/posts/[slug]"`.
 	 */
 	get page() {
-		return this.#findRoutePage(this.#route)
+		return this.#findRoutePage(this.route)
 	}
 
 	/** The current page locale. */
@@ -178,6 +183,18 @@ class AstroI18n {
 	) {
 		if (!this.#isInitialized) throw new NotInitialized()
 		const { route, locale, fallbackLocale } = options
+
+		if (this.#isGetStaticPaths) {
+			return this.#translations.get(
+				key,
+				"",
+				locale || this.locale,
+				fallbackLocale || this.fallbackLocale,
+				properties,
+				this.#formatters.toObject(),
+				true,
+			)
+		}
 
 		const page = route
 			? this.#findRoutePage(route)
@@ -388,18 +405,25 @@ class AstroI18n {
 	}
 
 	#setPrivateProperties(
-		properties: { locale?: string; route?: string } = {},
+		properties: {
+			locale?: string
+			route?: string
+			isGetStaticPaths?: boolean
+		} = {},
 	) {
-		const { route, locale } = {
+		const { route, locale, isGetStaticPaths } = {
 			route: this.#route,
 			locale: this.#locale,
+			isGetStaticPaths: this.#isGetStaticPaths,
 			...properties,
 		}
 		this.#route = route
 		this.#locale = locale
+		this.#isGetStaticPaths = isGetStaticPaths
 	}
 
 	#findRoutePage(route: string) {
+		if (this.#isGetStaticPaths) return null
 		if (this.#routePageCache[route]) {
 			return this.#routePageCache[route] || never()
 		}
