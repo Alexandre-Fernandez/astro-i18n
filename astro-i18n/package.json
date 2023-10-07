@@ -28,7 +28,7 @@
 	],
 	"scripts": {
 		"prepare": "npm run build",
-		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/build.cjs",
+		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs ",
 		"patch": "npm version patch",
 		"minor": "npm version minor",
 		"major": "npm version major",
