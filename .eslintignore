@@ -5,3 +5,4 @@ dist
 *.cjs
 *.mjs
 *.d.ts
+astro-i18n/**/*.astro

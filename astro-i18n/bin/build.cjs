@@ -1,5 +1,6 @@
 const esbuild = require("esbuild")
 
+// core
 esbuild.build({
 	entryPoints: ["src/index.ts"],
 	bundle: true,
@@ -7,7 +8,7 @@ esbuild.build({
 	external: ["esbuild"],
 	outdir: "dist/src",
 	platform: "node",
-	target: "node14",
+	target: "node18",
 	format: "esm",
 	outExtension: {
 		".js": ".mjs",
@@ -16,6 +17,7 @@ esbuild.build({
 	sourcesContent: false,
 })
 
+// cli
 esbuild.build({
 	entryPoints: ["src/bin.ts"],
 	bundle: true,
@@ -23,10 +25,25 @@ esbuild.build({
 	external: ["esbuild"],
 	outdir: "dist/src",
 	platform: "node",
-	target: "node14",
+	target: "node18",
 	format: "cjs",
 	outExtension: {
 		".js": ".cjs",
+	},
+	sourcemap: false,
+	sourcesContent: false,
+})
+
+// astro components
+esbuild.build({
+	entryPoints: ["src/astro/index.ts"],
+	minify: true,
+	outdir: "dist/src/astro",
+	platform: "node",
+	target: "node18",
+	format: "esm",
+	outExtension: {
+		".js": ".mjs",
 	},
 	sourcemap: false,
 	sourcesContent: false,
