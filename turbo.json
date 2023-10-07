@@ -43,7 +43,7 @@
 		"generate:types": {
 			"cache": false
 		},
-		"extract:keys": {
+		"extract": {
 			"cache": false
 		}
 	}

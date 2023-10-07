@@ -24,11 +24,11 @@ import type { FlatConfigTranslations } from "@src/core/cli/types"
 import type { DeepStringRecord } from "@src/core/translation/types"
 
 const cmd = {
-	name: "extract:keys",
+	name: "extract",
 	options: ["root"],
 } as const satisfies Command
 
-export async function extractKeys({ command, options }: ParsedArgv) {
+export async function extract({ command, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
 	const { join } = await AsyncNode.path
 

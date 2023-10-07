@@ -7,20 +7,23 @@ import generatePagesCommand, {
 import generateTypesCommand, {
 	generateTypes,
 } from "@src/core/cli/commands/generate-types.command"
-import extractKeysCommand, {
-	extractKeys,
+import extractCommand, {
+	extract,
 } from "@src/core/cli/commands/extract-keys.command"
+import installCommand, { install } from "@src/core/cli/commands/install.command"
 
 const argv = parseArgv([
 	generatePagesCommand,
 	generateTypesCommand,
-	extractKeysCommand,
+	extractCommand,
+	installCommand,
 ])
 
 const cli = {
 	[generatePagesCommand.name]: generatePages,
 	[generateTypesCommand.name]: generateTypes,
-	[extractKeysCommand.name]: extractKeys,
+	[extractCommand.name]: extract,
+	[installCommand.name]: install,
 }
 
 if (!argv.command || !(cli as any)[argv.command]) {
