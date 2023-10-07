@@ -272,13 +272,12 @@ class AstroI18n {
 			}
 		}
 
+		// adding back locale
 		const showLocale =
 			showPrimaryLocale === undefined
 				? this.#config.showPrimaryLocale ||
 				  target !== this.primaryLocale
 				: showPrimaryLocale
-
-		// adding back locale
 		if (showLocale) {
 			translatedRoute = translatedRoute
 				? `${target}/${translatedRoute}`
