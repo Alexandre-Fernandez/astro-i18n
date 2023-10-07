@@ -10,9 +10,10 @@
 		"publish:major": "turbo run publish:major --filter=astro-i18n",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"generate:pages": "turbo run build --filter=astro-i18n && turbo run generate:pages --filter=astro",
-		"generate:types": "turbo run build --filter=astro-i18n && turbo run generate:types --filter=astro",
-		"extract": "turbo run build --filter=astro-i18n && turbo run extract --filter=astro"
+		"i18n:generate:pages": "turbo run build --filter=astro-i18n && turbo run i18n:generate:pages --filter=astro",
+		"i18n:generate:types": "turbo run build --filter=astro-i18n && turbo run i18n:generate:types --filter=astro",
+		"i18n:extract": "turbo run build --filter=astro-i18n && turbo run i18n:extract --filter=astro",
+		"i18n:install": "turbo run build --filter=astro-i18n && turbo run i18n:install --filter=astro"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",

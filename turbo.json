@@ -37,13 +37,16 @@
 			"dependsOn": ["build", "major", "upload"],
 			"cache": false
 		},
-		"generate:pages": {
+		"i18n:generate:pages": {
 			"cache": false
 		},
-		"generate:types": {
+		"i18n:generate:types": {
 			"cache": false
 		},
-		"extract": {
+		"i18n:extract": {
+			"cache": false
+		},
+		"i18n:install": {
 			"cache": false
 		}
 	}

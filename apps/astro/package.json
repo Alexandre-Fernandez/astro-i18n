@@ -11,9 +11,11 @@
 		"build": "astro build",
 		"astro": "astro",
 		"test": "vitest",
-		"generate:pages": "astro-i18n generate:pages --purge",
-		"generate:types": "astro-i18n generate:types",
-		"extract": "astro-i18n extract"
+		"i18n:install": "astro-i18n install",
+		"i18n:extract": "astro-i18n extract",
+		"i18n:generate:pages": "astro-i18n generate:pages --purge",
+		"i18n:generate:types": "astro-i18n generate:types",
+		"i18n:sync": "npm run i18n:generate:pages && npm run i18n:generate:types"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",

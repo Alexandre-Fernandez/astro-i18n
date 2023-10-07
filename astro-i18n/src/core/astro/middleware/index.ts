@@ -41,5 +41,5 @@ export function useAstroI18n(
 			statusText: response.statusText,
 			headers: response.headers,
 		})
-	}) as AstroMiddleware
+	}) satisfies AstroMiddleware as (...args: any[]) => any
 }
