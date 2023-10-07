@@ -14,15 +14,17 @@ import type { TranslationVariables } from "@src/core/translation/types"
 
 const cmd = {
 	name: "generate:types",
-	options: [],
+	options: ["root"],
 } as const satisfies Command
 
-export async function generateTypes({ command, args }: ParsedArgv) {
+export async function generateTypes({ command, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
 	const { join } = await AsyncNode.path
 	const { readFileSync, appendFileSync, writeFileSync } = await AsyncNode.fs
 
-	const root = await toPosixPath(args[0] || process.cwd())
+	const root = await toPosixPath(
+		typeof options["root"] === "string" ? options["root"] : process.cwd(),
+	)
 	if (!(await isDirectory(root))) throw new RootNotFound()
 
 	await astroI18n.initialize()

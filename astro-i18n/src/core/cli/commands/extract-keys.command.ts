@@ -25,14 +25,16 @@ import type { DeepStringRecord } from "@src/core/translation/types"
 
 const cmd = {
 	name: "extract:keys",
-	options: [],
+	options: ["root"],
 } as const satisfies Command
 
-export async function extractKeys({ command, args }: ParsedArgv) {
+export async function extractKeys({ command, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
 	const { join } = await AsyncNode.path
 
-	const root = await toPosixPath(args[0] || process.cwd())
+	const root = await toPosixPath(
+		typeof options["root"] === "string" ? options["root"] : process.cwd(),
+	)
 	if (!(await isDirectory(root))) throw new RootNotFound()
 
 	await astroI18n.initialize()

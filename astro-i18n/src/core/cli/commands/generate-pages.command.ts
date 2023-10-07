@@ -13,14 +13,16 @@ import type { Command, ParsedArgv } from "@lib/argv/types"
 
 const cmd = {
 	name: "generate:pages",
-	options: ["purge"],
+	options: ["purge", "root"],
 } as const satisfies Command
 
-export async function generatePages({ command, args, options }: ParsedArgv) {
+export async function generatePages({ command, options }: ParsedArgv) {
 	if (command !== cmd.name) throw new InvalidCommand()
 	const { join } = await AsyncNode.path
 
-	const root = await toPosixPath(args[0] || process.cwd())
+	const root = await toPosixPath(
+		typeof options["root"] === "string" ? options["root"] : process.cwd(),
+	)
 	if (!(await isDirectory(root))) throw new RootNotFound()
 	const pagesDirectory = join(root, "src/pages")
 
