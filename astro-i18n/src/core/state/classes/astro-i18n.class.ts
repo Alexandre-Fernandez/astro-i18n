@@ -219,7 +219,8 @@ class AstroI18n {
 	 * @param options `targetLocale`: Overrides the target locale. `routeLocale`:
 	 * Overrides the given route locale, this is useful if astro-i18n cannot
 	 * figure out the route's locale. `showPrimaryLocale`: Overrides the
-	 * showPrimaryLocale parameter.
+	 * showPrimaryLocale parameter. `query`: Adds these query parameters at the
+	 * end of the translated route.
 	 */
 	l(
 		route: string,

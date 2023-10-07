@@ -84,7 +84,7 @@ declare module "${PACKAGE_NAME}" {
 	/**
 	 * @param route A route in any of the configured languages, for example \`"/en/my/english/route/[param]"\`.
 	 * @param parameters An object containing your route parameters, for example \`{ slug: "my-blog-post-slug" }\`.
-	 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter.
+	 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter. \`query\`: Adds these query parameters at the end of the translated route.
 	 */
 	export function l<T extends Route>(
 		route: T | string & {},
@@ -95,7 +95,8 @@ declare module "${PACKAGE_NAME}" {
 					options?: { 
 						targetLocale?: string, 
 						routeLocale?: string,
-						showPrimaryLocale?: string
+						showPrimaryLocale?: string,
+						query?: Record<string, unknown>
 					}
 				]
 				: [
@@ -103,7 +104,8 @@ declare module "${PACKAGE_NAME}" {
 					options?: { 
 						targetLocale?: string, 
 						routeLocale?: string,
-						showPrimaryLocale?: string
+						showPrimaryLocale?: string,
+						query?: Record<string, unknown>
 					}
 				]
 			: [
@@ -111,7 +113,8 @@ declare module "${PACKAGE_NAME}" {
 				options?: { 
 					targetLocale?: string, 
 					routeLocale?: string,
-					showPrimaryLocale?: string
+					showPrimaryLocale?: string,
+					query?: Record<string, unknown>
 				}
 			]
 	): string
@@ -173,7 +176,7 @@ declare module "${PACKAGE_NAME}" {
 		/**
 		 * @param route A route in any of the configured languages, for example \`"/en/my/english/route/[param]"\`.
 		 * @param parameters An object containing your route parameters, for example \`{ slug: "my-blog-post-slug" }\`.
-		 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter.
+		 * @param options \`targetLocale\`: Overrides the target locale. \`routeLocale\`: Overrides the given route locale, this is useful if ${PACKAGE_NAME} cannot figure out the route's locale. \`showPrimaryLocale\`: Overrides the showPrimaryLocale parameter. \`query\`: Adds these query parameters at the end of the translated route.
 		 */
 		l<T extends Route>(
 			route: T | string & {},
@@ -184,7 +187,8 @@ declare module "${PACKAGE_NAME}" {
 						options?: { 
 							targetLocale?: string, 
 							routeLocale?: string,
-							showPrimaryLocale?: string
+							showPrimaryLocale?: string,
+							query?: Record<string, unknown>
 						}
 					]
 					: [
@@ -192,7 +196,8 @@ declare module "${PACKAGE_NAME}" {
 						options?: { 
 							targetLocale?: string, 
 							routeLocale?: string,
-							showPrimaryLocale?: string
+							showPrimaryLocale?: string,
+							query?: Record<string, unknown>
 						}
 					]
 				: [
@@ -200,7 +205,8 @@ declare module "${PACKAGE_NAME}" {
 					options?: { 
 						targetLocale?: string, 
 						routeLocale?: string,
-						showPrimaryLocale?: string
+						showPrimaryLocale?: string,
+						query?: Record<string, unknown>
 					}
 				]
 		): string
