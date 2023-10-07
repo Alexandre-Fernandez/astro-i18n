@@ -294,9 +294,9 @@ class AstroI18n {
 	}
 
 	/** Appends the query parameters to the given `url` */
-	q(url: string, query: Record<string, string>) {
+	q(route: string, query: Record<string, string>) {
 		const searchParams = new URLSearchParams(query).toString()
-		return searchParams ? `${url}?${searchParams}` : url
+		return searchParams ? `${route}?${searchParams}` : route
 	}
 
 	/** Adds new translations at runtime. */
