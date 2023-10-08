@@ -62,6 +62,8 @@ declare module "${PACKAGE_NAME}" {
 	export type TranslationLoadingRules = {groups:string[];routes: string[]}[]
 	export type SegmentTranslations = {[secondaryLocale: string]:{[segment: string]:string}}
 	export interface AstroI18nConfig {primaryLocale:string;secondaryLocales:string[];fallbackLocale:string;showPrimaryLocale:boolean;trailingSlash:"always"|"never";run:"server"|"client+server";translations:Translations;translationLoadingRules:TranslationLoadingRules;translationDirectory:TranslationDirectory;routes:SegmentTranslations;}
+	/** Typed astro-i18n config definition. */
+	export function defineAstroI18nConfig(config: Partial<AstroI18nConfig>): Partial<AstroI18nConfig>
 	/** The \`${PACKAGE_NAME}\` middleware. */
 	export function useAstroI18n(
 		config?: Partial<AstroI18nConfig> | string,

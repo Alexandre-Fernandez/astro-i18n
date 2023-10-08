@@ -4,15 +4,8 @@ import {
 	isDirectory,
 	isFile,
 } from "@lib/async-node/functions/fs.functions"
-import {
-	importJson,
-	importScript,
-} from "@lib/async-node/functions/import.functions"
-import {
-	isRootPath,
-	popPath,
-	toPosixPath,
-} from "@lib/async-node/functions/path.functions"
+import { importJson } from "@lib/async-node/functions/import.functions"
+import { isRootPath, popPath } from "@lib/async-node/functions/path.functions"
 import { Regex, RegexBuilder } from "@lib/regex"
 import { assert, isRecord } from "@lib/ts/guards"
 import {
@@ -39,9 +32,6 @@ import type {
 } from "@src/core/config/types"
 import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
 import type { TranslationMap } from "@src/core/translation/types"
-import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
-import { isPartialConfig } from "@src/core/config/guards/config.guard"
-import Config from "@src/core/config/classes/config.class"
 
 const astroI18nConfigPattern = RegexBuilder.fromRegex(ASTRO_I18N_CONFIG_PATTERN)
 	.assertEnding()
@@ -51,60 +41,11 @@ const astroConfigPattern = RegexBuilder.fromRegex(ASTRO_CONFIG_PATTERN)
 	.assertEnding()
 	.build()
 
-export async function loadConfig(configPath: string | null = null) {
-	const { fileURLToPath } = await AsyncNode.url
-
-	// find from PWD
-	if (!configPath) {
-		let pwd = ""
-
-		if (typeof process !== "undefined") {
-			pwd = process.env["PWD"] || ""
-		}
-
-		configPath = await autofindAstroI18nConfig(await toPosixPath(pwd))
-	}
-
-	// find from CWD
-	if (!configPath) {
-		let cwd = ""
-
-		if (typeof process !== "undefined") {
-			cwd = process.cwd()
-		}
-
-		configPath = await autofindAstroI18nConfig(await toPosixPath(cwd))
-	}
-
-	// find from current module
-	if (!configPath) {
-		let filename = ""
-
-		if (
-			typeof import.meta === "object" &&
-			typeof import.meta.url === "string"
-		) {
-			filename = fileURLToPath(import.meta.url)
-		} else if (typeof __filename === "string") {
-			filename = __filename
-		}
-
-		if (filename) {
-			configPath = await autofindAstroI18nConfig(
-				await toPosixPath(filename),
-			)
-		}
-	}
-
-	if (!configPath) throw new ConfigNotFound()
-
-	const partialConfig = configPath.endsWith(".json")
-		? await importJson(configPath)
-		: (await importScript(configPath))["default"]
-
-	assert(partialConfig, isPartialConfig, "AstroI18nConfig")
-
-	return new Config(partialConfig, configPath)
+/**
+ * Typed astro-i18n config definition.
+ */
+export function defineAstroI18nConfig(config: Partial<AstroI18nConfig>) {
+	return config
 }
 
 /**

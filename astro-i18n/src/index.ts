@@ -1,13 +1,10 @@
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
-import type { AstroI18nConfig } from "@src/core/config/types"
 /*
 
 
 
 ###> astro-i18n/exports ### */
-export function defineAstroI18nConfig(config: Partial<AstroI18nConfig>) {
-	return config
-}
+export { defineAstroI18nConfig } from "@src/core/config/functions/config.functions"
 
 export { useAstroI18n } from "@src/core/astro/middleware"
 
