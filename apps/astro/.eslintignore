@@ -1,5 +1,0 @@
-esbuild
-dist
-*.js
-*.cjs
-*.mjs

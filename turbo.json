@@ -55,6 +55,10 @@
 		"npm:publish:major": {
 			"dependsOn": ["lint", "test", "build", "npm:major", "npm:publish"],
 			"cache": false
+		},
+		"npm:pack": {
+			"dependsOn": ["lint", "test", "build"],
+			"cache": false
 		}
 	}
 }

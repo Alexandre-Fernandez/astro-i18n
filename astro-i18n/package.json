@@ -27,24 +27,20 @@
 		"dist"
 	],
 	"exports": {
-		".": "./dist/src/index.mjs",
-		"./components": "./dist/src/astro/index.mjs"
-	},
-	"typesVersions": {
-		"*": {
-			"": [
-				"./dist/src/index.d.ts"
-			],
-			"components": [
-				"./dist/src/astro/index.d.ts"
-			]
+		".": {
+			"import": "./src/index.ts",
+			"types": "./src/index.d.ts"
+		},
+		"./components": {
+			"import": "./src/astro/index.ts",
+			"types": "./src/astro/index.d.ts"
 		}
 	},
 	"scripts": {
 		"prepare": "npm run build",
 		"test": "../apps/astro/node_modules/.bin/vitest run --root ../apps/astro",
 		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs && cpy 'src/astro/*.astro' dist/src/astro",
-		"lint": "eslint --ignore-path .eslintignore .",
+		"lint": "eslint --ignore-path ../.eslintignore .",
 		"npm:patch": "npm version patch",
 		"npm:minor": "npm version minor",
 		"npm:major": "npm version major",
