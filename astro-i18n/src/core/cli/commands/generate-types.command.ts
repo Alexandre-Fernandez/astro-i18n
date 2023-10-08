@@ -242,7 +242,7 @@ declare module "${PACKAGE_NAME}" {
 		initialize(config?: Partial<AstroI18nConfig> | string, formatters?: TranslationFormatters = {}): Promise<void>
 	}
 	export const astroI18n: AstroI18n
-}`
+}`.trim()
 
 	const envDtsPath = join(root, "src", "env.d.ts")
 
