@@ -22,24 +22,41 @@
 	},
 	"main": "./src/index.ts",
 	"bin": "./dist/src/bin.cjs",
-	"types": "./src/index.ts",
+	"types": "./src/index.d.ts",
 	"files": [
 		"dist"
 	],
+	"exports": {
+		".": "./dist/src/index.mjs",
+		"./components": "./dist/src/astro/index.mjs"
+	},
+	"typesVersions": {
+		"*": {
+			"": [
+				"./dist/src/index.d.ts"
+			],
+			"components": [
+				"./dist/src/astro/index.d.ts"
+			]
+		}
+	},
 	"scripts": {
 		"prepare": "npm run build",
-		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs ",
-		"patch": "npm version patch",
-		"minor": "npm version minor",
-		"major": "npm version major",
-		"upload": "node bin/pre-publish.cjs && npm publish ; node bin/post-publish.cjs",
-		"lint": "eslint --ignore-path .eslintignore ."
+		"test": "../apps/astro/node_modules/.bin/vitest run --root ../apps/astro",
+		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs && cpy 'src/astro/*.astro' dist/src/astro",
+		"lint": "eslint --ignore-path .eslintignore .",
+		"npm:patch": "npm version patch",
+		"npm:minor": "npm version minor",
+		"npm:major": "npm version major",
+		"npm:publish": "node bin/pre-package.cjs && npm publish ; node bin/post-package.cjs",
+		"npm:pack": "node bin/pre-package.cjs && npm pack ; node bin/post-package.cjs"
 	},
 	"devDependencies": {
 		"@types/node": "^20.1.4",
 		"af-prettierrc": "latest",
 		"af-tsconfig": "latest",
 		"astro": "^2.7.2",
+		"cpy-cli": "^5.0.0",
 		"esbuild": "^0.17.19",
 		"eslint": "^8.40.0",
 		"eslint-config-af-typescript": "latest",

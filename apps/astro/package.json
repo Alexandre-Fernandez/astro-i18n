@@ -8,7 +8,7 @@
 		"dev": "astro dev",
 		"start": "astro dev",
 		"preview": "astro preview",
-		"build": "astro build",
+		"astro:build": "astro build",
 		"astro": "astro",
 		"test": "vitest",
 		"i18n:install": "astro-i18n install",

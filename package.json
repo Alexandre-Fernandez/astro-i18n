@@ -5,15 +5,15 @@
 		"dev": "turbo run dev",
 		"test": "turbo run test",
 		"build": "turbo run build",
-		"publish:patch": "turbo run publish:patch --filter=astro-i18n",
-		"publish:minor": "turbo run publish:minor --filter=astro-i18n",
-		"publish:major": "turbo run publish:major --filter=astro-i18n",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"i18n:generate:pages": "turbo run build --filter=astro-i18n && turbo run i18n:generate:pages --filter=astro",
-		"i18n:generate:types": "turbo run build --filter=astro-i18n && turbo run i18n:generate:types --filter=astro",
-		"i18n:extract": "turbo run build --filter=astro-i18n && turbo run i18n:extract --filter=astro",
-		"i18n:install": "turbo run build --filter=astro-i18n && turbo run i18n:install --filter=astro"
+		"i18n:generate:pages": "turbo run i18n:generate:pages",
+		"i18n:generate:types": "turbo run i18n:generate:types",
+		"i18n:extract": "turbo run i18n:extract",
+		"i18n:install": "turbo run i18n:install",
+		"npm:publish:patch": "turbo run publish:patch --filter=astro-i18n",
+		"npm:publish:minor": "turbo run publish:minor --filter=astro-i18n",
+		"npm:publish:major": "turbo run publish:major --filter=astro-i18n"
 	},
 	"devDependencies": {
 		"af-prettierrc": "latest",
