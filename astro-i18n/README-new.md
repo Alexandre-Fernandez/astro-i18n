@@ -1,5 +1,5 @@
 <div align="center" >
-    <img src="https://github.com/Alexandre-Fernandez/pathcrafter/blob/main/img/logo.png" alt="pathcrafter logo" width="66%">
+    <img src="https://raw.githubusercontent.com/Alexandre-Fernandez/astro-i18n/0fb145cf64ef94968ca70c36b52a922fa897d11a/img/logo.svg" alt="astro-i18n logo" width="33%">
     <br/>
 	<h1>astro-i18n</h1>
     <p>A TypeScript-first internationalization library for <a href="https://github.com/withastro/astro">Astro</a>.</p>
