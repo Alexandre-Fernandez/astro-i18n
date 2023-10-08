@@ -49,7 +49,7 @@
 		"npm:minor": "npm version minor",
 		"npm:major": "npm version major",
 		"npm:publish": "node bin/pre-package.cjs && npm publish ; node bin/post-package.cjs",
-		"npm:pack": "node bin/pre-package.cjs && npm pack ; node bin/post-package.cjs"
+		"npm:pack": "node bin/pre-package.cjs && npm pack --pack-destination=.. ; node bin/post-package.cjs"
 	},
 	"devDependencies": {
 		"@types/node": "^20.1.4",
