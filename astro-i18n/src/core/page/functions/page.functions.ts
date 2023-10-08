@@ -51,6 +51,7 @@ export async function getProjectPages(
 			"|",
 		)})(\\.[^\\.\\s]+)?\\.json$`,
 	)
+	const pageTranslationDirPattern = Regex.fromString(`_?${$directory.pages}`)
 
 	const primaryLocaleDir = config.showPrimaryLocale
 		? join(pagesDir, config.primaryLocale || "en")
@@ -93,7 +94,8 @@ export async function getProjectPages(
 				translationFilePattern.match(relative) || {}
 			if (!match || !range) continue
 
-			const route = `${relative.slice(0, range[0])}${match[1] || "/"}`
+			let route = `${relative.slice(0, range[0])}${match[1] || "/"}`
+			if (pageTranslationDirPattern.test(route)) route = "/"
 			const locale = match[2] || never()
 			const name = route.split("/").slice(-1).join("") || "index"
 			const translatedName = match[3] ? match[3].replace(".", "") : null
