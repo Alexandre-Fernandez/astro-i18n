@@ -60,7 +60,7 @@
 		"typescript": "^5.0.4"
 	},
 	"peerDependencies": {
-		"esbuild": "^0.17.18"
+		"esbuild": "0.x"
 	},
 	"contributors": [
 		{
