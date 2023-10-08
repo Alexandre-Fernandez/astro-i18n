@@ -53,7 +53,30 @@ export async function generateTypes({ command, options }: ParsedArgv) {
 	types += `type Environment = "${Object.values(Environment).join('"|"')}"\n`
 	types += `
 declare module "${PACKAGE_NAME}" {
-	export * from "${PACKAGE_NAME}/"
+	type GetStaticPathsProps = {paginate:Function;rss:Function}
+	type GetStaticPathsItem = {params:Record<string,number|string|undefined>;props?:Record<string,unknown>}
+	type DeepStringRecord = {[key: string]:string|DeepStringRecord}
+	type TranslationDirectory = {i18n?:string;pages?: string}
+	export type Translations = {[group: string]:{[locale: string]: DeepStringRecord}}
+	export type TranslationFormatters = {[formatterName: string]:(value:unknown,...args:unknown[])=>unknown}
+	export type TranslationLoadingRules = {groups:string[];routes: string[]}[]
+	export type SegmentTranslations = {[secondaryLocale: string]:{[segment: string]:string}}
+	export interface AstroI18nConfig {primaryLocale:string;secondaryLocales:string[];fallbackLocale:string;showPrimaryLocale:boolean;trailingSlash:"always"|"never";run:"server"|"client+server";translations:Translations;translationLoadingRules:TranslationLoadingRules;translationDirectory:TranslationDirectory;routes:SegmentTranslations;}
+	/** The \`${PACKAGE_NAME}\` middleware. */
+	export function useAstroI18n(
+		config?: Partial<AstroI18nConfig> | string,
+		formatters?: TranslationFormatters,
+	): (...args: any[]) => any
+	/** Workaround function to make astroI18n work inside getStaticPaths. This is because Astro's getStaticPaths runs before everything which doesn't allows astroI18n to update its state automatically. */
+	function createGetStaticPaths(
+		callback: (
+			props: GetStaticPathsProps,
+		) => GetStaticPathsItem[] | Promise<GetStaticPathsItem[]>,
+	): (props: GetStaticPathsProps & {
+		astroI18n?: {
+			locale: string;
+		};
+	}) => Promise<GetStaticPathsItem[]>
 	/**
 	 * @param key The translation key, for example \`"my.nested.translation.key"\`.
 	 * @param properties An object containing your interpolation variables and/or your variants, for example \`{ variant: 3, interpolation: "text" }\`.
@@ -118,13 +141,6 @@ declare module "${PACKAGE_NAME}" {
 				}
 			]
 	): string
-	type DeepStringRecord = {[key: string]:string|DeepStringRecord}
-	type TranslationDirectory = {i18n?:string;pages?: string}
-	export type Translations = {[group: string]:{[locale: string]: DeepStringRecord}}
-	export type TranslationFormatters = {[formatterName: string]:(value:unknown,...args:unknown[])=>unknown}
-	export type TranslationLoadingRules = {groups:string[];routes: string[]}[]
-	export type SegmentTranslations = {[secondaryLocale: string]:{[segment: string]:string}}
-	export interface AstroI18nConfig {primaryLocale:string;secondaryLocales:string[];fallbackLocale:string;showPrimaryLocale:boolean;trailingSlash:"always"|"never";run:"server"|"client+server";translations:Translations;translationLoadingRules:TranslationLoadingRules;translationDirectory:TranslationDirectory;routes:SegmentTranslations;}
 	class AstroI18n {
 		/** The detected runtime environment. */
 		environment: Environment

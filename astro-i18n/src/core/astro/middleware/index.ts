@@ -4,6 +4,9 @@ import type { AstroI18nConfig } from "@src/core/config/types"
 import type { AstroMiddleware } from "@src/core/astro/types"
 import type { Formatters } from "@src/core/translation/types"
 
+/**
+ * The `astro-i18n` middleware.
+ */
 export function useAstroI18n(
 	config?: Partial<AstroI18nConfig> | string,
 	formatters?: Formatters,
