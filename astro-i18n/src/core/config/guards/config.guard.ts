@@ -22,6 +22,10 @@ export function isPartialConfig(
 				if (!isStringArray(value)) return false
 				break
 			}
+			case "fallbackLocale": {
+				if (typeof value !== "string") return false
+				break
+			}
 			case "showPrimaryLocale": {
 				if (typeof value !== "boolean") return false
 				break
