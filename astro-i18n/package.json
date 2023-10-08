@@ -59,7 +59,7 @@
 		"tsc-alias": "^1.8.6",
 		"typescript": "^5.0.4"
 	},
-	"optionalDependencies": {
+	"peerDependencies": {
 		"esbuild": "^0.17.18"
 	},
 	"contributors": [
