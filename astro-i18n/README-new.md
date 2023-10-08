@@ -22,11 +22,11 @@
 
 ```yml
 # npm
-npm install astro-i18n && ./node_modules/.bin/astro-i18n install
+npm install astro-i18n
 # yarn
-yarn add astro-i18n && ./node_modules/.bin/astro-i18n install
+yarn add astro-i18n
 # pnpm
-pnpm add astro-i18n && ./node_modules/.bin/astro-i18n install
+pnpm add astro-i18n
 ```
 
 ```yml
