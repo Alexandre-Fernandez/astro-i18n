@@ -31,12 +31,11 @@ pnpm add astro-i18n
 
 ## Get started
 
-Run the quick setup command :
+Run the quick install command :
 
 ```yml
-# node
 ./node_modules/.bin/astro-i18n install
-# serverless
+# serverless (no filesystem/node.js setup)
 ./node_modules/.bin/astro-i18n install --serverless
 ```
 
