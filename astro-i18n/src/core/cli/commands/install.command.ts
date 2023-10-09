@@ -119,9 +119,9 @@ export const onRequest = sequence(astroI18n)
 	const i18nDir = join(root, "src", DEFAULT_TRANSLATION_DIRNAME)
 	let hasCommonDir = false
 	for (const content of readdirSync(root)) {
-		// checking for common dir in any root directory
 		const path = join(root, content)
 		if (!(await isDirectory(path))) continue
+		if (content === "node_modules") continue
 		for (const filename of readdirSync(path)) {
 			if (
 				filename === COMMON_TRANSLATIONS_GROUP &&
