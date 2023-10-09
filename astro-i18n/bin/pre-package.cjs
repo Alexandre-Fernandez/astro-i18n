@@ -25,12 +25,12 @@ const packageJson = JSON.parse(
 copyFileSync(PACKAGE_JSON_PATH, `${PACKAGE_JSON_PATH}.bk`)
 
 // update to build path
-packageJson.main = "./" + join(BUILD_SRC_DIR, `index.mjs`)
+packageJson.main = "./" + join(BUILD_SRC_DIR, `index.js`)
 packageJson.types = "./" + join(BUILD_SRC_DIR, `index.d.ts`)
-packageJson.exports["."].import = "./" + join(BUILD_SRC_DIR, `index.mjs`)
+packageJson.exports["."].import = "./" + join(BUILD_SRC_DIR, `index.js`)
 packageJson.exports["."].types = "./" + join(BUILD_SRC_DIR, `index.d.ts`)
 packageJson.exports["./components"].import =
-	"./" + join(BUILD_ASTRO_DIR, `index.mjs`)
+	"./" + join(BUILD_ASTRO_DIR, `index.js`)
 packageJson.exports["./components"].types =
 	"./" + join(BUILD_ASTRO_DIR, `index.d.ts`)
 

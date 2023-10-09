@@ -10,9 +10,6 @@ esbuild.build({
 	platform: "node",
 	target: "node18",
 	format: "esm",
-	outExtension: {
-		".js": ".mjs",
-	},
 	sourcemap: false,
 	sourcesContent: false,
 })
@@ -42,9 +39,6 @@ esbuild.build({
 	platform: "node",
 	target: "node18",
 	format: "esm",
-	outExtension: {
-		".js": ".mjs",
-	},
 	sourcemap: false,
 	sourcesContent: false,
 })
