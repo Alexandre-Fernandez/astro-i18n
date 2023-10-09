@@ -115,7 +115,7 @@ export const onRequest = sequence(astroI18n)
 		)
 	}
 
-	// creating common directory folder
+	// creating common translation directory
 	const i18nDir = join(root, "src", DEFAULT_TRANSLATION_DIRNAME)
 	let hasCommonDir = false
 	for (const content of readdirSync(root)) {
