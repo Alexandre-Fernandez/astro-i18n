@@ -6,11 +6,13 @@ import {
 } from "@lib/async-node/functions/path.functions"
 
 export async function isDirectory(path: string) {
+	if (!path) return false
 	const { existsSync, lstatSync } = await AsyncNode.fs
 	return existsSync(path) && lstatSync(path).isDirectory()
 }
 
 export async function isFile(path: string) {
+	if (!path) return false
 	const { existsSync, lstatSync } = await AsyncNode.fs
 	return existsSync(path) && !lstatSync(path).isDirectory()
 }

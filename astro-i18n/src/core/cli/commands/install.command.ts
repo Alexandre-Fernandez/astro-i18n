@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { isRecord } from "@lib/ts/guards"
 import { merge } from "@lib/object"
 import { importJson } from "@lib/async-node/functions/import.functions"
@@ -18,10 +19,12 @@ import {
 } from "@src/core/cli/constants/cli-patterns.constants"
 import { PACKAGE_NAME } from "@src/constants/meta.constants"
 import type { Command, ParsedArgv } from "@lib/argv/types"
+import { COMMON_TRANSLATIONS_GROUP } from "@src/core/translation/constants/translation.constants"
+import { DEFAULT_TRANSLATION_DIRNAME } from "@src/constants/app.constants"
 
 const cmd = {
 	name: "install",
-	options: ["root"],
+	options: ["root", "serverless"],
 } as const satisfies Command
 
 export async function install({ command, options }: ParsedArgv) {
@@ -36,29 +39,6 @@ export async function install({ command, options }: ParsedArgv) {
 
 	const isTypescript = await hasTsconfig(root)
 
-	// create default config file
-	if (!(await getAstroI18nConfigPath(root))) {
-		writeFileSync(
-			join(root, `${PACKAGE_NAME}.config.${isTypescript ? "ts" : "js"}`),
-			`
-import { defineAstroI18nConfig } from "astro-i18n"
-
-export default defineAstroI18nConfig({
-	primaryLocale: "en", // the default locale for your app
-	secondaryLocales: [], // other supported locales
-	fallbackLocale: "en", // if a translation is missing in a locale it will retry with the fallbackLocale
-	trailingSlash: "never", // add trailing slashes to generated links
-	run: "client+server", // where will ${PACKAGE_NAME} be able to run
-	showPrimaryLocale: false, // show the primary locale in the generated routes (for example /en/about instead of /about)
-	translationLoadingRules: [], // which translation group gets loaded in a page
-	translationDirectory: {}, // set the name of ${PACKAGE_NAME} translation directories
-	translations: {}, // you can put your translations here, for example { [group]: { [locale]: {...} } }
-	routes: {}, // you can put your route segment translations here, for example { [secondary_locale]: { about: "about-translated-in-secondary_locale" } }
-})
-`.trim(),
-		)
-	}
-
 	// add commands in package.json
 	const pkgPath = join(root, "package.json")
 	const pkg = (await isFile(pkgPath)) ? await importJson(pkgPath) : null
@@ -72,7 +52,44 @@ export default defineAstroI18nConfig({
 					"npm run i18n:generate:pages && npm run i18n:generate:types",
 			},
 		})
-		writeFileSync(pkgPath, JSON.stringify(pkg, null, "\t"))
+		writeFileSync(pkgPath, `${JSON.stringify(pkg, null, "\t")}\n`)
+	}
+
+	await (options["serverless"]
+		? installServerless(root, isTypescript)
+		: installNode(root, isTypescript))
+}
+
+/**
+ * Node
+ */
+async function installNode(root: string, isTypescript: boolean) {
+	const { writeFileSync, readdirSync } = await AsyncNode.fs
+	const { join } = await AsyncNode.path
+
+	const astroI18nConfigPath = await getAstroI18nConfigPath(root)
+
+	// create default config file
+	if (!astroI18nConfigPath) {
+		writeFileSync(
+			join(root, `${PACKAGE_NAME}.config.${isTypescript ? "ts" : "js"}`),
+			`
+import { defineAstroI18nConfig } from "astro-i18n"
+
+export default defineAstroI18nConfig({
+	primaryLocale: "en", // default app locale
+	secondaryLocales: [], // other supported locales
+	fallbackLocale: "en", // fallback locale (on missing translation)
+	trailingSlash: "never", // "never" or "always"
+	run: "client+server", //"client+server" or "server"
+	showPrimaryLocale: false, // "/en/about" vs "/about"
+	translationLoadingRules: [], // per page group loading
+	translationDirectory: {}, // translation directory names
+	translations: {}, // { [translation_group1]: { [locale1]: {}, ... } }
+	routes: {}, // { [secondary_locale1]: { about: "about-translated", ... } }
+})
+`.trim(),
+		)
 	}
 
 	// add default middleware
@@ -90,6 +107,78 @@ import { useAstroI18n } from "astro-i18n"
 
 const astroI18n = useAstroI18n(
 	undefined /* config */,
+	undefined /* custom formatters */,
+)
+
+export const onRequest = sequence(astroI18n)
+`.trim(),
+		)
+	}
+
+	// creating common directory folder
+	const i18nDir = join(root, "src", DEFAULT_TRANSLATION_DIRNAME)
+	let hasCommonDir = false
+	for (const content of readdirSync(root)) {
+		// checking for common dir in any root directory
+		const path = join(root, content)
+		if (!(await isDirectory(path))) continue
+		for (const filename of readdirSync(path)) {
+			if (
+				filename === COMMON_TRANSLATIONS_GROUP &&
+				(await isDirectory(filename))
+			) {
+				hasCommonDir = true
+				break
+			}
+		}
+	}
+	if (!(await isDirectory(i18nDir)) && !hasCommonDir) {
+		writeNestedFile(
+			join(i18nDir, COMMON_TRANSLATIONS_GROUP, "en.json"),
+			`${JSON.stringify(
+				{
+					your_common: "translations here",
+					they: { can: "be nested" },
+				},
+				null,
+				"\t",
+			)}\n`,
+		)
+	}
+}
+
+/**
+ * Serverless
+ */
+async function installServerless(root: string, isTypescript: boolean) {
+	const { join } = await AsyncNode.path
+
+	// add default middleware
+	if (!(await getMiddlewarePath(root))) {
+		writeNestedFile(
+			join(
+				root,
+				"src",
+				"middleware",
+				`index.${isTypescript ? "ts" : "js"}`,
+			),
+			`
+import { sequence } from "astro/middleware"
+import { useAstroI18n } from "astro-i18n"
+
+const astroI18n = useAstroI18n(
+	{
+		primaryLocale: "en", // default app locale
+		secondaryLocales: [], // other supported locales
+		fallbackLocale: "en", // fallback locale (on missing translation)
+		trailingSlash: "never", // "never" or "always"
+		run: "client+server", //"client+server" or "server"
+		showPrimaryLocale: false, // "/en/about" vs "/about"
+		translationLoadingRules: [], // per page group loading
+		translationDirectory: {}, // translation directory names
+		translations: {}, // { [translation_group1]: { [locale1]: {}, ... } }
+		routes: {}, // { [secondary_locale1]: { about: "about-translated", ... } }
+	},
 	undefined /* custom formatters */,
 )
 

@@ -16,7 +16,7 @@
 
 ## Introduction
 
-...
+Most internationalization libraries rely on raw untyped strings to access their translations. This is equally possible with astro-i18n however it can generate project specific types to get type-safety and autocompletion on your translations.
 
 ## Installation
 
@@ -29,14 +29,14 @@ yarn add astro-i18n
 pnpm add astro-i18n
 ```
 
+## Get started
+
+Run the quick setup command :
+
 ```yml
 # quick setup
 ./node_modules/.bin/astro-i18n install
 ```
-
-## Get started
-
-...
 
 ## Reference
 
