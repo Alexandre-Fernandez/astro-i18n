@@ -565,24 +565,19 @@ Utility function to parse one of the configured locales out of the given route.
 
 ## CLI
 
-...
+### `astro-i18n install`
 
-## Contributors
+Generates default files and add i18n commands to `package.json`.
 
-<table>
-	<tbody>
-		<tr>
-			<td align="center">
-				<a href="https://github.com/Alexandre-Fernandez">
-					<figure>
-						<img src="https://avatars.githubusercontent.com/u/79476242?v=4?s=100" width="100px;"
-							alt="Alexandre Fernandez">
-						<br />
-						<figcaption><sub>Alexandre Fernandez</sub></figcaption>
-					</figure>
-				</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
-```
+### `astro-i18n generate:pages`
+
+Generates the pages corresponding to your current config and `src/pages` folder. You can use the `--purge` argument to clear old pages.
+
+### `astro-i18n generate:types`
+
+Generates types in `src/env.d.ts` to give you type safety according to your config & translations.
+
+### `astro-i18n extract:keys`
+
+Extract all the translation keys used in `src/pages` (as long as they are strings and not variables), and adds them to your i18n folder for every locale.
+This is useful if you use your keys as values.
