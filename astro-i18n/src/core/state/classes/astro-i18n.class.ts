@@ -334,7 +334,8 @@ class AstroI18n {
 		return this
 	}
 
-	/** Tries to parse one of the configured locales out of the given route.
+	/**
+	 * Tries to parse one of the configured locales out of the given route.
 	 * If no configured locale is found it will return \`null\`.
 	 */
 	extractRouteLocale(route: string) {

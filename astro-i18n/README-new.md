@@ -352,17 +352,216 @@ function xXify(value: unknown, repeats: unknown = 1) {
 
 ## Reference
 
-### ...
+### `defineAstroI18nConfig`
 
-...
+```ts
+function defineAstroI18nConfig(
+	config: Partial<AstroI18nConfig>,
+): Partial<AstroI18nConfig>
+```
 
-### ...
+Utility function to get type safety when defining the config.
 
-...
+### `useAstroI18n`
 
-### ...
+```ts
+function useAstroI18n(
+	config?: Partial<AstroI18nConfig> | string, // string if path to config file
+	formatters?: {
+		[name: string]: (value: unknown, ...args: unknown[]) => unknown
+	},
+): AstroMiddleware
+```
 
-...
+The astro-i18n middleware, mandatory to make the library work.
+
+### `createGetStaticPaths`
+
+```ts
+function createGetStaticPaths(
+	callback: (
+		props: GetStaticPathsProps,
+	) => GetStaticPathsItem[] | Promise<GetStaticPathsItem[]>,
+): GetStaticPathsItem[] | Promise<GetStaticPathsItem[]>
+```
+
+You should use this function if you plan to use any translation features inside a getStaticPaths. This is to fix some Astro behaviour. Using the `t` function is not recommended inside getStaticPaths.
+
+### `t`
+
+Alias for `astroI18n.t`.
+
+### `l`
+
+Alias for `astroI18n.l`.
+
+### `astroI18n.environment`
+
+```ts
+environment: "node" | "none" | "browser"
+```
+
+The current detected environment.
+
+### `astroI18n.route`
+
+```ts
+route: string
+```
+
+The current route (without the locale, for example `/fr/about` will return `/about`).
+
+### `astroI18n.pages`
+
+```ts
+pages: string[]
+```
+
+An array of all the available pages.
+
+### `astroI18n.page`
+
+```ts
+page: string
+```
+
+The corresponding page for the current route, for example `/posts/my-cool-slug` will be `/posts/[slug]`.
+
+### `astroI18n.locale`
+
+```ts
+locale: string
+```
+
+The locale for the current page.
+
+### `astroI18n.locales`
+
+```ts
+locales: string[]
+```
+
+All the supported locales.
+
+### `astroI18n.primaryLocale`
+
+```ts
+primaryLocale: string
+```
+
+The configured primary locale.
+
+### `astroI18n.secondaryLocales`
+
+```ts
+secondaryLocales: string
+```
+
+The configured secondary locales.
+
+### `astroI18n.fallbackLocale`
+
+```ts
+fallbackLocale: string
+```
+
+The configured fallback locale.
+
+### `astroI18n.isInitialized`
+
+```ts
+isInitialized: boolean
+```
+
+True once the config has been loaded and the state initialized.
+
+### `astroI18n.t`
+
+```ts
+function t(
+	key: string,
+	properties?: Record<string, unknown>,
+	options?: {
+		route?: string
+		locale?: string
+		fallbackLocale?: string
+	},
+): string
+```
+
+The main translation function (`t` is an alias).
+
+### `astroI18n.l`
+
+```ts
+function l(
+	route: string,
+	parameters?: Record<string, unknown>,
+	options?: {
+		targetLocale?: string
+		routeLocale?: string
+		showPrimaryLocale?: boolean
+		query?: Record<string, unknown>
+	},
+): string
+```
+
+The main routing function (`l` is an alias).
+
+### `astroI18n.addTranslations`
+
+```ts
+function addTranslations(translations: {
+	[group: string]: {
+		[locale: string]: DeepStringRecord
+	}
+}): AstroI18n
+```
+
+Adds new translations at runtime.
+
+### `astroI18n.addFormatters`
+
+```ts
+function addFormatters(formatters: {
+	[name: string]: (value: unknown, ...args: unknown[]) => unknown
+}): AstroI18n
+```
+
+Adds new formatters at runtime.
+
+### `astroI18n.addTranslationLoadingRules`
+
+```ts
+function addTranslationLoadingRules(
+	translationLoadingRules: {
+		groups: string[]
+		routes: string[]
+	}[],
+): AstroI18n
+```
+
+Adds new translation loading rules at runtime.
+
+### `astroI18n.addRoutes`
+
+```ts
+function addRoutes(routes: {
+	[secondaryLocale: string]: {
+		[segment: string]: string
+	}
+}): AstroI18n
+```
+
+Adds new route segment translations at runtime.
+
+### `astroI18n.extractRouteLocale`
+
+```ts
+function extractRouteLocale(route: string): string
+```
+
+Utility function to parse one of the configured locales out of the given route.
 
 ## CLI
 
