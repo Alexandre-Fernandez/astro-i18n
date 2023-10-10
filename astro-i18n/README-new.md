@@ -55,17 +55,17 @@ If you are using **serverless all your initial data needs to be passed to the mi
 
 When using node (SSR or SSG) you can either go for the same workflow as serverless or use the filesystem to store your config and translations.
 
-If you used the quick install (with node) a config file for `astro-i18n` should have been generated, you will find it in your root directory (`astro-i18n.config.(ts|js|cjs|mjs|json)`). This is exactly the same as passing it in the middleware parameters.
+If you used the quick install (with node) a config file for `astro-i18n` should have been generated, you will find it in your root directory (`astro-i18n.config.(ts|js|cjs|mjs|json)`). This is the same as passing it in the middleware parameters.
 **Configure it as needed, you can set your `primaryLocale` and `secondaryLocales` there**.
 
-In total you can put your translations in 4 locations :
+You can put your translations in four locations :
 
 -   Inside the middleware config.
 -   Inside the config file at the root.
 -   In your `src/pages` folder (local page translations), see below.
 -   In the `src/i18n` directory, see below.
 
-**`astro-i18n` works on the server-side and on the client-side** to allow it to work with client-side frameworks such as React. Because of this **translations are aggregated into groups**:
+**`astro-i18n` works on the server-side and on the client-side** so that it can work with client-side frameworks. Because of this **translations are aggregated into groups**:
 
 -   The `"common"` group which is accesible on every page.
 -   The current page group named after its route, such as `"/about"` or `"/posts/[id]"`, as its name implies it's only accessible on the current page.
@@ -123,7 +123,7 @@ t("my_nested.translation_key") // bonjour
 
 If there's duplicate keys `t` will return the more specific one (custom group => local page => common group).
 
-To translate a link use the `l` function :
+To translate a link use the `l` function, **by default all route segment translations are visible on the client-side** :
 
 ```ts
 // src/pages/fr/a-propos/index.astro
@@ -140,6 +140,217 @@ l("/about") // "a-propos"
 ```
 
 That's it for the basics, for more keep reading !
+
+## Configuration
+
+### `primaryLocale`
+
+The default locale for your app.
+
+### `secondaryLocales`
+
+All the other locales supported by your app.
+
+### `fallbackLocale`
+
+If left undefined this will be equal to your `primaryLocale`, to disable it set it to an empty string. The locale to search a translation in when it's missing in another one.
+
+### `showPrimaryLocale`
+
+Boolean deciding whether to show the default locale in the url or not.
+
+### `trailingSlash`
+
+Possible values are `"always"` or `"never"` (default). When set to `"always"`, generated routes will have a trailing slash.
+
+### `run`
+
+Possible values are `"server"` or `"client+server"` (default). When set to `"client+server"` the available translations for the current page and all route translations will be serialized and sent to the client so that astro-i18n can work with client-side frameworks. You can disable this behaviour by setting `run` to `"server"`.
+
+### `translations`
+
+Your app translations in the following format :
+
+```json
+{
+	"common": {
+		"en": {
+			"hello": "Hello",
+			"form": {
+				// accessed with the "form.first_name" key :
+				"first_name": "First name"
+			}
+		},
+		"fr": {
+			"hello": "Bonjour",
+			"form": {
+				"first_name": "Prénom"
+			}
+		}
+	},
+	"admin": {
+		"en": {
+			"how_are_you": "How are you ?"
+		},
+		"fr": {
+			"how_are_you": "Comment allez vous ?"
+		}
+	},
+	// routes are also a valid group, they will automatically load in the corresponding page :
+	"/posts/[id]": {
+		"en": {
+			"bye": "Bye"
+		},
+		"fr": {
+			"bye": "Au revoir"
+		}
+	}
+}
+```
+
+### `translationLoadingRules`
+
+An array of rules specifying what group to load on which page :
+
+```json
+[
+	{
+		"routes": ["^/admin.*"], // regex for all routes beginning with "/admin"
+		"groups": ["^admin$"] // regex to load the "admin" group
+	}
+]
+```
+
+### `translationDirectory`
+
+Which name to use for the directories in `src` and in `src/pages`, by default it's `"i18n"` (`/src/i18n` and `src/pages/i18n`/`src/pages/about/i18n`).
+
+```json
+{
+	"i18n": "i18n",
+	"pages": "i18n"
+}
+```
+
+### `routes`
+
+Your route segment translations. This is where you can translate your routes, for example `"/about"` to `"/a-propos"`.
+
+```json
+{
+	// only specify secondary locales
+	"fr": {
+		// "primary_locale_segment": "translated_segment"
+		"about": "a-propos"
+	}
+}
+```
+
+## Variants
+
+Variants are the way that plurals and context are handled. You can set multiple variables, numbers will match the closest value however other types will only match exact matches. They are set in the translation key, here's some examples :
+
+```json
+{
+	"car": "There is a car.", // default value for "car" key
+	"car{{ cars: 2 }}": "There are two cars.",
+	"car{{ cars: 3 }}": "There are many cars.",
+	"foo{{ multiple: [true, 'bar'] }}": "baz.",
+	"context{{ weather: 'rain' }}": "It's rainy.",
+	"context{{ weather: 'sun' }}": "It's sunny."
+}
+```
+
+```ts
+import { astroI18n, t } from "astro-i18n"
+
+t("car") // "There is a car."
+t("car", { cars: 0 }) // "There are two cars."
+t("car", { cars: 1 }) // "There are two cars."
+t("car", { cars: 2 }) // "There are two cars."
+t("car", { cars: 3 }) // "There are many cars."
+t("car", { cars: 18 }) // "There are many cars."
+t("foo", { multiple: true }) // "baz."
+t("foo", { multiple: "bar" }) // "baz."
+t("context", { weather: "rain" }) // "It's rainy."
+t("context", { weather: "sun" }) // "It's sunny."
+```
+
+## Interpolations
+
+Interpolations can be used to display dynamic data in your translation values, here's some examples :
+
+```json
+{
+	"interpolation_1": "{# variable #}",
+	"interpolation_2": "{# variable(alias) #}",
+	"interpolation_3": "{# variable(alias)>uppercase #}",
+	"interpolation_4": "{# 15>intl_format_number({ style: 'currency', currency: currency }) #}",
+	"interpolation_5": "{# { foo: 'bar'}(alias)>json(false)>uppercase #}"
+}
+```
+
+```ts
+import { astroI18n, t } from "astro-i18n"
+
+astroI18n.locale // "en"
+
+t("interpolation_1", { variable: "foo" }) // "foo"
+t("interpolation_2", { alias: "bar" }) // "bar"
+t("interpolation_3", { alias: "baz" }) // "BAZ"
+t("interpolation_4", { currency: "EUR" }) // "€15.00"
+t("interpolation_5") // '{"FOO":"BAR"}'
+t("interpolation_5", { alias: { bar: "baz" } }) // '{"BAR":"BAZ"}'
+```
+
+As you can see there's multiple parts to an interpolation :
+
+-   The interpolation value which is what the formatters apply on.
+-   The interpolation alias which can either change the name of the value if it's a variable or make the value a default value replaceable by the alias variable.
+-   The interpolation formatters which can take arguments, you can chain them and create your own. When creating a formatter, if you want it to work on the client side it must not use anything outside the function scope.
+
+You can apply this to any value, even if it's nested or inside the formatters arguments.
+
+## Interpolation formatters
+
+An interpolation formatter is a function that takes the interpolation value and transforms it, if there's multiple of them they will be chained.
+These are the default interpolation formatters :
+
+-   `upper()` : `value.toUpperCase()`.
+-   `uppercase()` : alias for `upper`.
+-   `lower()` : `value.toLowerCase()`.
+-   `lowercase()` : alias for `lower`.
+-   `capitalize()` : Capitalizes the first character of `value` and lowers the others.
+-   `json(format = true)` : `JSON.stringify(value)`, if format is true it will format the JSON.
+-   `default_falsy(defaultValue)` : When `!value`, `defaultValue` will be used instead.
+-   `default(defaultValue)` : alias for `default_falsy`.
+-   `default_nullish(defaultValue)` : When `value == null`, `defaultValue` will be used instead.
+-   `default_non_string(defaultValue)` : When `typeof value !== "string"`, `defaultValue` will be used instead.
+-   `intl_format_number(options, locale = astroI18n.locale)` : Formats `value` with [`Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat).
+-   `intl_format_date(options, locale = astroI18n.locale)` : Formats `value` with [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
+
+If the formatter has no arguments you can write it without parenthesises, for example `value>upper`.
+
+You can add your own custom formatters in the second argument of the middleware. If you want them to work on the client-side they must not use anything outside the function scope. Here's an example of a custom formatter :
+
+```ts
+export function xXify(value: unknown, repeats: unknown = 1) {
+	if (typeof repeats !== "number") {
+		throw new Error("repeats must be a number")
+	}
+	if (repeats <= 0) {
+		return value
+	}
+	return `${"xX".repeat(repeats)}${value}${"Xx".repeat(repeats)}`
+}
+
+// example that wouldn't work client-side :
+const error = new Error("repeats must be a number")
+function xXify(value: unknown, repeats: unknown = 1) {
+	if (typeof repeats !== "number") throw error // cannot use anything outside of scope
+	// ...
+}
+```
 
 ## Reference
 
@@ -177,3 +388,4 @@ That's it for the basics, for more keep reading !
 		</tr>
 	</tbody>
 </table>
+```
