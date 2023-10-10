@@ -8,15 +8,15 @@
 ## Features
 
 -   🪶 Lightweight.
--   🏗️ Build-time loading.
 -   🌏 Internationalized routing.
 -   🔒 Type-safety and autocompletion.
 -   🔧 Support for plurals, context, interpolations and formatters.
 -   🚀 Built for [Astro](https://github.com/withastro/astro) and nothing else.
+-   💻 Astro island compatible.
 
 ## Introduction
 
-Most internationalization libraries rely on raw untyped strings to access their translations. This is equally possible with astro-i18n however it can generate project specific types to get type-safety and autocompletion on your translations.
+Most internationalization libraries rely on raw untyped strings to access their translations. This is equally possible with astro-i18n however it can generate project specific types to get type-safety and autocompletion for your translations.
 
 ## Installation
 
