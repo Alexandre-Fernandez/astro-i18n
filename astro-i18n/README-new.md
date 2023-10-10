@@ -338,9 +338,7 @@ export function xXify(value: unknown, repeats: unknown = 1) {
 	if (typeof repeats !== "number") {
 		throw new Error("repeats must be a number")
 	}
-	if (repeats <= 0) {
-		return value
-	}
+	if (repeats <= 0) return value
 	return `${"xX".repeat(repeats)}${value}${"Xx".repeat(repeats)}`
 }
 
