@@ -569,7 +569,7 @@ You can use these premade components in your project :
 
 ### HrefLangs
 
-SEO component, see [hreglang](https://en.wikipedia.org/wiki/Hreflang).
+SEO component, see [hreflang](https://en.wikipedia.org/wiki/Hreflang).
 
 ```astro
 ---
@@ -599,7 +599,7 @@ const hrefLangs = astroI18n.locales.map((locale) => ({
 
 ```
 
-### LanguageSwitcher
+### LocaleSwitcher
 
 Simple component to switch locales.
 
