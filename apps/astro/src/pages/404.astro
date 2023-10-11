@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro"
+
+const data = Astro.locals
+---
+
+<Layout>
+	<main>404 {JSON.stringify(data)}</main>
+</Layout>
+
+<script></script>
+
+<style>
+	main {
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>

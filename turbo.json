@@ -1,0 +1,64 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": ["**/.env.*local"],
+	"pipeline": {
+		"lint": {},
+		"test": {},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", "!.next/cache/**"]
+		},
+		"i18n:generate:pages": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"i18n:generate:types": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"i18n:extract": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"i18n:install": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"npm:patch": {
+			"dependsOn": ["lint", "test"],
+			"cache": false
+		},
+		"npm:minor": {
+			"dependsOn": ["lint", "test"],
+			"cache": false
+		},
+		"npm:major": {
+			"dependsOn": ["lint", "test"],
+			"cache": false
+		},
+		"npm:publish": {
+			"dependsOn": ["lint", "test", "build"],
+			"cache": false
+		},
+		"npm:publish:patch": {
+			"dependsOn": ["lint", "test", "build", "npm:patch", "npm:publish"],
+			"cache": false
+		},
+		"npm:publish:minor": {
+			"dependsOn": ["lint", "test", "build", "npm:minor", "npm:publish"],
+			"cache": false
+		},
+		"npm:publish:major": {
+			"dependsOn": ["lint", "test", "build", "npm:major", "npm:publish"],
+			"cache": false
+		},
+		"npm:pack": {
+			"dependsOn": ["lint", "test", "build"],
+			"cache": false
+		}
+	}
+}

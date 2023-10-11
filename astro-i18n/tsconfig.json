@@ -1,0 +1,18 @@
+{
+	"extends": "af-tsconfig",
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "es2022",
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"@src": ["./src"],
+			"@src/*": ["./src/*"],
+			"@lib": ["./lib"],
+			"@lib/*": ["./lib/*"]
+		}
+	},
+	"include": ["src", "lib"]
+}

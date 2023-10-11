@@ -1,0 +1,45 @@
+{
+	"name": "astro",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"prepare": "astro telemetry disable",
+		"dev": "astro dev",
+		"start": "astro dev",
+		"preview": "astro preview",
+		"astro:build": "astro build",
+		"astro": "astro",
+		"test": "vitest",
+		"i18n:install": "astro-i18n install",
+		"i18n:extract": "astro-i18n extract",
+		"i18n:generate:pages": "astro-i18n generate:pages --purge",
+		"i18n:generate:types": "astro-i18n generate:types",
+		"i18n:sync": "npm run i18n:generate:pages && npm run i18n:generate:types"
+	},
+	"devDependencies": {
+		"af-prettierrc": "latest",
+		"af-tsconfig": "latest",
+		"astro": "^3.0.7",
+		"eslint": "^8.40.0",
+		"eslint-config-af-typescript": "latest",
+		"eslint-plugin-astro": "^0.27.0",
+		"prettier": "^2.8.8",
+		"prettier-plugin-astro": "^0.8.1",
+		"typescript": "^5.2.2",
+		"vite-tsconfig-paths": "^4.2.1",
+		"vitest": "^0.34.5"
+	},
+	"dependencies": {
+		"@astrojs/react": "^2.2.1",
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"astro-i18n": "workspace:*",
+		"esbuild": "^0.17.18",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0"
+	},
+	"peerDependencies": {
+		"astro": "^2.5.0"
+	}
+}

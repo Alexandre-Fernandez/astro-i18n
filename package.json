@@ -1,75 +1,31 @@
 {
-	"name": "astro-i18n",
-	"version": "1.8.1",
-	"author": "alexandre-fernandez",
-	"description": "A TypeScript-first internationalization library for Astro.",
-	"keywords": [
-		"astro",
-		"i18n",
-		"l10n",
-		"internationalization",
-		"localization",
-		"typescript",
-		"astro-component",
-		"seo",
-		"accessibility"
-	],
-	"license": "MIT",
-	"homepage": "https://github.com/alexandre-fernandez/astro-i18n",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/alexandre-fernandez/astro-i18n"
-	},
-	"main": "dist/src/index.mjs",
-	"bin": "dist/src/cli/index.cjs",
-	"types": "./dist/src/index.d.ts",
-	"files": [
-		"dist"
-	],
-	"exports": {
-		".": "./dist/src/index.mjs",
-		"./components": "./dist/src/astro/index.mjs"
-	},
-	"typesVersions": {
-		"*": {
-			"": [
-				"./dist/src/index.d.ts"
-			],
-			"components": [
-				"./dist/src/astro/index.d.ts"
-			]
-		}
-	},
+	"name": "astro-i18n-monorepo",
+	"private": true,
 	"scripts": {
-		"prepare": "ts-patch install -s",
-		"lint": "eslint --ignore-path .eslintignore .",
-		"build": "npm run build:types && npm run build:core && npm run build:cli && npm run build:astro",
-		"build:types": "tsc --project tsconfig.json",
-		"build:core": "node esbuild/core.cjs",
-		"build:cli": "node esbuild/cli.cjs",
-		"build:astro": "node esbuild/astro.cjs && cpy 'src/astro/*.astro' dist/src/astro"
+		"dev": "turbo run dev",
+		"test": "turbo run test",
+		"build": "turbo run build",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"i18n:generate:pages": "turbo run i18n:generate:pages",
+		"i18n:generate:types": "turbo run i18n:generate:types",
+		"i18n:extract": "turbo run i18n:extract",
+		"i18n:install": "turbo run i18n:install",
+		"npm:publish:patch": "turbo run publish:patch --filter=astro-i18n",
+		"npm:publish:minor": "turbo run publish:minor --filter=astro-i18n",
+		"npm:publish:major": "turbo run publish:major --filter=astro-i18n",
+		"npm:pack": "turbo run npm:pack --filter=astro-i18n"
 	},
 	"devDependencies": {
-		"@types/node": "^18.8.5",
-		"@typescript-eslint/eslint-plugin": "^5.43.0",
-		"@typescript-eslint/parser": "^5.43.0",
-		"astro": "^2.5.0",
-		"cpy-cli": "^4.2.0",
-		"esbuild": "^0.15.11",
-		"eslint": "^8.27.0",
-		"eslint-config-af-typescript": "^1.6.0",
-		"prettier": "^2.7.1",
-		"ts-patch": "^2.0.2",
-		"typescript": "4.8.4",
-		"typescript-transform-paths": "^3.4.4"
+		"af-prettierrc": "latest",
+		"eslint": "^7.32.0",
+		"eslint-config-af-typescript": "latest",
+		"prettier": "^2.8.8",
+		"turbo": "^1.10.13",
+		"typescript": "^5.2.2"
 	},
-	"dependencies": {
-		"get-file-exports": "^1.2.1"
-	},
-	"contributors": [
-		{
-			"name": "Alexandre Fernandez",
-			"url": "https://github.com/alexandre-fernandez"
-		}
-	]
+	"packageManager": "pnpm@7.15.0",
+	"engines": {
+		"node": ">=18.0.0"
+	}
 }

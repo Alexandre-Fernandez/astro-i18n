@@ -1,0 +1,67 @@
+{
+	"name": "astro-i18n",
+	"version": "1.8.1",
+	"author": "alexandre-fernandez",
+	"description": "A TypeScript-first internationalization library for Astro.",
+	"keywords": [
+		"astro",
+		"i18n",
+		"l10n",
+		"internationalization",
+		"localization",
+		"typescript",
+		"astro-component",
+		"seo",
+		"accessibility"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/alexandre-fernandez/astro-i18n",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexandre-fernandez/astro-i18n"
+	},
+	"main": "./src/index.ts",
+	"bin": "./dist/src/bin.cjs",
+	"types": "./src/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"import": "./src/index.ts",
+			"types": "./src/index.d.ts"
+		}
+	},
+	"scripts": {
+		"prepare": "npm run build",
+		"test": "../apps/astro/node_modules/.bin/vitest run --root ../apps/astro",
+		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs",
+		"lint": "eslint --ignore-path ../.eslintignore .",
+		"npm:patch": "npm version patch",
+		"npm:minor": "npm version minor",
+		"npm:major": "npm version major",
+		"npm:publish": "node bin/pre-package.cjs && npm publish ; node bin/post-package.cjs",
+		"npm:pack": "node bin/pre-package.cjs && npm pack --pack-destination=.. ; node bin/post-package.cjs"
+	},
+	"devDependencies": {
+		"@types/node": "^20.1.4",
+		"af-prettierrc": "latest",
+		"af-tsconfig": "latest",
+		"astro": "^2.7.2",
+		"cpy-cli": "^5.0.0",
+		"esbuild": "^0.17.19",
+		"eslint": "^8.40.0",
+		"eslint-config-af-typescript": "latest",
+		"tsc-alias": "^1.8.6",
+		"typescript": "^5.0.4"
+	},
+	"peerDependencies": {
+		"esbuild": "0.x"
+	},
+	"contributors": [
+		{
+			"name": "Alexandre Fernandez",
+			"url": "https://github.com/alexandre-fernandez"
+		}
+	]
+}

@@ -1,0 +1,48 @@
+---
+import ReactComponent from "../components/ReactComponent"
+import Layout from "../layouts/Layout.astro"
+
+const data = Astro.locals
+---
+
+<Layout>
+	<main>
+		<div>
+			<h3>Astro.locals:</h3>
+
+			<p>{JSON.stringify(data)}</p>
+		</div>
+
+		<div>
+			<h3>Server singleton</h3>
+
+			<p>azeazea</p>
+		</div>
+
+		<div>
+			<h3>React client:idle</h3>
+
+			<ReactComponent client:idle />
+		</div>
+
+		<div>
+			<h3>React client:only</h3>
+
+			<ReactComponent client:only="react" />
+		</div>
+	</main>
+</Layout>
+
+<script></script>
+
+<style>
+	main {
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		text-align: center;
+	}
+</style>

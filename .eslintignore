@@ -1,6 +1,8 @@
+node_modules
 esbuild
 dist
 *.js
 *.cjs
 *.mjs
-*.astro
+*.d.ts
+astro-i18n/**/*.astro
