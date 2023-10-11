@@ -11,9 +11,9 @@
 		"i18n:generate:types": "turbo run i18n:generate:types",
 		"i18n:extract": "turbo run i18n:extract",
 		"i18n:install": "turbo run i18n:install",
-		"npm:publish:patch": "turbo run publish:patch --filter=astro-i18n",
-		"npm:publish:minor": "turbo run publish:minor --filter=astro-i18n",
-		"npm:publish:major": "turbo run publish:major --filter=astro-i18n",
+		"npm:publish:patch": "turbo run npm:publish:patch --filter=astro-i18n",
+		"npm:publish:minor": "turbo run npm:publish:minor --filter=astro-i18n",
+		"npm:publish:major": "turbo run npm:publish:major --filter=astro-i18n",
 		"npm:pack": "turbo run npm:pack --filter=astro-i18n"
 	},
 	"devDependencies": {
