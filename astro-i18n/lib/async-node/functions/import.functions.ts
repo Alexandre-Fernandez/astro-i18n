@@ -10,10 +10,7 @@ export async function importScript(
 	filename: string,
 ): Promise<Record<string, unknown>> {
 	let esbuild: Esbuild | null = null
-	try {
-		esbuild = await import("esbuild")
-	} catch {}
-	if (!esbuild) throw new DependencyNotFound("esbuild")
+	esbuild = await import("esbuild")
 
 	const supportedExtensions = /\.(js|cjs|mjs|ts)$/
 	if (!isFile(filename)) throw new FileNotFound(filename)
@@ -21,22 +18,26 @@ export async function importScript(
 		throw new InvalidFileType(["js", "cjs", "mjs", "ts"])
 	}
 
-	const { outputFiles } = await esbuild.build({
-		entryPoints: [filename],
-		bundle: true,
-		external: ["esbuild"],
-		format: "cjs",
-		platform: "node",
-		write: false,
-	})
-	const commonJs = new TextDecoder().decode(outputFiles[0]?.contents)
+	try {
+		const { outputFiles } = await esbuild.build({
+			entryPoints: [filename],
+			bundle: true,
+			external: ["esbuild"],
+			format: "cjs",
+			platform: "node",
+			write: false,
+		})
+		const commonJs = new TextDecoder().decode(outputFiles[0]?.contents)
 
-	return commonJs
-		? extractCommonJsExports(
-				commonJs,
-				filename.replace(supportedExtensions, ".cjs"),
-		  )
-		: {}
+		return commonJs
+			? extractCommonJsExports(
+					commonJs,
+					filename.replace(supportedExtensions, ".cjs"),
+			  )
+			: {}
+	} catch {
+		throw new DependencyNotFound("esbuild")
+	}
 }
 
 export async function importJson(filename: string) {
