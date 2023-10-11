@@ -563,6 +563,92 @@ function extractRouteLocale(route: string): string
 
 Utility function to parse one of the configured locales out of the given route.
 
+## Components
+
+You can use these premade components in your project :
+
+### HrefLangs
+
+SEO component, see [hreglang](https://en.wikipedia.org/wiki/Hreflang).
+
+```astro
+---
+import { astroI18n } from "astro-i18n"
+
+const params: Record<string, string> = {}
+for (const [key, value] of Object.entries(Astro.params)) {
+	if (value === undefined) continue
+	params[key] = String(value)
+}
+
+const hrefLangs = astroI18n.locales.map((locale) => ({
+	href:
+		Astro.url.origin +
+		astroI18n.l(Astro.url.pathname, params, {
+			targetLocale: locale,
+		}),
+	hreflang: locale,
+}))
+---
+
+{
+	hrefLangs.map(({ href, hreflang }) => (
+		<link rel="alternate" href={href} hreflang={hreflang} />
+	))
+}
+
+```
+
+### LanguageSwitcher
+
+Simple component to switch locales.
+
+```astro
+---
+import { astroI18n, l } from "astro-i18n"
+
+interface Props {
+	showCurrent: boolean
+	labels: {
+		[locale: string]: string
+	}
+}
+
+const { showCurrent = true, labels = {} } = Astro.props
+
+const params: Record<string, string> = {}
+for (const [key, value] of Object.entries(Astro.params)) {
+	if (value === undefined) continue
+	params[key] = String(value)
+}
+
+let links = astroI18n.locales.map((locale) => ({
+	locale,
+	href: l(Astro.url.pathname, params, {
+		targetLocale: locale,
+	}),
+	label: labels[locale] || locale.toUpperCase(),
+}))
+
+if (!showCurrent) {
+	links = links.filter((link) => link.locale !== astroI18n.locale)
+}
+---
+
+<nav>
+	<ul>
+		{
+			links.map(({ href, label }) => (
+				<li>
+					<a href={href}>{label}</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+```
+
 ## CLI
 
 ### `astro-i18n install`
