@@ -86,10 +86,6 @@ importers:
         version: 0.34.6
 
   astro-i18n:
-    optionalDependencies:
-      esbuild:
-        specifier: ^0.17.18
-        version: 0.17.19
     devDependencies:
       '@types/node':
         specifier: ^20.1.4
@@ -106,6 +102,9 @@ importers:
       cpy-cli:
         specifier: ^5.0.0
         version: 5.0.0
+      esbuild:
+        specifier: ^0.17.19
+        version: 0.17.19
       eslint:
         specifier: ^8.40.0
         version: 8.50.0
