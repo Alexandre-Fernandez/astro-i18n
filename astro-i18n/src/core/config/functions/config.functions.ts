@@ -1,3 +1,4 @@
+import { setObjectProperty } from "@lib/object"
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import {
 	canRead,
@@ -117,9 +118,7 @@ export async function getProjectTranslationGroups(
 				isDeepStringRecord,
 				`${locale}.GroupTranslations`,
 			)
-			groups[group] = {
-				[locale]: translations,
-			}
+			setObjectProperty(groups, [group, locale], translations)
 		}
 	}
 
