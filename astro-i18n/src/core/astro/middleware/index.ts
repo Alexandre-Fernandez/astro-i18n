@@ -33,6 +33,8 @@ export function useAstroI18n(
 		if (astroI18n.internals.config.run !== "client+server") return next()
 
 		const response = await next()
+		if (response.body?.locked) return response
+
 		let body = await response.text()
 		if (!body.startsWith("<!DOCTYPE html>")) return response
 
