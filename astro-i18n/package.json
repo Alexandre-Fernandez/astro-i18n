@@ -1,6 +1,6 @@
 {
 	"name": "astro-i18n",
-	"version": "2.0.9",
+	"version": "2.0.10",
 	"author": "alexandre-fernandez",
 	"description": "A TypeScript-first internationalization library for Astro.",
 	"keywords": [
@@ -20,16 +20,16 @@
 		"type": "git",
 		"url": "https://github.com/alexandre-fernandez/astro-i18n"
 	},
-	"main": "./src/index.ts",
+	"main": "./dist/src/index.js",
 	"bin": "./dist/src/bin.cjs",
-	"types": "./src/index.d.ts",
+	"types": "./dist/src/index.d.ts",
 	"files": [
 		"dist"
 	],
 	"exports": {
 		".": {
-			"import": "./src/index.ts",
-			"types": "./src/index.d.ts"
+			"import": "./dist/src/index.js",
+			"types": "./dist/src/index.d.ts"
 		}
 	},
 	"scripts": {
