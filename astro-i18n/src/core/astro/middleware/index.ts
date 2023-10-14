@@ -33,9 +33,7 @@ export function useAstroI18n(
 		if (astroI18n.internals.config.run !== "client+server") return next()
 
 		const response = await next()
-		if (response.body?.locked) return response
-
-		let body = await response.text()
+		let body = await response.clone().text()
 		if (!body.startsWith("<!DOCTYPE html>")) return response
 
 		// serializing astro-i18n into the html
