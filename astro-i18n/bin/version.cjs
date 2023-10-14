@@ -1,5 +1,5 @@
 const { readFileSync, writeFileSync } = require("fs")
-const { join } = require("path")
+const { join, resolve } = require("path")
 const { execSync } = require("child_process")
 
 if (!Array.isArray(process.argv)) throw new Error("Cannot parse argv.\n")
@@ -44,6 +44,8 @@ switch (mode) {
 		)
 	}
 }
+
+await new Promise((resolve) => setTimeout(resolve, 2000))
 
 /**
  * @param {number} major
