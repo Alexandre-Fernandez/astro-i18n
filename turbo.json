@@ -28,32 +28,20 @@
 			"dependsOn": ["build"],
 			"cache": false
 		},
-		"npm:patch": {
-			"dependsOn": ["lint", "test"],
-			"cache": false
-		},
-		"npm:minor": {
-			"dependsOn": ["lint", "test"],
-			"cache": false
-		},
-		"npm:major": {
-			"dependsOn": ["lint", "test"],
-			"cache": false
-		},
 		"npm:publish": {
 			"dependsOn": ["lint", "test", "build"],
 			"cache": false
 		},
 		"npm:publish:patch": {
-			"dependsOn": ["lint", "test", "npm:patch", "build", "npm:publish"],
+			"dependsOn": ["lint", "test", "build"],
 			"cache": false
 		},
 		"npm:publish:minor": {
-			"dependsOn": ["lint", "test", "npm:minor", "build", "npm:publish"],
+			"dependsOn": ["lint", "test", "build"],
 			"cache": false
 		},
 		"npm:publish:major": {
-			"dependsOn": ["lint", "test", "npm:major", "build", "npm:publish"],
+			"dependsOn": ["lint", "test", "build"],
 			"cache": false
 		},
 		"npm:pack": {

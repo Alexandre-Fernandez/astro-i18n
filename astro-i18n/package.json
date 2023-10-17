@@ -37,10 +37,10 @@
 		"test": "../apps/astro/node_modules/.bin/vitest run --root ../apps/astro",
 		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && node bin/pre-build.cjs && node bin/build.cjs",
 		"lint": "eslint --ignore-path ../.eslintignore .",
-		"npm:patch": "node bin/version.cjs patch",
-		"npm:minor": "node bin/version.cjs minor",
-		"npm:major": "node bin/version.cjs major",
 		"npm:publish": "node bin/pre-package.cjs && npm publish ; node bin/post-package.cjs",
+		"npm:publish:patch": "node bin/version.cjs patch && npm run npm:publish",
+		"npm:publish:minor": "node bin/version.cjs minor && npm run npm:publish",
+		"npm:publish:major": "node bin/version.cjs major && npm run npm:publish",
 		"npm:pack": "node bin/pre-package.cjs && npm pack --pack-destination=.. ; node bin/post-package.cjs"
 	},
 	"devDependencies": {
