@@ -1,5 +1,5 @@
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
-import { throwError } from "@lib/error"
+import { never } from "@lib/error"
 import { merge } from "@lib/object"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
@@ -17,7 +17,6 @@ import type {
 	ConfigTranslations,
 	SerializedConfig,
 } from "@src/core/config/types"
-import UnreachableCode from "@src/errors/unreachable-code.error"
 import AsyncNode from "@lib/async-node/classes/async-node.class"
 import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
 import {
@@ -148,6 +147,8 @@ class Config implements AstroI18nConfig {
 	 * the config
 	 */
 	async loadFilesystemTranslations() {
+		if (!this.path) return this
+
 		// find project root
 		let root = await popPath(this.path)
 		if (!(await hasAstroConfig(root))) {
@@ -162,11 +163,7 @@ class Config implements AstroI18nConfig {
 			if (!this.translations[page.route]) {
 				this.translations[page.route] = {}
 			}
-			merge(
-				this.translations[page.route] ||
-					throwError(new UnreachableCode()),
-				page.translations,
-			)
+			merge(this.translations[page.route] || never(), page.translations)
 			if (!this.routes) this.routes = {}
 			merge(this.routes, page.routes)
 		}
