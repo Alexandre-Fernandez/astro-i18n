@@ -31,11 +31,11 @@ switch (mode) {
 		break
 	}
 	case "MINOR": {
-		update(major, minor + 1, patch)
+		update(major, minor + 1, 0)
 		break
 	}
 	case "MAJOR": {
-		update(major + 1, minor, patch)
+		update(major + 1, 0, 0)
 		break
 	}
 	default: {
