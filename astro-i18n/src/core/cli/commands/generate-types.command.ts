@@ -240,6 +240,8 @@ declare module "${PACKAGE_NAME}" {
 		extractRouteLocale(route: string): string|null
 		/** Initializes ${PACKAGE_NAME} on the server-side. */
 		initialize(config?: Partial<AstroI18nConfig> | string, formatters?: TranslationFormatters = {}): Promise<void>
+		/** Redirects the user to the given destination. */
+		redirect(destination: string | URL, status = 301)
 	}
 	export const astroI18n: AstroI18n
 }`.trim()

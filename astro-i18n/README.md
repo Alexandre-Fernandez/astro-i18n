@@ -417,7 +417,7 @@ The current route (without the locale, for example `/fr/about` will return `/abo
 pages: string[]
 ```
 
-An array of all the available pages.
+An array of all the available pages. At the moment it only detects pages for which you have a translation (even if it's empty).
 
 ### `astroI18n.page`
 
@@ -425,7 +425,7 @@ An array of all the available pages.
 page: string
 ```
 
-The corresponding page for the current route, for example `/posts/my-cool-slug` will be `/posts/[slug]`.
+The corresponding page for the current route, for example `/posts/my-cool-slug` will be `/posts/[slug]`. Only gets detected if you have a translation for that page (even if it's empty).
 
 ### `astroI18n.locale`
 
@@ -562,6 +562,14 @@ function extractRouteLocale(route: string): string
 ```
 
 Utility function to parse one of the configured locales out of the given route.
+
+### `astroI18n.redirect`
+
+```ts
+function redirect(destination: string | URL, status = 301): void
+```
+
+Use this instead of `Astro.redirect` to redirect users.
 
 ## Components
 

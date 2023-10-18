@@ -28,6 +28,7 @@ import type {
 	Formatters,
 	TranslationProperties,
 } from "@src/core/translation/types"
+import CannotRedirect from "@src/core/state/errors/cannot-redirect.error"
 
 class AstroI18n {
 	static #scriptId = `__${PACKAGE_NAME}__`
@@ -61,6 +62,16 @@ class AstroI18n {
 	 * Routes in other locales also get mapped to the primary one.
 	 */
 	#routePageCache: Record<string, string> = {}
+
+	/**
+	 * The middleware will redirect here at the end of the response.
+	 */
+	#redirection: Response | null = null
+
+	/**
+	 * The current URL origin, set by the middleware.
+	 */
+	#origin = ""
 
 	constructor() {
 		if (
@@ -160,6 +171,7 @@ class AstroI18n {
 			waitInitialization: this.#waitInitialization.bind(this),
 			setPrivateProperties: this.#setPrivateProperties.bind(this),
 			reinitalize: this.#reinitalize.bind(this),
+			getAndClearRedirection: this.#getAndClearRedirection.bind(this),
 		}
 	}
 
@@ -342,6 +354,24 @@ class AstroI18n {
 		return this.#splitLocaleAndRoute(route).locale
 	}
 
+	/**
+	 * Redirects the user to the given destination.
+	 */
+	redirect(destination: string | URL, status = 301) {
+		if (this.environment === Environment.BROWSER) throw new CannotRedirect()
+
+		if (typeof destination === "string") {
+			const url = isUrl(destination)
+				? new URL(destination)
+				: new URL(`${this.#origin}/${destination.replace(/^\//, "")}`)
+
+			this.#redirection = Response.redirect(url, status)
+			return
+		}
+
+		this.#redirection = Response.redirect(destination, status)
+	}
+
 	/** Initializes astro-i18n on the server-side. */
 	async initialize(
 		config: Partial<AstroI18nConfig> | string | undefined = undefined,
@@ -424,22 +454,31 @@ class AstroI18n {
 		await this.initialize(config, formatters)
 	}
 
+	#getAndClearRedirection() {
+		const temp = this.#redirection
+		this.#redirection = null
+		return temp
+	}
+
 	#setPrivateProperties(
 		properties: {
 			locale?: string
 			route?: string
 			isGetStaticPaths?: boolean
+			origin?: string
 		} = {},
 	) {
-		const { route, locale, isGetStaticPaths } = {
+		const { route, locale, isGetStaticPaths, origin } = {
 			route: this.#route,
 			locale: this.#locale,
 			isGetStaticPaths: this.#isGetStaticPaths,
+			origin: this.#origin,
 			...properties,
 		}
 		this.#route = route
 		this.#locale = locale
 		this.#isGetStaticPaths = isGetStaticPaths
+		this.#origin = origin
 	}
 
 	#findRoutePage(route: string) {

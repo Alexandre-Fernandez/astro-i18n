@@ -15,7 +15,7 @@ export function useAstroI18n(
 	if (isObject(config) && Object.keys(config).length === 0) config = undefined
 	astroI18n.initialize(config, formatters)
 
-	return (async (_ctx, next) => {
+	return (async (ctx, next) => {
 		// init
 		if (!astroI18n.isInitialized) {
 			await astroI18n.internals.waitInitialization()
@@ -25,14 +25,22 @@ export function useAstroI18n(
 		}
 
 		// removing isGetStaticPaths
-		astroI18n.internals.setPrivateProperties({ isGetStaticPaths: false })
+		astroI18n.internals.setPrivateProperties({
+			isGetStaticPaths: false,
+			origin: ctx.url.origin,
+		})
 
 		// setting route
-		astroI18n.route = _ctx.url.pathname
+		astroI18n.route = ctx.url.pathname
 
 		if (astroI18n.internals.config.run !== "client+server") return next()
 
 		const response = await next()
+
+		// was redirected ?
+		const redirection = astroI18n.internals.getAndClearRedirection()
+		if (redirection) return redirection
+
 		let body = await response.clone().text()
 		if (!body.startsWith("<!DOCTYPE html>")) return response
 
