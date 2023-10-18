@@ -113,6 +113,8 @@ class Page implements PageProps {
 		if (!srcPagesEndIndex) return null
 		let proxy = ""
 
+		route = route.replace(/\/$/, "") || "/"
+
 		// import page
 		const pathFromPages = this.#path.slice(srcPagesEndIndex)
 		const depth = route.split("/").length - 1
