@@ -55,3 +55,7 @@ build
 
 # backup
 *.bk
+
+# apps
+apps/*
+!apps/astro

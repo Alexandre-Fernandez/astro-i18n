@@ -5,6 +5,7 @@
 		"dev": "turbo run dev",
 		"test": "turbo run test",
 		"build": "turbo run build",
+		"astro-i18n:build": "turbo run build --filter=astro-i18n",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"i18n:generate:pages": "turbo run i18n:generate:pages",

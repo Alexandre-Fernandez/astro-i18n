@@ -51,7 +51,7 @@ const astroI18n = useAstroI18n(/* astro-i18n config, custom formatters */)
 export const onRequest = sequence(astroI18n)
 ```
 
-If you are using **serverless all your initial data needs to be passed to the middleware** (mainly inside the config).
+If you are using **serverless all your initial data needs to be passed to the middleware**, you should import your root astro-i18n config and pass it to the middleware.
 
 When using node (SSR or SSG) you can either go for the same workflow as serverless or use the filesystem to store your config and translations.
 

@@ -6,6 +6,6 @@ const ASTRO_I18N_DIR = join(__dirname, "..")
 const README_PATH = join(ASTRO_I18N_DIR, README)
 
 if (existsSync(README_PATH) && lstatSync(README_PATH).isFile()) {
-	const MONOREPO_DIR = join(ASTRO_I18N_DIR, "..")
-	copyFileSync(README_PATH, join(MONOREPO_DIR, README))
+	const MONOREPO_README = join(ASTRO_I18N_DIR, "..", README)
+	copyFileSync(README_PATH, MONOREPO_README)
 }

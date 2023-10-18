@@ -81,7 +81,7 @@ export default defineAstroI18nConfig({
 	secondaryLocales: [], // other supported locales
 	fallbackLocale: "en", // fallback locale (on missing translation)
 	trailingSlash: "never", // "never" or "always"
-	run: "client+server", //"client+server" or "server"
+	run: "client+server", // "client+server" or "server"
 	showPrimaryLocale: false, // "/en/about" vs "/about"
 	translationLoadingRules: [], // per page group loading
 	translationDirectory: {}, // translation directory names
@@ -151,7 +151,33 @@ export const onRequest = sequence(astroI18n)
  * Serverless
  */
 async function installServerless(root: string, isTypescript: boolean) {
+	const { writeFileSync } = await AsyncNode.fs
 	const { join } = await AsyncNode.path
+
+	const astroI18nConfigPath = await getAstroI18nConfigPath(root)
+
+	// create default config file
+	if (!astroI18nConfigPath) {
+		writeFileSync(
+			join(root, `${PACKAGE_NAME}.config.${isTypescript ? "ts" : "js"}`),
+			`
+import { defineAstroI18nConfig } from "astro-i18n"
+
+export default defineAstroI18nConfig({
+	primaryLocale: "en", // default app locale
+	secondaryLocales: [], // other supported locales
+	fallbackLocale: "en", // fallback locale (on missing translation)
+	trailingSlash: "never", // "never" or "always"
+	run: "client+server", // "client+server" or "server"
+	showPrimaryLocale: false, // "/en/about" vs "/about"
+	translationLoadingRules: [], // per page group loading
+	translationDirectory: {}, // translation directory names
+	translations: {}, // { [translation_group1]: { [locale1]: {}, ... } }
+	routes: {}, // { [secondary_locale1]: { about: "about-translated", ... } }
+})
+`.trim(),
+		)
+	}
 
 	// add default middleware
 	if (!(await getMiddlewarePath(root))) {
@@ -165,20 +191,10 @@ async function installServerless(root: string, isTypescript: boolean) {
 			`
 import { sequence } from "astro/middleware"
 import { useAstroI18n } from "astro-i18n"
+import astroI18nConfig from "../../astro-i18n.config"
 
 const astroI18n = useAstroI18n(
-	{
-		primaryLocale: "en", // default app locale
-		secondaryLocales: [], // other supported locales
-		fallbackLocale: "en", // fallback locale (on missing translation)
-		trailingSlash: "never", // "never" or "always"
-		run: "client+server", //"client+server" or "server"
-		showPrimaryLocale: false, // "/en/about" vs "/about"
-		translationLoadingRules: [], // per page group loading
-		translationDirectory: {}, // translation directory names
-		translations: {}, // { [translation_group1]: { [locale1]: {}, ... } }
-		routes: {}, // { [secondary_locale1]: { about: "about-translated", ... } }
-	},
+	astroI18nConfig,
 	undefined /* custom formatters */,
 )
 
