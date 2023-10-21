@@ -1,6 +1,7 @@
 import { popPath, toPosixPath } from "@lib/async-node/functions/path.functions"
 import { never } from "@lib/error"
 import { merge } from "@lib/object"
+import { assert } from "@lib/ts/guards"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
 import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import {
@@ -9,6 +10,14 @@ import {
 	getProjectTranslationGroups,
 	hasAstroConfig,
 } from "@src/core/config/functions/config.functions"
+import AsyncNode from "@lib/async-node/classes/async-node.class"
+import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
+import {
+	importJson,
+	importScript,
+} from "@lib/async-node/functions/import.functions"
+import { isPartialConfig } from "@src/core/config/guards/config.guard"
+import MixedPrimarySecondary from "@src/core/config/errors/mixed-primary-secondary.error"
 import type {
 	AstroI18nConfig,
 	ConfigTranslationLoadingRules,
@@ -17,14 +26,6 @@ import type {
 	ConfigTranslations,
 	SerializedConfig,
 } from "@src/core/config/types"
-import AsyncNode from "@lib/async-node/classes/async-node.class"
-import ConfigNotFound from "@src/core/config/errors/config-not-found.error"
-import {
-	importJson,
-	importScript,
-} from "@lib/async-node/functions/import.functions"
-import { isPartialConfig } from "@src/core/config/guards/config.guard"
-import { assert } from "@lib/ts/guards"
 
 class Config implements AstroI18nConfig {
 	primaryLocale
@@ -75,6 +76,10 @@ class Config implements AstroI18nConfig {
 		this.translationDirectory = translationDirectory || {}
 		this.routes = routes || {}
 		this.path = path || ""
+
+		if (this.secondaryLocales.includes(this.primaryLocale)) {
+			throw new MixedPrimarySecondary(this.primaryLocale)
+		}
 	}
 
 	get pages() {
