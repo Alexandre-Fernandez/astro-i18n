@@ -72,21 +72,38 @@ export async function getProjectPages(
 			if (relative.endsWith(".astro")) {
 				const { match, range } =
 					ASTRO_COMPONENT_ROUTE_NAME_PATTERN.match(relative) || {}
-				if (!match || !range) continue
+				if (!match || !match[2] || !range) continue
 
-				const name =
-					match[1] && match[2] === "/index"
-						? match[1].replace("/", "")
-						: match[2]?.replace("/", "") || never()
+				let name = "index"
+				let route = "/"
+
+				// root page
+				if (!match[1]) {
+					if (match[2] !== "/index") {
+						name = match[2].replace("/", "")
+						route = `/${name}`
+					}
+				}
+				// dir index (/posts/index.astro)
+				else if (match[2] === "/index") {
+					name = match[1].replace("/", "")
+					route = `${relative.slice(0, range[0])}/${name}`
+				}
+				// page (/posts/[slug].astro)
+				else {
+					name = match[2].replace("/", "")
+					route = `${relative.slice(
+						0,
+						range[0] + match[1].length,
+					)}/${name}`
+				}
+
 				if (name.startsWith("_")) continue // ignore if private
-				const route =
-					name === "index"
-						? "/"
-						: `${relative.slice(0, range[0])}/${name}`
 
 				pageData[route] = { ...pageData[route], name, route, path }
 				continue
 			}
+
 			// translations
 			if (!relative.endsWith(".json")) continue
 
