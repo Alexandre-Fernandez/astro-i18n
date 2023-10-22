@@ -297,8 +297,6 @@ class AstroI18n {
 				: target
 		}
 
-		console.log(route, `==${target}==>`, translatedRoute)
-
 		// adding trailing slash
 		if (this.#config.trailingSlash === "always") {
 			translatedRoute += "/"
