@@ -102,6 +102,7 @@ class AstroI18n {
 	/** The current page route. */
 	set route(route: string) {
 		if (isUrl(route)) route = new URL(route).pathname
+		route = decodeURI(route)
 		const { locale, route: localelessRoute } =
 			this.#splitLocaleAndRoute(route)
 		this.#route = localelessRoute
@@ -248,7 +249,7 @@ class AstroI18n {
 		const { targetLocale, routeLocale, showPrimaryLocale, query } = options
 
 		// retrieving segments only
-		const segments = this.#getRouteSegments(route)
+		const segments = this.#getRouteSegments(decodeURI(route))
 
 		// removing locale
 		const extractedLocale = this.locales.includes(segments[0] || "")
@@ -295,6 +296,8 @@ class AstroI18n {
 				? `${target}/${translatedRoute}`
 				: target
 		}
+
+		console.log(route, `==${target}==>`, translatedRoute)
 
 		// adding trailing slash
 		if (this.#config.trailingSlash === "always") {
@@ -583,6 +586,16 @@ class AstroI18n {
 				secondaryLocales: this.secondaryLocales,
 				fallbackLocale: this.fallbackLocale,
 				isInitialized: this.isInitialized,
+				"#redirection":
+					this.#redirection instanceof Response
+						? {
+								url: this.#redirection.url,
+								status: this.#redirection.status,
+						  }
+						: this.#redirection,
+				"#origin": this.#origin,
+				"#isGetStaticPaths": this.#isGetStaticPaths,
+				"#routePageCache": this.#routePageCache,
 				"#config": this.#config.toObject(),
 				"#translations": this.#translations.toObject(),
 				"#segments": this.#segments.toObject(),

@@ -58,4 +58,4 @@ build
 
 # apps
 apps/*
-!apps/astro
+!apps/astro/*
