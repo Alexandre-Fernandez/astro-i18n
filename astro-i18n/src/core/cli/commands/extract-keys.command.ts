@@ -83,7 +83,11 @@ export async function extract({ command, options }: ParsedArgv) {
 		pages: DEFAULT_TRANSLATION_DIRNAME,
 		...astroI18n.internals.config.translationDirectory,
 	}
-	const translationDirectory = join(root, "src", directories.i18n)
+	const translationDirectory = join(
+		root,
+		astroI18n.internals.config.srcDir,
+		directories.i18n,
+	)
 
 	// filling main i18n dir group translations
 	for (const [group, locales] of Object.entries(groupTranslations)) {

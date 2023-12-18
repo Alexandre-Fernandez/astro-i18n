@@ -1,6 +1,7 @@
 import { defineAstroI18nConfig } from "astro-i18n"
 
 export default defineAstroI18nConfig({
+	srcDir: "nested/src",
 	primaryLocale: "en",
 	secondaryLocales: ["fr"],
 	showPrimaryLocale: false,

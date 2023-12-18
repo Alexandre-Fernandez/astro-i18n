@@ -30,12 +30,12 @@ export async function getProjectPages(
 	config: Partial<AstroI18nConfig> = {},
 ) {
 	const { join } = await AsyncNode.path
-	const pagesDir = `${projectRoot}/src/${PAGES_DIRNAME}`
+	const pagesDir = `${projectRoot}/${config.srcDir}/${PAGES_DIRNAME}`
 	if (!(await isDirectory(pagesDir))) throw new PagesNotFound()
 
 	const pageData: { [route: string]: Partial<PageProps> } = {}
 	const secondaryLocalePaths = (config.secondaryLocales || []).map(
-		(locale) => `/src/${PAGES_DIRNAME}/${locale}`,
+		(locale) => `/${config.srcDir}/${PAGES_DIRNAME}/${locale}`,
 	)
 	const $directory: AstroI18nConfig["translationDirectory"] = {
 		i18n: DEFAULT_TRANSLATION_DIRNAME,
@@ -160,7 +160,7 @@ export async function getProjectPages(
 		pages.push({ translations: {}, routes: {}, ...page } as any)
 	}
 
-	const i18nPagesDir = `${projectRoot}/src/${$directory.i18n}/${PAGES_DIRNAME}`
+	const i18nPagesDir = `${projectRoot}/${config.srcDir}/${$directory.i18n}/${PAGES_DIRNAME}`
 
 	if (!(await isDirectory(i18nPagesDir))) {
 		return pages.map((page) => new Page(page))

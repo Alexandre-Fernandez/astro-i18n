@@ -20,6 +20,8 @@ export interface AstroI18nConfig {
 	translationDirectory: ConfigTranslationDirectory
 
 	routes: ConfigRoutes
+
+	srcDir: string
 }
 
 export type ConfigTranslationLoadingRules = {

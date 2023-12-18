@@ -246,7 +246,7 @@ declare module "${PACKAGE_NAME}" {
 	export const astroI18n: AstroI18n
 }`.trim()
 
-	const envDtsPath = join(root, "src", "env.d.ts")
+	const envDtsPath = join(root, astroI18n.internals.config.srcDir, "env.d.ts")
 
 	if (await isFile(envDtsPath)) {
 		const data = readFileSync(envDtsPath, { encoding: "utf8" })

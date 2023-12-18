@@ -56,6 +56,10 @@ export function isPartialConfig(
 				if (!isConfigRoutes(value)) return false
 				break
 			}
+			case "srcDir": {
+				if (typeof value !== "string") return false
+				break
+			}
 			default: {
 				return false
 			}

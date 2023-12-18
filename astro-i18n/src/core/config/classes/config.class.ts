@@ -50,6 +50,8 @@ class Config implements AstroI18nConfig {
 
 	path: string
 
+	srcDir: string
+
 	constructor(
 		{
 			primaryLocale,
@@ -62,6 +64,7 @@ class Config implements AstroI18nConfig {
 			translationLoadingRules,
 			translationDirectory,
 			routes,
+			srcDir,
 		}: Partial<AstroI18nConfig> = {},
 		path = "",
 	) {
@@ -76,6 +79,7 @@ class Config implements AstroI18nConfig {
 		this.translationDirectory = translationDirectory || {}
 		this.routes = routes || {}
 		this.path = path || ""
+		this.srcDir = srcDir || "src"
 
 		if (this.secondaryLocales.includes(this.primaryLocale)) {
 			throw new MixedPrimarySecondary(this.primaryLocale)

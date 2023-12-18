@@ -84,7 +84,7 @@ export async function getProjectTranslationGroups(
 	projectRoot: string,
 	config: Partial<AstroI18nConfig> = {},
 ) {
-	const i18nDir = `${projectRoot}/src/${
+	const i18nDir = `${projectRoot}/${config.srcDir}/${
 		config.translationDirectory?.i18n || DEFAULT_TRANSLATION_DIRNAME
 	}`
 

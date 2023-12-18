@@ -10,6 +10,7 @@ import RootNotFound from "@src/core/config/errors/root-not-found.error"
 import { getProjectPages } from "@src/core/page/functions/page.functions"
 import { astroI18n } from "@src/core/state/singletons/astro-i18n.singleton"
 import type { Command, ParsedArgv } from "@lib/argv/types"
+import { PAGES_DIRNAME } from "@src/constants/app.constants"
 
 const cmd = {
 	name: "generate:pages",
@@ -24,9 +25,13 @@ export async function generatePages({ command, options }: ParsedArgv) {
 		typeof options["root"] === "string" ? options["root"] : process.cwd(),
 	)
 	if (!(await isDirectory(root))) throw new RootNotFound()
-	const pagesDirectory = join(root, "src/pages")
 
 	await astroI18n.initialize()
+
+	const pagesDirectory = join(
+		root,
+		`${astroI18n.internals.config.srcDir}/${PAGES_DIRNAME}`,
+	)
 
 	if (options["purge"]) {
 		for (const locale of astroI18n.secondaryLocales) {
