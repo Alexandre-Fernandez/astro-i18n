@@ -12,7 +12,7 @@ export const EMPTY_PATTERN = new Regex(/^\s*$/)
 
 export const VARIANT_PATTERN = new Regex(/{{(.+)}}/)
 
-export const INTERPOLATION_PATTERN = new Regex(/{#(.+)#}/)
+export const INTERPOLATION_PATTERN = new Regex(/{#(.+?)#}/)
 
 export const INTERPOLATION_ALIAS_PATTERN = Regex.fromString(
 	`\\(\\s*(${VARNAME_PATTERN.source})\\s*\\)`,
