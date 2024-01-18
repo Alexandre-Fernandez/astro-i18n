@@ -43,7 +43,14 @@ export function useAstroI18n(
 
 		if (response.bodyUsed) return response
 		let body = await response.text()
-		if (!body.startsWith("<!DOCTYPE html>")) return response
+
+		if (!body.startsWith("<!DOCTYPE html>")) {
+			return new Response(body, {
+				status: response.status,
+				statusText: response.statusText,
+				headers: response.headers,
+			})
+		}
 
 		// serializing astro-i18n into the html
 		const closingHeadIndex = body.indexOf("</head>")
