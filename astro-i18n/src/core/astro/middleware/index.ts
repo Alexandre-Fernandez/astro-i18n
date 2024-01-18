@@ -41,7 +41,8 @@ export function useAstroI18n(
 		const redirection = astroI18n.internals.getAndClearRedirection()
 		if (redirection) return redirection
 
-		let body = await response.clone().text()
+		if (response.bodyUsed) return response
+		let body = await response.text()
 		if (!body.startsWith("<!DOCTYPE html>")) return response
 
 		// serializing astro-i18n into the html
