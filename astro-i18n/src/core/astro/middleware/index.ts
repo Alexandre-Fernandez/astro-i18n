@@ -16,6 +16,8 @@ export function useAstroI18n(
 	astroI18n.initialize(config, formatters)
 
 	return (async (ctx, next) => {
+		if (/^\/_.+/.test(ctx.url.pathname)) return next()
+
 		// init
 		if (!astroI18n.isInitialized) {
 			await astroI18n.internals.waitInitialization()
