@@ -16,7 +16,7 @@ export function useAstroI18n(
 	astroI18n.initialize(config, formatters)
 
 	return (async (ctx, next) => {
-		if (/^\/_.+/.test(ctx.url.pathname)) return next()
+		if (ctx.url.pathname.startsWith("/_")) return next()
 
 		// init
 		if (!astroI18n.isInitialized) {
@@ -43,16 +43,13 @@ export function useAstroI18n(
 		const redirection = astroI18n.internals.getAndClearRedirection()
 		if (redirection) return redirection
 
-		if (response.bodyUsed) return response
-		let body = await response.text()
-
-		if (!body.startsWith("<!DOCTYPE html>")) {
-			return new Response(body, {
-				status: response.status,
-				statusText: response.statusText,
-				headers: response.headers,
-			})
+		// is html ?
+		if (!response.headers.get("content-type")?.includes("html")) {
+			return response
 		}
+		if (response.bodyUsed) return response
+
+		let body = await response.text()
 
 		// serializing astro-i18n into the html
 		const closingHeadIndex = body.indexOf("</head>")
